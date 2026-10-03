@@ -67,8 +67,14 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
 
     <div class="card shadow-sm border-0">
-        <div class="card-header bg-transparent py-3">
-            <h6 class="mb-0 fw-bold">Application History (<?= count($requests); ?>)</h6>
+        <div class="card-header bg-transparent py-3 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <span class="card-header-icon bg-primary text-white"><i class="bi bi-file-earmark-text"></i></span>
+                <div>
+                    <h6 class="mb-0 fw-bold">Application History</h6>
+                    <small class="text-muted"><?= count($requests); ?> rental applications logged</small>
+                </div>
+            </div>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -88,12 +94,17 @@ require_once __DIR__ . '/../includes/header.php';
                     <tbody>
                         <?php if (empty($requests)): ?>
                             <tr>
-                                <td colspan="8" class="text-center py-5 text-muted">
-                                    <i class="bi bi-file-earmark-x fs-1 d-block mb-2"></i>
-                                    You have not submitted any rental inquiries yet.<br>
-                                    <a href="<?= BASE_URL; ?>user/index.php" class="btn btn-primary btn-sm mt-3">
-                                        Browse Available Houses
-                                    </a>
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <div class="empty-state-icon">
+                                            <i class="bi bi-file-earmark-x"></i>
+                                        </div>
+                                        <h6 class="empty-state-title">No Rental Applications Yet</h6>
+                                        <p class="empty-state-text">You have not submitted any rental applications yet. Explore available properties and apply in 1-click.</p>
+                                        <a href="<?= BASE_URL; ?>user/index.php" class="btn btn-primary btn-sm mt-3">
+                                            <i class="bi bi-search me-1"></i>Browse Available Houses
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         <?php else: ?>
@@ -146,23 +157,25 @@ require_once __DIR__ . '/../includes/header.php';
                                         <?= format_date($r['created_at']); ?>
                                     </td>
                                     <td class="text-end">
-                                        <?php if ($r['status'] === 'pending'): ?>
-                                            <form method="POST" action="<?= BASE_URL; ?>user/my_requests.php" class="d-inline" onsubmit="return confirm('Cancel this rental application?');">
-                                                <?= csrf_field(); ?>
-                                                <input type="hidden" name="request_id" value="<?= (int)$r['id']; ?>">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel Application">
-                                                    <i class="bi bi-x-circle me-1"></i>Cancel
-                                                </button>
-                                            </form>
-                                        <?php elseif ($r['status'] === 'approved'): ?>
-                                            <a href="<?= BASE_URL; ?>user/approved_rentals.php" class="btn btn-sm btn-success">
-                                                <i class="bi bi-patch-check me-1"></i>View Lease
-                                            </a>
-                                        <?php else: ?>
-                                            <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$r['house_id']; ?>" class="btn btn-sm btn-outline-secondary">
-                                                Re-apply
-                                            </a>
-                                        <?php endif; ?>
+                                        <div class="btn-action-group justify-content-end">
+                                            <?php if ($r['status'] === 'pending'): ?>
+                                                <form method="POST" action="<?= BASE_URL; ?>user/my_requests.php" class="d-inline" onsubmit="return confirm('Cancel this rental application?');">
+                                                    <?= csrf_field(); ?>
+                                                    <input type="hidden" name="request_id" value="<?= (int)$r['id']; ?>">
+                                                    <button type="submit" class="btn-action btn-action-delete" title="Cancel Application">
+                                                        <i class="bi bi-x-circle"></i>
+                                                    </button>
+                                                </form>
+                                            <?php elseif ($r['status'] === 'approved'): ?>
+                                                <a href="<?= BASE_URL; ?>user/approved_rentals.php" class="btn btn-sm btn-success text-nowrap">
+                                                    <i class="bi bi-patch-check me-1"></i>View Lease
+                                                </a>
+                                            <?php else: ?>
+                                                <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$r['house_id']; ?>" class="btn-action btn-action-view" title="Re-apply or View Details">
+                                                    <i class="bi bi-arrow-repeat"></i>
+                                                </a>
+                                            <?php endif; ?>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

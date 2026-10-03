@@ -78,7 +78,13 @@ require_once __DIR__ . '/../includes/header.php';
             <!-- Houses Table -->
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold">Assigned House Portfolio</h6>
+                    <div class="d-flex align-items-center">
+                        <span class="card-header-icon bg-primary text-white"><i class="bi bi-houses"></i></span>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Assigned House Portfolio</h6>
+                            <small class="text-muted"><?= count($myHouses); ?> properties under your supervision</small>
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV('managerHousesTable', 'my_assigned_houses.csv')">
                         <i class="bi bi-file-earmark-arrow-down me-1"></i>Export CSV
                     </button>
@@ -100,9 +106,14 @@ require_once __DIR__ . '/../includes/header.php';
                             <tbody>
                                 <?php if (empty($myHouses)): ?>
                                     <tr>
-                                        <td colspan="7" class="text-center py-5 text-muted">
-                                            <i class="bi bi-house-slash fs-1 d-block mb-2"></i>
-                                            No assigned houses found matching your criteria.
+                                        <td colspan="7">
+                                            <div class="empty-state">
+                                                <div class="empty-state-icon">
+                                                    <i class="bi bi-house-slash"></i>
+                                                </div>
+                                                <h6 class="empty-state-title">No Assigned Properties Found</h6>
+                                                <p class="empty-state-text">No properties assigned to your account match your search filter.</p>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php else: ?>
@@ -145,9 +156,14 @@ require_once __DIR__ . '/../includes/header.php';
                                                 </div>
                                             </td>
                                             <td class="text-end no-export">
-                                                <a href="<?= BASE_URL; ?>manager/house_edit.php?id=<?= (int)$h['id']; ?>" class="btn btn-sm btn-primary">
-                                                    <i class="bi bi-pencil-square me-1"></i>Update Status
-                                                </a>
+                                                <div class="btn-action-group justify-content-end">
+                                                    <a href="<?= BASE_URL; ?>manager/house_edit.php?id=<?= (int)$h['id']; ?>" class="btn-action btn-action-edit" title="Update Units & Status">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                    <a href="<?= BASE_URL; ?>house_details.php?id=<?= (int)$h['id']; ?>" target="_blank" class="btn-action btn-action-view" title="Preview Public Listing">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

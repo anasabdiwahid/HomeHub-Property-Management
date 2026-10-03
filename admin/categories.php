@@ -91,9 +91,15 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="row g-4">
                 <!-- Add Category Form -->
                 <div class="col-lg-4">
-                    <div class="card shadow-sm sticky-top" style="top: 90px;">
-                        <div class="card-header">
-                            <h6 class="mb-0 fw-bold"><i class="bi bi-tag-fill text-primary me-2"></i>Add New Category</h6>
+                    <div class="card shadow-sm sticky-top" style="top: 90px; border-top: 4px solid var(--hh-gold) !important;">
+                        <div class="card-header bg-transparent d-flex align-items-center">
+                            <div class="card-header-icon bg-primary-subtle text-primary">
+                                <i class="bi bi-tag-fill"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Add New Category</h6>
+                                <small class="text-muted">Create property classification</small>
+                            </div>
                         </div>
                         <div class="card-body">
                             <form method="POST" action="<?= BASE_URL; ?>admin/categories.php">
@@ -102,16 +108,20 @@ require_once __DIR__ . '/../includes/header.php';
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold small">Category Name <span class="text-danger">*</span></label>
-                                    <input type="text" name="category_name" class="form-control" placeholder="e.g. Commercial Plaza" required>
+                                    <div class="input-icon-group">
+                                        <i class="bi bi-card-heading input-icon-prefix"></i>
+                                        <input type="text" name="category_name" class="form-control" placeholder="e.g. Commercial Plaza" required>
+                                    </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold small">Description</label>
-                                    <textarea name="description" rows="3" class="form-control" placeholder="Brief summary of this property type..."></textarea>
+                                    <textarea name="description" rows="3" class="form-control" placeholder="Brief summary of amenities, unit structures or layout..."></textarea>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="bi bi-plus-circle me-1"></i>Create Category
+                                <button type="submit" class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2 shadow-sm">
+                                    <i class="bi bi-plus-circle-fill text-gold"></i>
+                                    <span>Create Category</span>
                                 </button>
                             </form>
                         </div>
@@ -121,51 +131,81 @@ require_once __DIR__ . '/../includes/header.php';
                 <!-- Categories List -->
                 <div class="col-lg-8">
                     <div class="card shadow-sm">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0 fw-bold">All Categories (<?= count($categories); ?>)</h6>
+                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center py-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="card-header-icon bg-primary-subtle text-primary">
+                                    <i class="bi bi-collection-fill"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">Property Categories</h6>
+                                    <small class="text-muted">Classifications used for filtering & listings</small>
+                                </div>
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill font-monospace">
+                                <i class="bi bi-tags me-1"></i><?= count($categories); ?> Categories
+                            </span>
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Category Name</th>
+                                            <th style="width: 50px;">#</th>
+                                            <th>Category</th>
                                             <th>Description</th>
-                                            <th>Houses</th>
-                                            <th class="text-end">Actions</th>
+                                            <th style="width: 140px;">Properties</th>
+                                            <th class="text-end" style="width: 110px;">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php if (empty($categories)): ?>
                                             <tr>
-                                                <td colspan="5" class="text-center py-4 text-muted">No categories created yet.</td>
+                                                <td colspan="5" class="text-center py-5 text-muted">
+                                                    <i class="bi bi-tags fs-1 d-block mb-2 text-muted opacity-50"></i>
+                                                    No categories created yet. Fill the form to add one.
+                                                </td>
                                             </tr>
                                         <?php else: ?>
                                             <?php foreach ($categories as $index => $cat): ?>
+                                                <?php $meta = category_icon_meta($cat['category_name']); ?>
                                                 <tr>
-                                                    <td><?= $index + 1; ?></td>
-                                                    <td class="fw-bold text-main"><?= e($cat['category_name']); ?></td>
-                                                    <td class="text-muted small"><?= e($cat['description'] ?? '-'); ?></td>
+                                                    <td class="text-muted small fw-semibold"><?= $index + 1; ?></td>
                                                     <td>
-                                                        <span class="badge bg-primary-subtle text-primary">
-                                                            <?= (int)$cat['house_count']; ?> properties
+                                                        <div class="d-flex align-items-center gap-3">
+                                                            <div class="category-avatar <?= $meta['class']; ?>">
+                                                                <i class="bi <?= $meta['icon']; ?>"></i>
+                                                            </div>
+                                                            <div>
+                                                                <div class="fw-bold text-main fs-6"><?= e($cat['category_name']); ?></div>
+                                                                <small class="text-muted font-monospace" style="font-size: 0.72rem;">ID #<?= (int)$cat['id']; ?></small>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-muted small" style="max-width: 280px; line-height: 1.5;">
+                                                        <?= e($cat['description'] ?? '-'); ?>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge-count-pill">
+                                                            <i class="bi bi-buildings text-primary"></i>
+                                                            <span><strong><?= (int)$cat['house_count']; ?></strong> <?= (int)$cat['house_count'] === 1 ? 'property' : 'properties'; ?></span>
                                                         </span>
                                                     </td>
                                                     <td class="text-end">
-                                                        <button type="button" class="btn btn-sm btn-outline-secondary me-1" 
-                                                                onclick="openEditCategoryModal(<?= (int)$cat['id']; ?>, '<?= e(addslashes($cat['category_name'])); ?>', '<?= e(addslashes($cat['description'] ?? '')); ?>')">
-                                                            <i class="bi bi-pencil"></i>
-                                                        </button>
-
-                                                        <form method="POST" action="<?= BASE_URL; ?>admin/categories.php" class="d-inline" onsubmit="return confirm('Are you sure you want to delete category \'<?= e($cat['category_name']); ?>\'?');">
-                                                            <?= csrf_field(); ?>
-                                                            <input type="hidden" name="action" value="delete">
-                                                            <input type="hidden" name="category_id" value="<?= (int)$cat['id']; ?>">
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger" <?= (int)$cat['house_count'] > 0 ? 'disabled title="Cannot delete category with houses"' : ''; ?>>
-                                                                <i class="bi bi-trash"></i>
+                                                        <div class="btn-action-group justify-content-end">
+                                                            <button type="button" class="btn-action btn-action-edit" title="Edit Category" 
+                                                                    onclick="openEditCategoryModal(<?= (int)$cat['id']; ?>, '<?= e(addslashes($cat['category_name'])); ?>', '<?= e(addslashes($cat['description'] ?? '')); ?>')">
+                                                                <i class="bi bi-pencil-square"></i>
                                                             </button>
-                                                        </form>
+
+                                                            <form method="POST" action="<?= BASE_URL; ?>admin/categories.php" class="d-inline" onsubmit="return confirm('Are you sure you want to delete category \'<?= e($cat['category_name']); ?>\'?');">
+                                                                <?= csrf_field(); ?>
+                                                                <input type="hidden" name="action" value="delete">
+                                                                <input type="hidden" name="category_id" value="<?= (int)$cat['id']; ?>">
+                                                                <button type="submit" class="btn-action btn-action-delete" title="Delete Category" <?= (int)$cat['house_count'] > 0 ? 'disabled title="Cannot delete category with assigned houses"' : ''; ?>>
+                                                                    <i class="bi bi-trash3"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
@@ -183,29 +223,43 @@ require_once __DIR__ . '/../includes/header.php';
 
 <!-- Edit Category Modal -->
 <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <form method="POST" action="<?= BASE_URL; ?>admin/categories.php" class="modal-content">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="POST" action="<?= BASE_URL; ?>admin/categories.php" class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
             <?= csrf_field(); ?>
             <input type="hidden" name="action" value="edit">
             <input type="hidden" name="category_id" id="edit_cat_id">
 
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold">Edit Category</h5>
+            <div class="modal-header border-bottom py-3">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="card-header-icon bg-warning-subtle text-warning mb-0">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0">Edit Category</h5>
+                        <small class="text-muted">Update classification details</small>
+                    </div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-4">
                 <div class="mb-3">
                     <label class="form-label fw-semibold small">Category Name <span class="text-danger">*</span></label>
-                    <input type="text" name="category_name" id="edit_cat_name" class="form-control" required>
+                    <div class="input-icon-group">
+                        <i class="bi bi-card-heading input-icon-prefix"></i>
+                        <input type="text" name="category_name" id="edit_cat_name" class="form-control" required>
+                    </div>
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label fw-semibold small">Description</label>
                     <textarea name="description" id="edit_cat_desc" rows="3" class="form-control"></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+            <div class="modal-footer border-top py-3 bg-body-tertiary">
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm px-4">
+                    <i class="bi bi-check2-circle me-1 text-gold"></i>Save Changes
+                </button>
             </div>
         </form>
     </div>

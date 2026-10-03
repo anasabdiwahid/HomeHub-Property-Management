@@ -17,7 +17,7 @@ $managerId = (int)$currentUser['id'];
 
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ? LIMIT 1");
 $stmt->execute([$managerId]);
-$user = $stmt->fetch();
+$user = $stmt->fetch() ?: $currentUser;
 
 $errors = [];
 
@@ -88,7 +88,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <div class="col-lg-4">
                     <div class="card shadow-sm text-center p-4">
                         <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold mx-auto mb-3 shadow" style="width: 80px; height: 80px; font-size: 2rem;">
-                            <?= strtoupper(substr($user['name'], 0, 1)); ?>
+                            <?= strtoupper(substr($user['name'] ?? 'Manager', 0, 1)); ?>
                         </div>
                         <h5 class="fw-bold mb-1"><?= e($user['name']); ?></h5>
                         <div class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 mb-3 text-uppercase">
@@ -145,7 +145,7 @@ require_once __DIR__ . '/../includes/header.php';
 
                                 <div class="mb-3">
                                     <label class="form-label fw-semibold small">Phone Number (EVC Plus / Telesom)</label>
-                                    <input type="text" name="phone" class="form-control" value="<?= e($_POST['phone'] ?? $user['phone']); ?>" placeholder="+252 61 XXXXXXX">
+                                    <input type="text" name="phone" class="form-control" value="<?= e($_POST['phone'] ?? $user['phone'] ?? ''); ?>" placeholder="+252 61 XXXXXXX">
                                 </div>
 
                                 <hr class="my-4">

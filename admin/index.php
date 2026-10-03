@@ -285,7 +285,10 @@ require_once __DIR__ . '/../includes/header.php';
                                     <tbody>
                                         <?php if (empty($recentRequests)): ?>
                                             <tr>
-                                                <td colspan="5" class="text-center text-muted py-4">No rental requests found.</td>
+                                                <td colspan="5" class="text-center py-4 text-muted">
+                                                    <i class="bi bi-inbox opacity-50 fs-3 d-block mb-1"></i>
+                                                    <span class="small">No rental requests submitted yet.</span>
+                                                </td>
                                             </tr>
                                         <?php else: ?>
                                             <?php foreach ($recentRequests as $req): ?>
@@ -301,7 +304,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                     <td class="fw-semibold"><?= format_currency($req['rent_price'], $currency); ?></td>
                                                     <td><?= status_badge($req['status']); ?></td>
                                                     <td class="text-end">
-                                                        <a href="<?= BASE_URL; ?>admin/rental_requests.php" class="btn btn-sm btn-outline-secondary py-1 px-2">
+                                                        <a href="<?= BASE_URL; ?>admin/rental_requests.php" class="btn-action btn-action-view" title="Review Application">
                                                             <i class="bi bi-eye"></i>
                                                         </a>
                                                     </td>
@@ -335,7 +338,10 @@ require_once __DIR__ . '/../includes/header.php';
                                     <tbody>
                                         <?php if (empty($recentPayments)): ?>
                                             <tr>
-                                                <td colspan="3" class="text-center text-muted py-4">No recent collections recorded.</td>
+                                                <td colspan="3" class="text-center py-4 text-muted">
+                                                    <i class="bi bi-receipt-cutoff opacity-50 fs-3 d-block mb-1"></i>
+                                                    <span class="small">No recent collections recorded yet.</span>
+                                                </td>
                                             </tr>
                                         <?php else: ?>
                                             <?php foreach ($recentPayments as $pay): ?>

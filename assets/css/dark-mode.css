@@ -142,3 +142,69 @@
 [data-bs-theme="dark"] .sidebar .brand .brand-logo-img {
     background: #ffffff;
 }
+
+/* Dark Mode Overrides for Action Buttons & Category Avatars */
+[data-bs-theme="dark"] .btn-action-edit {
+    background: rgba(229, 169, 59, 0.15);
+    color: #e5a93b;
+}
+[data-bs-theme="dark"] .btn-action-edit:hover {
+    background: #e5a93b;
+    color: #07121e;
+}
+
+[data-bs-theme="dark"] .btn-action-delete {
+    background: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+}
+[data-bs-theme="dark"] .btn-action-delete:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+[data-bs-theme="dark"] .btn-action-view {
+    background: rgba(2, 132, 199, 0.18);
+    color: #38bdf8;
+}
+[data-bs-theme="dark"] .btn-action-view:hover {
+    background: #0284c7;
+    color: #ffffff;
+}
+
+[data-bs-theme="dark"] .btn-action-approve {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+}
+[data-bs-theme="dark"] .btn-action-approve:hover {
+    background: #10b981;
+    color: #ffffff;
+}
+
+[data-bs-theme="dark"] .btn-action-reject {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+}
+[data-bs-theme="dark"] .btn-action-reject:hover {
+    background: #f59e0b;
+    color: #ffffff;
+}
+
+[data-bs-theme="dark"] .empty-state-icon {
+    background: rgba(229, 169, 59, 0.1);
+    color: #e5a93b;
+    box-shadow: inset 0 0 0 1px rgba(229, 169, 59, 0.2);
+}
+
+[data-bs-theme="dark"] .cat-icon-apartment { background: rgba(2, 132, 199, 0.2); color: #38bdf8; }
+[data-bs-theme="dark"] .cat-icon-villa     { background: rgba(229, 169, 59, 0.2); color: #fbbf24; }
+[data-bs-theme="dark"] .cat-icon-office    { background: rgba(124, 58, 237, 0.2); color: #c084fc; }
+[data-bs-theme="dark"] .cat-icon-townhouse { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+[data-bs-theme="dark"] .cat-icon-studio    { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+[data-bs-theme="dark"] .cat-icon-default   { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+
+[data-bs-theme="dark"] .badge-count-pill {
+    background: #071524;
+    color: #cbd8e7;
+    border-color: #1a3658;
+}
+

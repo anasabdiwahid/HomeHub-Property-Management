@@ -144,7 +144,18 @@ require_once __DIR__ . '/../includes/header.php';
                             <tbody>
                                 <?php if (empty($users)): ?>
                                     <tr>
-                                        <td colspan="6" class="text-center py-5 text-muted">No registered tenants found.</td>
+                                        <td colspan="6">
+                                            <div class="empty-state">
+                                                <div class="empty-state-icon">
+                                                    <i class="bi bi-people"></i>
+                                                </div>
+                                                <h6 class="empty-state-title">No Registered Tenants Found</h6>
+                                                <p class="empty-state-text">No tenants are registered in the system yet. Tenants can register via public portal or you can manually add them.</p>
+                                                <button type="button" class="btn btn-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                                    <i class="bi bi-person-plus-fill me-1"></i>Add New Tenant
+                                                </button>
+                                            </div>
+                                        </td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($users as $u): ?>
@@ -192,18 +203,20 @@ require_once __DIR__ . '/../includes/header.php';
                                                 <?= format_date($u['created_at'], 'd M Y'); ?>
                                             </td>
                                             <td class="text-end">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary me-1"
-                                                        onclick="openEditUserModal(<?= (int)$u['id']; ?>, '<?= e(addslashes($u['name'])); ?>', '<?= e(addslashes($u['email'])); ?>', '<?= e(addslashes($u['phone'] ?? '')); ?>')">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <form method="POST" action="<?= BASE_URL; ?>admin/users.php" class="d-inline" onsubmit="return confirm('Are you sure you want to remove user \'<?= e($u['name']); ?>\'?');">
-                                                    <?= csrf_field(); ?>
-                                                    <input type="hidden" name="action" value="delete">
-                                                    <input type="hidden" name="user_id" value="<?= (int)$u['id']; ?>">
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                        <i class="bi bi-trash"></i>
+                                                <div class="btn-action-group justify-content-end">
+                                                    <button type="button" class="btn-action btn-action-edit" title="Edit Tenant"
+                                                            onclick="openEditUserModal(<?= (int)$u['id']; ?>, '<?= e(addslashes($u['name'])); ?>', '<?= e(addslashes($u['email'])); ?>', '<?= e(addslashes($u['phone'] ?? '')); ?>')">
+                                                        <i class="bi bi-pencil-square"></i>
                                                     </button>
-                                                </form>
+                                                    <form method="POST" action="<?= BASE_URL; ?>admin/users.php" class="d-inline" onsubmit="return confirm('Are you sure you want to remove user \'<?= e($u['name']); ?>\'?');">
+                                                        <?= csrf_field(); ?>
+                                                        <input type="hidden" name="action" value="delete">
+                                                        <input type="hidden" name="user_id" value="<?= (int)$u['id']; ?>">
+                                                        <button type="submit" class="btn-action btn-action-delete" title="Delete Tenant">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

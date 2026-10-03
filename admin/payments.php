@@ -205,7 +205,13 @@ require_once __DIR__ . '/../includes/header.php';
             <!-- Payments Table -->
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold">Payments Ledger (<?= count($payments); ?>)</h6>
+                    <div class="d-flex align-items-center">
+                        <span class="card-header-icon bg-success text-white"><i class="bi bi-wallet2"></i></span>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Payments Ledger</h6>
+                            <small class="text-muted"><?= count($payments); ?> transactions logged</small>
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV('paymentsTable', 'payments_ledger.csv')">
                         <i class="bi bi-file-earmark-arrow-down me-1"></i>Export CSV
                     </button>
@@ -228,7 +234,15 @@ require_once __DIR__ . '/../includes/header.php';
                             <tbody>
                                 <?php if (empty($payments)): ?>
                                     <tr>
-                                        <td colspan="8" class="text-center py-5 text-muted">No payment records found.</td>
+                                        <td colspan="8">
+                                            <div class="empty-state">
+                                                <div class="empty-state-icon">
+                                                    <i class="bi bi-receipt-cutoff"></i>
+                                                </div>
+                                                <h6 class="empty-state-title">No Payment Records Found</h6>
+                                                <p class="empty-state-text">No rent collection transactions recorded yet. Click "Record Rent" to log a new receipt.</p>
+                                            </div>
+                                        </td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($payments as $p): ?>
@@ -263,14 +277,16 @@ require_once __DIR__ . '/../includes/header.php';
                                                 <?= e($p['notes'] ?? '-'); ?>
                                             </td>
                                             <td class="text-end no-export">
-                                                <form method="POST" action="<?= BASE_URL; ?>admin/payments.php" class="d-inline" onsubmit="return confirm('Delete this payment record permanently?');">
-                                                    <?= csrf_field(); ?>
-                                                    <input type="hidden" name="action" value="delete">
-                                                    <input type="hidden" name="payment_id" value="<?= (int)$p['id']; ?>">
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Payment">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </form>
+                                                <div class="btn-action-group justify-content-end">
+                                                    <form method="POST" action="<?= BASE_URL; ?>admin/payments.php" class="d-inline" onsubmit="return confirm('Delete this payment record permanently?');">
+                                                        <?= csrf_field(); ?>
+                                                        <input type="hidden" name="action" value="delete">
+                                                        <input type="hidden" name="payment_id" value="<?= (int)$p['id']; ?>">
+                                                        <button type="submit" class="btn-action btn-action-delete" title="Delete Payment Record">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

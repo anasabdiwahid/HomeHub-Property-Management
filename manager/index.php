@@ -258,7 +258,12 @@ require_once __DIR__ . '/../includes/header.php';
                                     </thead>
                                     <tbody>
                                         <?php if (empty($recentRequests)): ?>
-                                            <tr><td colspan="4" class="text-center py-4 text-muted">No rental requests for your houses.</td></tr>
+                                            <tr>
+                                                <td colspan="4" class="text-center py-4 text-muted">
+                                                    <i class="bi bi-inbox opacity-50 fs-3 d-block mb-1"></i>
+                                                    <span class="small">No rental requests for your houses.</span>
+                                                </td>
+                                            </tr>
                                         <?php else: ?>
                                             <?php foreach ($recentRequests as $req): ?>
                                                 <tr>
@@ -272,7 +277,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                     </td>
                                                     <td><?= status_badge($req['status']); ?></td>
                                                     <td class="text-end">
-                                                        <a href="<?= BASE_URL; ?>manager/rental_requests.php" class="btn btn-sm btn-outline-secondary py-1 px-2">
+                                                        <a href="<?= BASE_URL; ?>manager/rental_requests.php" class="btn-action btn-action-view" title="Review Application">
                                                             <i class="bi bi-eye"></i>
                                                         </a>
                                                     </td>

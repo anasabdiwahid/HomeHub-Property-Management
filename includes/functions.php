@@ -203,3 +203,22 @@ function delete_uploaded_image(?string $filename, string $subfolder = 'houses/')
     }
     return false;
 }
+
+/**
+ * Returns icon and styling metadata for property category
+ */
+function category_icon_meta(?string $categoryName): array {
+    $name = strtolower(trim((string)$categoryName));
+    if (str_contains($name, 'apartment')) {
+        return ['icon' => 'bi-building', 'class' => 'cat-icon-apartment', 'color' => '#0284c7'];
+    } elseif (str_contains($name, 'villa')) {
+        return ['icon' => 'bi-gem', 'class' => 'cat-icon-villa', 'color' => '#d97706'];
+    } elseif (str_contains($name, 'office') || str_contains($name, 'commercial')) {
+        return ['icon' => 'bi-briefcase', 'class' => 'cat-icon-office', 'color' => '#7c3aed'];
+    } elseif (str_contains($name, 'townhouse')) {
+        return ['icon' => 'bi-houses', 'class' => 'cat-icon-townhouse', 'color' => '#059669'];
+    } elseif (str_contains($name, 'studio')) {
+        return ['icon' => 'bi-lamp', 'class' => 'cat-icon-studio', 'color' => '#ea580c'];
+    }
+    return ['icon' => 'bi-tag', 'class' => 'cat-icon-default', 'color' => '#102a45'];
+}

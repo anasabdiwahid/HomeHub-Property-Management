@@ -133,9 +133,15 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
 
             <!-- Houses Table -->
-            <div class="card">
+            <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold">Properties List (<?= count($houses); ?>)</h6>
+                    <div class="d-flex align-items-center">
+                        <span class="card-header-icon bg-primary text-white"><i class="bi bi-houses"></i></span>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Properties Directory</h6>
+                            <small class="text-muted"><?= count($houses); ?> properties registered</small>
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV('housesTable', 'houses_list.csv')">
                         <i class="bi bi-file-earmark-arrow-down me-1"></i>Export CSV
                     </button>
@@ -158,9 +164,17 @@ require_once __DIR__ . '/../includes/header.php';
                             <tbody>
                                 <?php if (empty($houses)): ?>
                                     <tr>
-                                        <td colspan="8" class="text-center py-5 text-muted">
-                                            <i class="bi bi-house-slash fs-1 d-block mb-2"></i>
-                                            No houses found matching your criteria.
+                                        <td colspan="8">
+                                            <div class="empty-state">
+                                                <div class="empty-state-icon">
+                                                    <i class="bi bi-houses"></i>
+                                                </div>
+                                                <h6 class="empty-state-title">No Properties Listed Yet</h6>
+                                                <p class="empty-state-text">Your property portfolio is currently empty. Click "Add House" above to list your first Mogadishu property.</p>
+                                                <a href="<?= BASE_URL; ?>admin/house_add.php" class="btn btn-primary btn-sm mt-3">
+                                                    <i class="bi bi-plus-lg me-1"></i>Add New House
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php else: ?>
@@ -213,15 +227,15 @@ require_once __DIR__ . '/../includes/header.php';
                                                 </div>
                                             </td>
                                             <td class="text-end no-export">
-                                                <div class="btn-group btn-group-sm">
-                                                    <a href="<?= BASE_URL; ?>admin/house_edit.php?id=<?= (int)$h['id']; ?>" class="btn btn-outline-secondary" title="Edit House">
-                                                        <i class="bi bi-pencil"></i>
+                                                <div class="btn-action-group justify-content-end">
+                                                    <a href="<?= BASE_URL; ?>admin/house_edit.php?id=<?= (int)$h['id']; ?>" class="btn-action btn-action-edit" title="Edit Property">
+                                                        <i class="bi bi-pencil-square"></i>
                                                     </a>
                                                     <form method="POST" action="<?= BASE_URL; ?>admin/house_delete.php" class="d-inline" onsubmit="return confirm('Are you sure you want to delete \'<?= e($h['house_name']); ?>\'? This action cannot be undone.');">
                                                         <?= csrf_field(); ?>
                                                         <input type="hidden" name="id" value="<?= (int)$h['id']; ?>">
-                                                        <button type="submit" class="btn btn-outline-danger" title="Delete House">
-                                                            <i class="bi bi-trash"></i>
+                                                        <button type="submit" class="btn-action btn-action-delete" title="Delete Property">
+                                                            <i class="bi bi-trash3"></i>
                                                         </button>
                                                     </form>
                                                 </div>

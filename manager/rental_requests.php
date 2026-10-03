@@ -142,16 +142,16 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
                 <div class="btn-group" role="group">
                     <a href="<?= BASE_URL; ?>manager/rental_requests.php" class="btn btn-sm <?= empty($statusFilter) ? 'btn-primary' : 'btn-outline-secondary'; ?>">
-                        All (<?= (int)($counts['total'] ?? 0); ?>)
+                        <i class="bi bi-collection me-1"></i>All (<?= (int)($counts['total'] ?? 0); ?>)
                     </a>
                     <a href="<?= BASE_URL; ?>manager/rental_requests.php?status=pending" class="btn btn-sm <?= $statusFilter === 'pending' ? 'btn-warning text-dark' : 'btn-outline-secondary'; ?>">
-                        Pending (<?= (int)($counts['pending'] ?? 0); ?>)
+                        <i class="bi bi-clock-history me-1"></i>Pending (<?= (int)($counts['pending'] ?? 0); ?>)
                     </a>
                     <a href="<?= BASE_URL; ?>manager/rental_requests.php?status=approved" class="btn btn-sm <?= $statusFilter === 'approved' ? 'btn-success' : 'btn-outline-secondary'; ?>">
-                        Approved (<?= (int)($counts['approved'] ?? 0); ?>)
+                        <i class="bi bi-check-circle me-1"></i>Approved (<?= (int)($counts['approved'] ?? 0); ?>)
                     </a>
                     <a href="<?= BASE_URL; ?>manager/rental_requests.php?status=rejected" class="btn btn-sm <?= $statusFilter === 'rejected' ? 'btn-danger' : 'btn-outline-secondary'; ?>">
-                        Rejected (<?= (int)($counts['rejected'] ?? 0); ?>)
+                        <i class="bi bi-x-circle me-1"></i>Rejected (<?= (int)($counts['rejected'] ?? 0); ?>)
                     </a>
                 </div>
 
@@ -159,15 +159,27 @@ require_once __DIR__ . '/../includes/header.php';
                     <?php if (!empty($statusFilter)): ?>
                         <input type="hidden" name="status" value="<?= e($statusFilter); ?>">
                     <?php endif; ?>
-                    <input type="text" name="search" class="form-control form-control-sm" placeholder="Search applicant..." value="<?= e($search); ?>" style="width: 200px;">
-                    <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-search"></i></button>
+                    <div class="input-icon-group">
+                        <i class="bi bi-search input-icon-prefix"></i>
+                        <input type="text" name="search" class="form-control form-control-sm" placeholder="Search applicant..." value="<?= e($search); ?>" style="width: 220px;">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-arrow-right"></i></button>
+                    <?php if (!empty($search)): ?>
+                        <a href="<?= BASE_URL; ?>manager/rental_requests.php<?= !empty($statusFilter) ? '?status=' . e($statusFilter) : ''; ?>" class="btn btn-outline-secondary btn-sm" title="Clear Search"><i class="bi bi-x-lg"></i></a>
+                    <?php endif; ?>
                 </form>
             </div>
 
             <!-- Table -->
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold">Applications (<?= count($requests); ?>)</h6>
+                    <div class="d-flex align-items-center">
+                        <span class="card-header-icon bg-primary text-white"><i class="bi bi-file-earmark-text"></i></span>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Applications Ledger</h6>
+                            <small class="text-muted"><?= count($requests); ?> rental requests under review</small>
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV('managerRequestsTable', 'my_rental_requests.csv')">
                         <i class="bi bi-file-earmark-arrow-down me-1"></i>Export CSV
                     </button>
@@ -189,7 +201,17 @@ require_once __DIR__ . '/../includes/header.php';
                             </thead>
                             <tbody>
                                 <?php if (empty($requests)): ?>
-                                    <tr><td colspan="8" class="text-center py-5 text-muted">No rental requests found for your properties.</td></tr>
+                                    <tr>
+                                        <td colspan="8">
+                                            <div class="empty-state">
+                                                <div class="empty-state-icon">
+                                                    <i class="bi bi-inbox"></i>
+                                                </div>
+                                                <h6 class="empty-state-title">No Rental Applications Found</h6>
+                                                <p class="empty-state-text">No rental applications currently registered for your assigned properties.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 <?php else: ?>
                                     <?php foreach ($requests as $r): ?>
                                         <tr>
@@ -209,14 +231,14 @@ require_once __DIR__ . '/../includes/header.php';
                                                 <?= e($r['request_note'] ?? $r['admin_notes'] ?? '-'); ?>
                                             </td>
                                             <td class="text-end no-export">
-                                                <div class="btn-group btn-group-sm">
+                                                <div class="btn-action-group justify-content-end">
                                                     <?php if ($r['status'] !== 'approved'): ?>
-                                                        <button type="button" class="btn btn-outline-success" onclick="openActionModal('approve', <?= (int)$r['id']; ?>, '<?= e(addslashes($r['user_name'])); ?>', '<?= e(addslashes($r['house_name'])); ?>')" title="Approve">
+                                                        <button type="button" class="btn-action btn-action-approve" onclick="openActionModal('approve', <?= (int)$r['id']; ?>, '<?= e(addslashes($r['user_name'])); ?>', '<?= e(addslashes($r['house_name'])); ?>')" title="Approve Application">
                                                             <i class="bi bi-check-lg"></i>
                                                         </button>
                                                     <?php endif; ?>
                                                     <?php if ($r['status'] !== 'rejected'): ?>
-                                                        <button type="button" class="btn btn-outline-danger" onclick="openActionModal('reject', <?= (int)$r['id']; ?>, '<?= e(addslashes($r['user_name'])); ?>', '<?= e(addslashes($r['house_name'])); ?>')" title="Reject">
+                                                        <button type="button" class="btn-action btn-action-reject" onclick="openActionModal('reject', <?= (int)$r['id']; ?>, '<?= e(addslashes($r['user_name'])); ?>', '<?= e(addslashes($r['house_name'])); ?>')" title="Reject Application">
                                                             <i class="bi bi-x-lg"></i>
                                                         </button>
                                                     <?php endif; ?>

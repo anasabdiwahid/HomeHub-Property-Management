@@ -109,7 +109,13 @@ require_once __DIR__ . '/../includes/header.php';
             <!-- Ledger Table -->
             <div class="card shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 fw-bold">Collections Ledger (<?= count($payments); ?>)</h6>
+                    <div class="d-flex align-items-center">
+                        <span class="card-header-icon bg-success text-white"><i class="bi bi-wallet2"></i></span>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Collections Ledger</h6>
+                            <small class="text-muted"><?= count($payments); ?> payments recorded</small>
+                        </div>
+                    </div>
                     <button type="button" class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV('managerPaymentsTable', 'my_rent_collections.csv')">
                         <i class="bi bi-file-earmark-arrow-down me-1"></i>Export CSV
                     </button>
@@ -130,7 +136,17 @@ require_once __DIR__ . '/../includes/header.php';
                             </thead>
                             <tbody>
                                 <?php if (empty($payments)): ?>
-                                    <tr><td colspan="7" class="text-center py-5 text-muted">No rent payments recorded yet for your properties.</td></tr>
+                                    <tr>
+                                        <td colspan="7">
+                                            <div class="empty-state">
+                                                <div class="empty-state-icon">
+                                                    <i class="bi bi-receipt-cutoff"></i>
+                                                </div>
+                                                <h6 class="empty-state-title">No Rent Collections Found</h6>
+                                                <p class="empty-state-text">No rent payments recorded yet for your assigned properties.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 <?php else: ?>
                                     <?php foreach ($payments as $p): ?>
                                         <tr>
