@@ -1,0 +1,177 @@
+<?php
+/**
+ * User My Rental Requests
+ * HomeHub Property Management System
+ * Top Navigation Only (No Sidebar)
+ */
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../includes/auth.php';
+
+require_role('user');
+
+$currentUser = current_user();
+$userId = (int)$currentUser['id'];
+$currency = get_setting($pdo, 'currency', '$');
+
+// Handle Cancel Request
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verify_csrf()) {
+        set_flash('danger', 'Invalid security token.');
+    } else {
+        $reqId = (int)($_POST['request_id'] ?? 0);
+        if ($reqId > 0) {
+            $stmt = $pdo->prepare("DELETE FROM rental_requests WHERE id = ? AND user_id = ? AND status = 'pending'");
+            $stmt->execute([$reqId, $userId]);
+            set_flash('success', 'Rental application cancelled.');
+        }
+    }
+    header('Location: ' . BASE_URL . 'user/my_requests.php');
+    exit;
+}
+
+$stmt = $pdo->prepare("
+    SELECT r.*, h.house_name, h.house_code, h.city, h.address, h.rent_price, h.image,
+           c.category_name, mgr.name as manager_name, mgr.phone as manager_phone
+    FROM rental_requests r
+    JOIN houses h ON r.house_id = h.id
+    JOIN categories c ON h.category_id = c.id
+    LEFT JOIN users mgr ON h.manager_id = mgr.id
+    WHERE r.user_id = ?
+    ORDER BY r.id DESC
+");
+$stmt->execute([$userId]);
+$requests = $stmt->fetchAll();
+
+$pageTitle = 'My Rental Requests - HomeHub';
+require_once __DIR__ . '/../includes/header.php';
+?>
+
+<!-- User Top Navigation (No Sidebar) -->
+<?php require_once __DIR__ . '/../includes/user_navbar.php'; ?>
+
+<main class="content-wrapper container py-4">
+    <?= display_flash(); ?>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
+        <div>
+            <h3 class="fw-bold mb-1">My Rental Applications</h3>
+            <p class="text-muted small mb-0">Track the status of your submitted property rental inquiries</p>
+        </div>
+        <a href="<?= BASE_URL; ?>user/index.php" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-search me-1"></i>Browse More Houses
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-transparent py-3">
+            <h6 class="mb-0 fw-bold">Application History (<?= count($requests); ?>)</h6>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Category & Degmada</th>
+                            <th>Monthly Rent</th>
+                            <th>Move-In Date</th>
+                            <th>Status</th>
+                            <th>Supervisor Response</th>
+                            <th>Applied Date</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($requests)): ?>
+                            <tr>
+                                <td colspan="8" class="text-center py-5 text-muted">
+                                    <i class="bi bi-file-earmark-x fs-1 d-block mb-2"></i>
+                                    You have not submitted any rental inquiries yet.<br>
+                                    <a href="<?= BASE_URL; ?>user/index.php" class="btn btn-primary btn-sm mt-3">
+                                        Browse Available Houses
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($requests as $r): ?>
+                                <?php 
+                                    $imgUrl = !empty($r['image']) && file_exists(UPLOAD_DIR . 'houses/' . $r['image'])
+                                        ? UPLOAD_URL . 'houses/' . e($r['image'])
+                                        : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=120&q=80';
+                                ?>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img src="<?= $imgUrl; ?>" alt="House" class="rounded-2 object-fit-cover shadow-sm" style="width: 50px; height: 40px;">
+                                            <div>
+                                                <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$r['house_id']; ?>" class="fw-bold text-main text-decoration-none">
+                                                    <?= e($r['house_name']); ?>
+                                                </a>
+                                                <div class="small text-muted font-monospace"><?= e($r['house_code']); ?></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div><span class="badge bg-primary-subtle text-primary"><?= e($r['category_name']); ?></span></div>
+                                        <small class="text-muted"><i class="bi bi-geo-alt me-1"></i><?= e($r['city']); ?></small>
+                                    </td>
+                                    <td class="fw-bold text-primary">
+                                        <?= format_currency($r['rent_price'], $currency); ?>
+                                    </td>
+                                    <td>
+                                        <?= !empty($r['move_in_date']) ? format_date($r['move_in_date']) : '<span class="text-muted small">Immediate</span>'; ?>
+                                    </td>
+                                    <td>
+                                        <?= status_badge($r['status']); ?>
+                                    </td>
+                                    <td class="small text-muted" style="max-width: 220px;">
+                                        <?php if (!empty($r['admin_notes'])): ?>
+                                            <span class="text-dark fw-semibold"><?= e($r['admin_notes']); ?></span>
+                                        <?php else: ?>
+                                            <span class="fst-italic">Under review by property manager</span>
+                                        <?php endif; ?>
+                                        <?php if (!empty($r['manager_phone']) && $r['status'] === 'approved'): ?>
+                                            <div class="mt-1">
+                                                <a href="tel:<?= e($r['manager_phone']); ?>" class="badge bg-success-subtle text-success text-decoration-none">
+                                                    <i class="bi bi-telephone me-1"></i>Call Manager: <?= e($r['manager_phone']); ?>
+                                                </a>
+                                            </div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="small text-muted">
+                                        <?= format_date($r['created_at']); ?>
+                                    </td>
+                                    <td class="text-end">
+                                        <?php if ($r['status'] === 'pending'): ?>
+                                            <form method="POST" action="<?= BASE_URL; ?>user/my_requests.php" class="d-inline" onsubmit="return confirm('Cancel this rental application?');">
+                                                <?= csrf_field(); ?>
+                                                <input type="hidden" name="request_id" value="<?= (int)$r['id']; ?>">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel Application">
+                                                    <i class="bi bi-x-circle me-1"></i>Cancel
+                                                </button>
+                                            </form>
+                                        <?php elseif ($r['status'] === 'approved'): ?>
+                                            <a href="<?= BASE_URL; ?>user/approved_rentals.php" class="btn btn-sm btn-success">
+                                                <i class="bi bi-patch-check me-1"></i>View Lease
+                                            </a>
+                                        <?php else: ?>
+                                            <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$r['house_id']; ?>" class="btn btn-sm btn-outline-secondary">
+                                                Re-apply
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

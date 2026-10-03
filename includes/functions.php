@@ -1,0 +1,205 @@
+<?php
+/**
+ * Utility Functions & Helpers
+ * HomeHub Property Management System
+ */
+
+declare(strict_types=1);
+
+/**
+ * Returns the list of Mogadishu districts (Degmooyinka Muqdisho)
+ */
+function mogadishu_districts(): array {
+    return [
+        'Hodan',
+        'Wadajir',
+        'Waaberi',
+        'Cabdicasiis',
+        'Howlwadaag',
+        'Xamar Weyne',
+        'Xamar Jajab',
+        'Darusalaam',
+        'Dharkenley',
+        'Deyniile',
+        'Boondheere',
+        'Shibis',
+        'Shangaani',
+        'Yaaqshiid',
+        'Kaaraan',
+        'Warta Nabadda',
+        'Kaxda',
+        'Huriwaa'
+    ];
+}
+
+/**
+ * Escapes HTML characters to prevent XSS
+ */
+function e(?string $string): string {
+    return htmlspecialchars((string)($string ?? ''), ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Renders a hidden CSRF token input
+ */
+function csrf_field(): string {
+    $token = $_SESSION['csrf_token'] ?? '';
+    return '<input type="hidden" name="csrf_token" value="' . e($token) . '">';
+}
+
+/**
+ * Verifies the CSRF token on POST requests
+ */
+function verify_csrf(): bool {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $token = $_POST['csrf_token'] ?? '';
+        if (empty($token) || empty($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $token)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Sets a flash message to display on the next page
+ */
+function set_flash(string $type, string $message): void {
+    $_SESSION['flash'] = [
+        'type'    => $type, // success, danger, warning, info
+        'message' => $message
+    ];
+}
+
+/**
+ * Renders and clears flash message HTML if present
+ */
+function display_flash(): string {
+    if (!empty($_SESSION['flash'])) {
+        $type = e($_SESSION['flash']['type']);
+        $msg = e($_SESSION['flash']['message']);
+        unset($_SESSION['flash']);
+
+        $icon = match($type) {
+            'success' => 'bi-check-circle-fill',
+            'danger'  => 'bi-exclamation-octagon-fill',
+            'warning' => 'bi-exclamation-triangle-fill',
+            default   => 'bi-info-circle-fill'
+        };
+
+        return '<div class="alert alert-' . $type . ' alert-dismissible fade show d-flex align-items-center mb-4" role="alert">
+                    <i class="bi ' . $icon . ' me-2 fs-5"></i>
+                    <div class="flex-grow-1">' . $msg . '</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>';
+    }
+    return '';
+}
+
+/**
+ * Formats a currency amount
+ */
+function format_currency(float|int|string $amount, string $currency = '$'): string {
+    $num = (float)$amount;
+    return $currency . ' ' . number_format($num, 2);
+}
+
+/**
+ * Formats date string
+ */
+function format_date(?string $date, string $format = 'd M Y'): string {
+    if (!$date) return '-';
+    $timestamp = strtotime($date);
+    return $timestamp ? date($format, $timestamp) : '-';
+}
+
+/**
+ * Returns human-friendly relative time (e.g. "2 days ago")
+ */
+function time_ago(?string $datetime): string {
+    if (!$datetime) return '-';
+    $time = strtotime($datetime);
+    if (!$time) return '-';
+    $diff = time() - $time;
+
+    if ($diff < 60) return 'Just now';
+    if ($diff < 3600) return floor($diff / 60) . ' mins ago';
+    if ($diff < 86400) return floor($diff / 3600) . ' hrs ago';
+    if ($diff < 2592000) return floor($diff / 86400) . ' days ago';
+    return date('d M Y', $time);
+}
+
+/**
+ * Returns HTML badge for rental request status
+ */
+function status_badge(string $status): string {
+    $status = strtolower($status);
+    return match($status) {
+        'approved' => '<span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1"><i class="bi bi-check-circle me-1"></i>Approved</span>',
+        'pending'  => '<span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1"><i class="bi bi-clock-history me-1"></i>Pending</span>',
+        'rejected' => '<span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1"><i class="bi bi-x-circle me-1"></i>Rejected</span>',
+        default    => '<span class="badge bg-secondary px-2 py-1">' . e(ucfirst($status)) . '</span>'
+    };
+}
+
+/**
+ * Handle secure image upload
+ */
+function upload_image(array $file, string $subfolder = 'houses/'): array {
+    if (!isset($file['error']) || is_array($file['error'])) {
+        return ['success' => false, 'error' => 'Invalid file parameters.'];
+    }
+
+    if ($file['error'] === UPLOAD_ERR_NO_FILE) {
+        return ['success' => true, 'filename' => null];
+    }
+
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        return ['success' => false, 'error' => 'File upload error code: ' . $file['error']];
+    }
+
+    // Limit to 5MB
+    if ($file['size'] > 5 * 1024 * 1024) {
+        return ['success' => false, 'error' => 'Image size exceeds maximum limit of 5MB.'];
+    }
+
+    // Check MIME type
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime = $finfo->file($file['tmp_name']);
+    $allowed = [
+        'image/jpeg' => 'jpg',
+        'image/png'  => 'png',
+        'image/webp' => 'webp',
+        'image/gif'  => 'gif'
+    ];
+
+    if (!array_key_exists($mime, $allowed)) {
+        return ['success' => false, 'error' => 'Invalid image format. Allowed: JPG, PNG, WEBP, GIF.'];
+    }
+
+    $ext = $allowed[$mime];
+    $filename = 'house_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+    $targetDir = UPLOAD_DIR . trim($subfolder, '/\\') . DIRECTORY_SEPARATOR;
+
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0755, true);
+    }
+
+    $targetPath = $targetDir . $filename;
+    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+        return ['success' => false, 'error' => 'Failed to save uploaded image.'];
+    }
+
+    return ['success' => true, 'filename' => $filename];
+}
+
+/**
+ * Delete uploaded image
+ */
+function delete_uploaded_image(?string $filename, string $subfolder = 'houses/'): bool {
+    if (empty($filename)) return false;
+    $filePath = UPLOAD_DIR . trim($subfolder, '/\\') . DIRECTORY_SEPARATOR . basename($filename);
+    if (file_exists($filePath) && is_file($filePath)) {
+        return @unlink($filePath);
+    }
+    return false;
+}

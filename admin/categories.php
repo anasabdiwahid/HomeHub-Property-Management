@@ -1,0 +1,223 @@
+<?php
+/**
+ * Categories Management
+ * HomeHub Property Management System
+ */
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../includes/auth.php';
+
+require_role('admin');
+
+// Handle Actions (Add, Edit, Delete)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verify_csrf()) {
+        set_flash('danger', 'Invalid security token.');
+        header('Location: ' . BASE_URL . 'admin/categories.php');
+        exit;
+    }
+
+    $action = $_POST['action'] ?? '';
+
+    if ($action === 'add') {
+        $catName = trim($_POST['category_name'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+
+        if (empty($catName)) {
+            set_flash('danger', 'Category name is required.');
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO categories (category_name, description) VALUES (?, ?)");
+            $stmt->execute([$catName, $description]);
+            set_flash('success', 'Category "' . $catName . '" added successfully!');
+        }
+    } elseif ($action === 'edit') {
+        $catId = (int)($_POST['category_id'] ?? 0);
+        $catName = trim($_POST['category_name'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+
+        if ($catId <= 0 || empty($catName)) {
+            set_flash('danger', 'Valid Category ID and name are required.');
+        } else {
+            $stmt = $pdo->prepare("UPDATE categories SET category_name = ?, description = ? WHERE id = ?");
+            $stmt->execute([$catName, $description, $catId]);
+            set_flash('success', 'Category updated successfully!');
+        }
+    } elseif ($action === 'delete') {
+        $catId = (int)($_POST['category_id'] ?? 0);
+        if ($catId > 0) {
+            // Check if houses exist under this category
+            $count = (int)$pdo->query("SELECT COUNT(*) FROM houses WHERE category_id = {$catId}")->fetchColumn();
+            if ($count > 0) {
+                set_flash('danger', 'Cannot delete this category because ' . $count . ' house(s) are assigned to it.');
+            } else {
+                $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ?");
+                $stmt->execute([$catId]);
+                set_flash('success', 'Category deleted successfully!');
+            }
+        }
+    }
+
+    header('Location: ' . BASE_URL . 'admin/categories.php');
+    exit;
+}
+
+// Fetch categories with houses count
+$categories = $pdo->query("
+    SELECT c.*, COUNT(h.id) as house_count 
+    FROM categories c 
+    LEFT JOIN houses h ON c.id = h.category_id 
+    GROUP BY c.id 
+    ORDER BY c.id ASC
+")->fetchAll();
+
+$pageTitle = 'Categories Management';
+$pageHeading = 'Categories';
+$pageSubtitle = 'Manage property classifications (Apartments, Villas, Offices, Studios)';
+require_once __DIR__ . '/../includes/header.php';
+?>
+
+<div class="app-wrapper">
+    <?php require_once __DIR__ . '/../includes/admin_sidebar.php'; ?>
+
+    <div class="app-main">
+        <?php require_once __DIR__ . '/../includes/topbar.php'; ?>
+
+        <main class="content-wrapper">
+            <?= display_flash(); ?>
+
+            <div class="row g-4">
+                <!-- Add Category Form -->
+                <div class="col-lg-4">
+                    <div class="card shadow-sm sticky-top" style="top: 90px;">
+                        <div class="card-header">
+                            <h6 class="mb-0 fw-bold"><i class="bi bi-tag-fill text-primary me-2"></i>Add New Category</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="<?= BASE_URL; ?>admin/categories.php">
+                                <?= csrf_field(); ?>
+                                <input type="hidden" name="action" value="add">
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold small">Category Name <span class="text-danger">*</span></label>
+                                    <input type="text" name="category_name" class="form-control" placeholder="e.g. Commercial Plaza" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold small">Description</label>
+                                    <textarea name="description" rows="3" class="form-control" placeholder="Brief summary of this property type..."></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-plus-circle me-1"></i>Create Category
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories List -->
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-bold">All Categories (<?= count($categories); ?>)</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Category Name</th>
+                                            <th>Description</th>
+                                            <th>Houses</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (empty($categories)): ?>
+                                            <tr>
+                                                <td colspan="5" class="text-center py-4 text-muted">No categories created yet.</td>
+                                            </tr>
+                                        <?php else: ?>
+                                            <?php foreach ($categories as $index => $cat): ?>
+                                                <tr>
+                                                    <td><?= $index + 1; ?></td>
+                                                    <td class="fw-bold text-main"><?= e($cat['category_name']); ?></td>
+                                                    <td class="text-muted small"><?= e($cat['description'] ?? '-'); ?></td>
+                                                    <td>
+                                                        <span class="badge bg-primary-subtle text-primary">
+                                                            <?= (int)$cat['house_count']; ?> properties
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary me-1" 
+                                                                onclick="openEditCategoryModal(<?= (int)$cat['id']; ?>, '<?= e(addslashes($cat['category_name'])); ?>', '<?= e(addslashes($cat['description'] ?? '')); ?>')">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </button>
+
+                                                        <form method="POST" action="<?= BASE_URL; ?>admin/categories.php" class="d-inline" onsubmit="return confirm('Are you sure you want to delete category \'<?= e($cat['category_name']); ?>\'?');">
+                                                            <?= csrf_field(); ?>
+                                                            <input type="hidden" name="action" value="delete">
+                                                            <input type="hidden" name="category_id" value="<?= (int)$cat['id']; ?>">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" <?= (int)$cat['house_count'] > 0 ? 'disabled title="Cannot delete category with houses"' : ''; ?>>
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="<?= BASE_URL; ?>admin/categories.php" class="modal-content">
+            <?= csrf_field(); ?>
+            <input type="hidden" name="action" value="edit">
+            <input type="hidden" name="category_id" id="edit_cat_id">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small">Category Name <span class="text-danger">*</span></label>
+                    <input type="text" name="category_name" id="edit_cat_name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small">Description</label>
+                    <textarea name="description" id="edit_cat_desc" rows="3" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openEditCategoryModal(id, name, desc) {
+    document.getElementById('edit_cat_id').value = id;
+    document.getElementById('edit_cat_name').value = name;
+    document.getElementById('edit_cat_desc').value = desc;
+    new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
+}
+</script>
+
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

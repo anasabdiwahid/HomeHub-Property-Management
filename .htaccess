@@ -1,0 +1,18 @@
+# HomeHub Property Management System .htaccess
+
+Options -Indexes
+DirectoryIndex index.php login.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Security: block direct access to sensitive config & sql files
+    RewriteRule ^config/ - [F,L]
+    RewriteRule ^database/ - [F,L]
+</IfModule>
+
+# Custom PHP settings if supported
+<IfModule mod_php.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 12M
+    php_value memory_limit 128M
+</IfModule>
