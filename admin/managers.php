@@ -77,6 +77,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$id]);
             set_flash('success', 'Manager status updated successfully!');
         }
+    } elseif ($action === 'reset_password') {
+        $id       = (int)($_POST['user_id'] ?? 0);
+        $password = trim($_POST['password'] ?? '');
+
+        if ($id <= 0 || empty($password)) {
+            set_flash('danger', 'Please provide a valid new password.');
+        } elseif (strlen($password) < 6) {
+            set_flash('danger', 'Password must be at least 6 characters long.');
+        } else {
+            $hash = password_hash($password, PASSWORD_BCRYPT);
+            $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ? AND role = 'manager'");
+            $stmt->execute([$hash, $id]);
+            set_flash('success', 'Password reset successfully for property manager!');
+        }
     } elseif ($action === 'delete') {
         $id = (int)($_POST['manager_id'] ?? 0);
         if ($id > 0) {
@@ -208,6 +222,10 @@ require_once __DIR__ . '/../includes/header.php';
                                             </td>
                                             <td class="text-end">
                                                 <div class="btn-action-group justify-content-end">
+                                                    <button type="button" class="btn-action btn-action-view" title="Set / Reset Password"
+                                                            onclick="openResetPasswordModal(<?= (int)$mgr['id']; ?>, '<?= e(addslashes($mgr['name'])); ?>', '<?= e(addslashes($mgr['email'])); ?>')">
+                                                        <i class="bi bi-key-fill"></i>
+                                                    </button>
                                                     <button type="button" class="btn-action btn-action-edit" title="Edit Manager"
                                                             onclick="openEditManagerModal(<?= (int)$mgr['id']; ?>, '<?= e(addslashes($mgr['name'])); ?>', '<?= e(addslashes($mgr['email'])); ?>', '<?= e(addslashes($mgr['phone'] ?? '')); ?>')">
                                                         <i class="bi bi-pencil-square"></i>
@@ -260,7 +278,15 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold small">Login Password <span class="text-danger">*</span></label>
-                    <input type="password" name="password" class="form-control" placeholder="Minimum 6 characters" required>
+                    <div class="input-group">
+                        <input type="password" name="password" id="new_mgr_password" class="form-control" placeholder="Minimum 6 characters" required>
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('new_mgr_password', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="btn btn-outline-primary" type="button" onclick="generateRandomPassword('new_mgr_password')" title="Generate Strong Password">
+                            <i class="bi bi-magic"></i> Generate
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -298,12 +324,59 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold small">New Password (leave empty to keep current)</label>
-                    <input type="password" name="password" class="form-control" placeholder="••••••••">
+                    <div class="input-group">
+                        <input type="password" name="password" id="edit_mgr_password" class="form-control" placeholder="••••••••">
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('edit_mgr_password', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="btn btn-outline-primary" type="button" onclick="generateRandomPassword('edit_mgr_password')">
+                            <i class="bi bi-magic"></i> Generate
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Reset Password Modal -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="<?= BASE_URL; ?>admin/managers.php" class="modal-content">
+            <?= csrf_field(); ?>
+            <input type="hidden" name="action" value="reset_password">
+            <input type="hidden" name="user_id" id="reset_user_id">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold"><i class="bi bi-key-fill text-warning me-2"></i>Set / Reset Manager Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info py-2 small mb-3">
+                    <i class="bi bi-info-circle me-1"></i> Setting new password for manager: <strong id="reset_user_label">Manager</strong>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold small">New Password <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="password" name="password" id="reset_mgr_password" class="form-control" placeholder="Enter new password" required>
+                        <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('reset_mgr_password', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="btn btn-outline-primary" type="button" onclick="generateRandomPassword('reset_mgr_password')" title="Generate Strong Password">
+                            <i class="bi bi-magic"></i> Generate
+                        </button>
+                    </div>
+                    <small class="text-muted">Minimum 6 characters.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-check2-circle me-1"></i>Update Password</button>
             </div>
         </form>
     </div>
@@ -316,6 +389,40 @@ function openEditManagerModal(id, name, email, phone) {
     document.getElementById('edit_mgr_email').value = email;
     document.getElementById('edit_mgr_phone').value = phone;
     new bootstrap.Modal(document.getElementById('editManagerModal')).show();
+}
+
+function openResetPasswordModal(id, name, email) {
+    document.getElementById('reset_user_id').value = id;
+    document.getElementById('reset_user_label').innerText = name + ' (' + email + ')';
+    document.getElementById('reset_mgr_password').value = '';
+    new bootstrap.Modal(document.getElementById('resetPasswordModal')).show();
+}
+
+function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'bi bi-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'bi bi-eye';
+    }
+}
+
+function generateRandomPassword(inputId) {
+    const chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ23456789!@#$%';
+    let pwd = '';
+    for (let i = 0; i < 10; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const input = document.getElementById(inputId);
+    input.type = 'text';
+    input.value = pwd;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(pwd);
+        alert('Generated Password: ' + pwd + '\n(Copied to clipboard!)');
+    }
 }
 </script>
 

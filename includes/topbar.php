@@ -43,6 +43,8 @@ $currentUser = current_user();
                     <small class="text-muted text-truncate d-block"><?= e($currentUser['email'] ?? ''); ?></small>
                 </li>
                 <?php if (($currentUser['role'] ?? '') === 'admin'): ?>
+                    <li><a class="dropdown-item py-2" href="<?= BASE_URL; ?>admin/profile.php"><i class="bi bi-person me-2 text-primary"></i>My Profile</a></li>
+                    <li><a class="dropdown-item py-2" href="<?= BASE_URL; ?>admin/admins.php"><i class="bi bi-shield-lock me-2 text-primary"></i>Manage Admins</a></li>
                     <li><a class="dropdown-item py-2" href="<?= BASE_URL; ?>admin/settings.php"><i class="bi bi-gear me-2 text-primary"></i>Settings</a></li>
                 <?php else: ?>
                     <li><a class="dropdown-item py-2" href="<?= BASE_URL; ?>manager/profile.php"><i class="bi bi-person me-2 text-primary"></i>My Profile</a></li>

@@ -36,6 +36,11 @@ $currentScript = basename($_SERVER['SCRIPT_NAME'] ?? '');
             <span>Categories</span>
         </a>
 
+        <a href="<?= BASE_URL; ?>admin/admins.php" class="nav-link <?= ($currentScript === 'admins.php') ? 'active' : ''; ?>">
+            <i class="bi bi-shield-lock"></i>
+            <span>Admins</span>
+        </a>
+
         <a href="<?= BASE_URL; ?>admin/managers.php" class="nav-link <?= ($currentScript === 'managers.php') ? 'active' : ''; ?>">
             <i class="bi bi-person-badge"></i>
             <span>Managers</span>
@@ -64,6 +69,11 @@ $currentScript = basename($_SERVER['SCRIPT_NAME'] ?? '');
         </a>
 
         <div class="nav-section-title">System</div>
+
+        <a href="<?= BASE_URL; ?>admin/profile.php" class="nav-link <?= ($currentScript === 'profile.php') ? 'active' : ''; ?>">
+            <i class="bi bi-person-circle"></i>
+            <span>My Profile</span>
+        </a>
 
         <a href="<?= BASE_URL; ?>admin/settings.php" class="nav-link <?= ($currentScript === 'settings.php') ? 'active' : ''; ?>">
             <i class="bi bi-sliders"></i>
