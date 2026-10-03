@@ -56,7 +56,7 @@ $stats = [
     'districts'  => $pdo->query("SELECT COUNT(DISTINCT city) FROM houses")->fetchColumn(),
 ];
 
-$pageTitle = 'HomeHub - Mogadishu Property Management & Rentals';
+$pageTitle = 'Index';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
@@ -112,7 +112,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="row align-items-center justify-content-between g-5">
             <div class="col-lg-6">
                 <div class="badge badge-gold px-3 py-2 rounded-pill mb-3">
-                    <i class="bi bi-geo-alt-fill me-1 text-gold"></i> Mogadishu Property Hub &bull; All Districts
+                    <i class="bi bi-house-door-fill me-1 text-gold"></i> HomeHub Index &bull; Mogadishu Property Hub
                 </div>
                 <h1 class="display-4 fw-bolder mb-3 text-main">
                     Modern Property Management & Rentals in Mogadishu
