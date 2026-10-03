@@ -81,7 +81,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="row align-items-center g-3">
             <div class="col-lg-7">
                 <span class="badge bg-gold px-3 py-1 rounded-pill mb-2 fw-bold text-dark">Tenant Portal &bull; Mogadishu</span>
-                <h3 class="fw-bold mb-1">Welcome, <?= e($currentUser['name']); ?>!</h3>
+                <h3 class="fw-bold mb-1">Welcome, <?= e($currentUser['name'] ?? 'Tenant'); ?>!</h3>
                 <p class="mb-0 text-white-50">Explore available rental properties across Mogadishu districts, submit lease applications, and track your request statuses.</p>
             </div>
             <div class="col-lg-5">

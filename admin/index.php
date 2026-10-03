@@ -80,7 +80,7 @@ $occupancyRate = $totalApartments > 0 ? round(($totalOccupied / $totalApartments
 
 $pageTitle = 'Admin Dashboard';
 $pageHeading = 'Admin Dashboard';
-$pageSubtitle = 'Welcome back, ' . e($currentUser['name']) . ' • Mogadishu Real Estate Overview';
+$pageSubtitle = 'Welcome back, ' . e($currentUser['name'] ?? 'Admin') . ' • Mogadishu Real Estate Overview';
 require_once __DIR__ . '/../includes/header.php';
 ?>
 

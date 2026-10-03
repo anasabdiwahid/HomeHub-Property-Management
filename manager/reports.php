@@ -71,7 +71,7 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="print-only mb-4 text-center border-bottom pb-3">
                 <h2 class="fw-bold">HOMEHUB MOGADISHU PROPERTY MANAGEMENT</h2>
                 <h4 class="text-uppercase"><?= e(strtoupper($activeReport)); ?> REPORT</h4>
-                <p class="small text-muted mb-0">Supervisor: <?= e($currentUser['name']); ?> | Date: <?= date('d M Y, h:i A'); ?></p>
+                <p class="small text-muted mb-0">Supervisor: <?= e($currentUser['name'] ?? 'Manager'); ?> | Date: <?= date('d M Y, h:i A'); ?></p>
             </div>
 
             <!-- Report Navigation & Export Controls -->

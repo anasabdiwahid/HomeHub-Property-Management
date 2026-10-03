@@ -20,7 +20,36 @@ function is_logged_in(): bool {
  * Get the current logged-in user data
  */
 function current_user(): ?array {
-    return $_SESSION['user'] ?? null;
+    global $pdo;
+
+    if (empty($_SESSION['user']) || empty($_SESSION['user']['id'])) {
+        return null;
+    }
+
+    // Self-healing: If user fields like name or email are missing from session, fetch fresh from DB
+    if (empty($_SESSION['user']['name']) && isset($pdo)) {
+        try {
+            $stmt = $pdo->prepare("SELECT id, name, email, phone, role, avatar, created_at FROM users WHERE id = ? LIMIT 1");
+            $stmt->execute([(int)$_SESSION['user']['id']]);
+            $dbUser = $stmt->fetch();
+            if ($dbUser) {
+                $_SESSION['user']['name']       = $dbUser['name'];
+                $_SESSION['user']['email']      = $dbUser['email'];
+                $_SESSION['user']['phone']      = $dbUser['phone'] ?? '';
+                $_SESSION['user']['role']       = $dbUser['role'];
+                $_SESSION['user']['avatar']     = $dbUser['avatar'] ?? null;
+                $_SESSION['user']['created_at'] = $dbUser['created_at'] ?? date('Y-m-d H:i:s');
+            }
+        } catch (Throwable $e) {
+            // Silently catch and fallback safely
+        }
+    }
+
+    if (empty($_SESSION['user']['name'])) {
+        $_SESSION['user']['name'] = ($_SESSION['user']['role'] ?? '') === 'admin' ? 'Administrator' : 'User';
+    }
+
+    return $_SESSION['user'];
 }
 
 /**

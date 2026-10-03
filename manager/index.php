@@ -94,7 +94,7 @@ $myHouses = $stmtMyHouses->fetchAll();
 
 $pageTitle = 'Manager Dashboard';
 $pageHeading = 'Manager Dashboard';
-$pageSubtitle = 'Supervision Portal • ' . e($currentUser['name']);
+$pageSubtitle = 'Supervision Portal • ' . e($currentUser['name'] ?? 'Manager');
 require_once __DIR__ . '/../includes/header.php';
 ?>
 
