@@ -102,9 +102,9 @@ INSERT INTO `settings` (`setting_key`, `setting_value`) VALUES
 ('app_version', '1.0.0')
 ON DUPLICATE KEY UPDATE `setting_value` = VALUES(`setting_value`);
 
--- Initial Users (Password: admin123, manager123, user123)
+-- Initial Users (Admin: ayman@gmail.com / ayman0000)
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`, `role`, `status`) VALUES
-(1, 'Admin Abdi', 'admin@homehub.so', '+252 61 500 0001', '$2y$10$fUhiFnOt3nUt4QAwrPCp5ewnZ1rRyMZcEOVJBpxJzBs6/U5o7ZqD.', 'admin', 'active'),
+(1, 'Ayman (Admin)', 'ayman@gmail.com', '+252 61 500 0001', '$2y$10$ZTwEBzEnHRKCLi5QJSEUxuNYYn2HnutRnljvzkthhDENAg.DbOyLW', 'admin', 'active'),
 (2, 'Ahmed Nur (Manager)', 'manager@homehub.so', '+252 61 500 0002', '$2y$10$VL.jaQcCI8AgAKEI7FxBbebe7n6BMscJLHQlWbUhPkV8ndvKiAhWa', 'manager', 'active'),
 (3, 'Farah Ali (Manager)', 'farah@homehub.so', '+252 61 500 0003', '$2y$10$VL.jaQcCI8AgAKEI7FxBbebe7n6BMscJLHQlWbUhPkV8ndvKiAhWa', 'manager', 'active'),
 (4, 'Jama Hassan (Tenant)', 'user@homehub.so', '+252 61 500 0004', '$2y$10$0VbOge8PX.J9ERZO10MM9OssMgzH9MB5ejJs.ncfLeb6daSkNkTcy', 'user', 'active'),

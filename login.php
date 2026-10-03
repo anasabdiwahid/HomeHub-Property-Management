@@ -117,9 +117,9 @@ require_once __DIR__ . '/includes/header.php';
                     <i class="bi bi-key-fill text-gold"></i> DEMO CREDENTIALS (CLICK TO AUTO-FILL)
                 </div>
                 <div class="d-grid gap-2">
-                    <button type="button" class="btn btn-sm btn-outline-primary text-start d-flex justify-content-between align-items-center" onclick="fillCreds('admin@homehub.so', 'admin123')">
-                        <span><strong class="badge bg-navy me-1" style="border: 1px solid var(--hh-gold);">Admin</strong> admin@homehub.so</span>
-                        <span class="small text-muted font-monospace">admin123</span>
+                    <button type="button" class="btn btn-sm btn-outline-primary text-start d-flex justify-content-between align-items-center" onclick="fillCreds('ayman@gmail.com', 'ayman0000')">
+                        <span><strong class="badge bg-navy me-1" style="border: 1px solid var(--hh-gold);">Admin</strong> ayman@gmail.com</span>
+                        <span class="small text-muted font-monospace">ayman0000</span>
                     </button>
                     <button type="button" class="btn btn-sm btn-outline-success text-start d-flex justify-content-between align-items-center" onclick="fillCreds('manager@homehub.so', 'manager123')">
                         <span><strong class="badge bg-success me-1">Manager</strong> manager@homehub.so</span>

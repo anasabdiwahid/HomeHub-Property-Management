@@ -70,7 +70,7 @@ A modern, comprehensive Property Management and Real Estate Rental platform buil
 
 | Role | Email | Password | Access Dashboard |
 |---|---|---|---|
-| **Admin** | `admin@homehub.so` | `admin123` | `http://localhost/Home hub/admin/` |
+| **Admin** | `ayman@gmail.com` | `ayman0000` | `http://localhost/Home hub/admin/` |
 | **Manager** | `manager@homehub.so` | `manager123` | `http://localhost/Home hub/manager/` |
 | **Manager 2** | `farah@homehub.so` | `manager123` | `http://localhost/Home hub/manager/` |
 | **Tenant** | `user@homehub.so` | `user123` | `http://localhost/Home hub/user/` |
