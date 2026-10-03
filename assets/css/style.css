@@ -107,7 +107,7 @@ a:hover {
     }
 }
 
-/* Sidebar (Admin & Manager) */
+/* Sidebar (Admin & Manager) - Independent Sticky Sidebar */
 .sidebar {
     width: 260px;
     background-color: var(--hh-sidebar-bg);
@@ -115,8 +115,13 @@ a:hover {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1000;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
 }
 
 .sidebar .brand {
@@ -126,6 +131,7 @@ a:hover {
     gap: 0.75rem;
     border-bottom: 1px solid rgba(229, 169, 59, 0.15);
     background: rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
 }
 
 .sidebar .brand .brand-logo-img {
@@ -159,6 +165,23 @@ a:hover {
     flex-direction: column;
     gap: 0.25rem;
     overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(229, 169, 59, 0.25) transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    width: 4px;
+}
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(229, 169, 59, 0.25);
+    border-radius: 4px;
+}
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: var(--hh-gold);
 }
 
 .nav-section-title {
@@ -209,6 +232,25 @@ a:hover {
 .sidebar-footer {
     padding: 1rem 1.25rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+
+/* Mobile Responsive Sidebar Off-canvas */
+@media (max-width: 991.98px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        bottom: 0;
+        height: 100vh;
+        max-height: 100vh;
+        z-index: 1050;
+        box-shadow: none;
+    }
+    .sidebar.show {
+        left: 0;
+        box-shadow: 0 0 35px rgba(0, 0, 0, 0.55);
+    }
 }
 
 /* Topbar Header */

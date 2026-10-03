@@ -55,6 +55,15 @@
         }
     };
 
+    // Close mobile sidebar on click outside
+    document.addEventListener('click', (e) => {
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = e.target.closest('[onclick*="toggleSidebar"]');
+        if (sidebar && sidebar.classList.contains('show') && !sidebar.contains(e.target) && !toggleBtn) {
+            sidebar.classList.remove('show');
+        }
+    });
+
     // Generic Confirm Delete Helper
     window.confirmAction = function (message = 'Are you sure you want to proceed with this action?') {
         return confirm(message);

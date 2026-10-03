@@ -208,3 +208,10 @@
     border-color: #1a3658;
 }
 
+[data-bs-theme="dark"] .sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(229, 169, 59, 0.2);
+}
+[data-bs-theme="dark"] .sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: var(--hh-gold);
+}
+
