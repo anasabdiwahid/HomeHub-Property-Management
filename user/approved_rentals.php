@@ -98,7 +98,7 @@ require_once __DIR__ . '/../includes/header.php';
                                 </div>
 
                                 <h5 class="fw-bold text-main mb-1"><?= e($r['house_name']); ?></h5>
-                                <p class="text-muted small mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i><?= e($r['address']); ?>, Degmada <?= e($r['city']); ?></p>
+                                <p class="text-muted small mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i><?= e($r['address']); ?>, <?= e($r['city']); ?> District, Mogadishu</p>
 
                                 <div class="p-2 bg-body-tertiary rounded-3 mb-3 border">
                                     <div class="d-flex justify-content-between small">

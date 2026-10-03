@@ -76,7 +76,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <thead>
                         <tr>
                             <th>Property</th>
-                            <th>Category & Degmada</th>
+                            <th>Category & District</th>
                             <th>Monthly Rent</th>
                             <th>Move-In Date</th>
                             <th>Status</th>

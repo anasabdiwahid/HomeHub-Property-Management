@@ -78,7 +78,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <span class="badge bg-primary px-3 py-1 rounded-pill mb-2"><?= e($house['category_name']); ?></span>
                         <h2 class="text-white fw-bold mb-1"><?= e($house['house_name']); ?></h2>
                         <div class="text-white-50 small">
-                            <i class="bi bi-geo-alt-fill text-danger me-1"></i><?= e($house['address']); ?>, Degmada <?= e($house['city']); ?>, Muqdisho
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i><?= e($house['address']); ?>, <?= e($house['city']); ?> District, Mogadishu
                             <span class="ms-3 font-monospace badge bg-dark bg-opacity-75"><?= e($house['house_code']); ?></span>
                         </div>
                     </div>

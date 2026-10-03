@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 /**
- * Returns the list of Mogadishu districts (Degmooyinka Muqdisho)
+ * Returns the list of official Mogadishu districts
  */
 function mogadishu_districts(): array {
     return [

@@ -168,9 +168,9 @@ require_once __DIR__ . '/../includes/header.php';
                         </h6>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold small">Degmada Muqdisho (District) <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold small">Mogadishu District <span class="text-danger">*</span></label>
                                 <select name="city" class="form-select" required>
-                                    <option value="">-- Dooro Degmada Muqdisho --</option>
+                                    <option value="">-- Select Mogadishu District --</option>
                                     <?php 
                                         $currentDistrict = $_POST['city'] ?? $house['city'];
                                         foreach (mogadishu_districts() as $dist): 

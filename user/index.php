@@ -80,28 +80,28 @@ require_once __DIR__ . '/../includes/header.php';
     <div class="card border-0 shadow-sm p-4 mb-4" style="background: linear-gradient(135deg, #102a45 0%, #1c3d61 100%); color: #ffffff; border-radius: 16px; border-top: 4px solid var(--hh-gold) !important;">
         <div class="row align-items-center g-3">
             <div class="col-lg-7">
-                <span class="badge bg-gold px-3 py-1 rounded-pill mb-2 fw-bold text-dark">Tenant Portal &bull; Muqdisho</span>
+                <span class="badge bg-gold px-3 py-1 rounded-pill mb-2 fw-bold text-dark">Tenant Portal &bull; Mogadishu</span>
                 <h3 class="fw-bold mb-1">Welcome, <?= e($currentUser['name']); ?>!</h3>
-                <p class="mb-0 text-white-50">Daawo guryaha banaan ee degmooyinka Muqdisho, gudbi codsigaaga kireysiga, lana socod xaaladda codsiyadaada.</p>
+                <p class="mb-0 text-white-50">Explore available rental properties across Mogadishu districts, submit lease applications, and track your request statuses.</p>
             </div>
             <div class="col-lg-5">
                 <div class="row g-2 text-center">
                     <div class="col-4">
                         <div class="bg-white bg-opacity-10 p-2 rounded-3 border border-white border-opacity-10">
                             <h4 class="fw-bold mb-0 text-gold"><?= $totalAvailableHouses; ?></h4>
-                            <small class="text-white-50" style="font-size: 0.72rem;">Guryaha Banaan</small>
+                            <small class="text-white-50" style="font-size: 0.72rem;">Vacant Houses</small>
                         </div>
                     </div>
                     <div class="col-4">
                         <a href="<?= BASE_URL; ?>user/my_requests.php" class="text-white text-decoration-none d-block bg-white bg-opacity-10 p-2 rounded-3 border border-white border-opacity-10">
                             <h4 class="fw-bold mb-0"><?= $myRequestsCount; ?></h4>
-                            <small class="text-white-50" style="font-size: 0.72rem;">Codsiyadeyda</small>
+                            <small class="text-white-50" style="font-size: 0.72rem;">My Requests</small>
                         </a>
                     </div>
                     <div class="col-4">
                         <a href="<?= BASE_URL; ?>user/approved_rentals.php" class="text-white text-decoration-none d-block bg-white bg-opacity-10 p-2 rounded-3 border border-white border-opacity-10">
                             <h4 class="fw-bold mb-0 text-success"><?= $myApprovedCount; ?></h4>
-                            <small class="text-white-50" style="font-size: 0.72rem;">La Aqbalay</small>
+                            <small class="text-white-50" style="font-size: 0.72rem;">Approved</small>
                         </a>
                     </div>
                 </div>
@@ -122,9 +122,9 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
 
                 <div class="col-sm-6 col-md-2">
-                    <label class="form-label small fw-semibold text-muted">Degmada (District)</label>
+                    <label class="form-label small fw-semibold text-muted">District</label>
                     <select name="city" class="form-select">
-                        <option value="">Dhammaan Degmooyinka</option>
+                        <option value="">All Districts</option>
                         <?php foreach ($districts as $d): ?>
                             <option value="<?= e($d); ?>" <?= $filterCity === $d ? 'selected' : ''; ?>><?= e($d); ?></option>
                         <?php endforeach; ?>

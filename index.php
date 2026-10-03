@@ -112,17 +112,17 @@ require_once __DIR__ . '/includes/header.php';
         <div class="row align-items-center justify-content-between g-5">
             <div class="col-lg-6">
                 <div class="badge badge-gold px-3 py-2 rounded-pill mb-3">
-                    <i class="bi bi-geo-alt-fill me-1 text-gold"></i> Mogadishu Only &bull; Degmooyinka Muqdisho
+                    <i class="bi bi-geo-alt-fill me-1 text-gold"></i> Mogadishu Property Hub &bull; All Districts
                 </div>
                 <h1 class="display-4 fw-bolder mb-3 text-main">
                     Modern Property Management & Rentals in Mogadishu
                 </h1>
                 <p class="lead text-muted mb-4">
-                    Guryaha iyo dabaqyada kireysan ee ugu casrisan guud ahaan degmooyinka gobolka Banaadir (Muqdisho). Hel guri banaan, gudbi codsi, kireyso adigoo isticmaalaya EVC Plus ama xawaalad.
+                    The most modern residential and commercial rental properties across all districts of Mogadishu (Banaadir). Find vacant homes, submit rental inquiries, and manage tenancies with mobile payments and verified agreements.
                 </p>
                 <div class="d-flex flex-wrap gap-3">
                     <a href="#browse-section" class="btn btn-gold btn-lg px-4 shadow-sm">
-                        <i class="bi bi-search me-2"></i>Daawo Guryaha Muqdisho
+                        <i class="bi bi-search me-2"></i>Browse Mogadishu Properties
                     </a>
                     <a href="<?= BASE_URL; ?>login.php" class="btn btn-primary btn-lg px-4 shadow-sm">
                         <i class="bi bi-shield-lock me-2 text-gold"></i>Staff Portal
@@ -135,31 +135,31 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="card shadow-lg border-0 p-3 p-md-4" style="border-top: 4px solid var(--hh-gold) !important;">
                     <div class="card-body">
                         <h4 class="card-title fw-bold mb-3 d-flex align-items-center gap-2">
-                            <i class="bi bi-funnel-fill text-gold"></i> Raadi Guri Muqdisho ah
+                            <i class="bi bi-funnel-fill text-gold"></i> Find Properties in Mogadishu
                         </h4>
                         <form method="GET" action="<?= BASE_URL; ?>#browse-section">
                             <div class="mb-3">
-                                <label class="form-label small fw-semibold text-muted">Magaca Guriga ama Aagga</label>
+                                <label class="form-label small fw-semibold text-muted">Property Name or Area</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-body-tertiary"><i class="bi bi-search"></i></span>
-                                    <input type="text" name="search" class="form-control" placeholder="e.g. Wadajir, KM4, Villa, Dabaq..." value="<?= e($search); ?>">
+                                    <input type="text" name="search" class="form-control" placeholder="e.g. Wadajir, KM4, Villa, Apartment..." value="<?= e($search); ?>">
                                 </div>
                             </div>
 
                             <div class="row g-2 mb-3">
                                 <div class="col-6">
-                                    <label class="form-label small fw-semibold text-muted">Degmada (District)</label>
+                                    <label class="form-label small fw-semibold text-muted">District</label>
                                     <select name="city" class="form-select">
-                                        <option value="">Dhammaan Degmooyinka</option>
+                                        <option value="">All Districts</option>
                                         <?php foreach ($districts as $d): ?>
                                             <option value="<?= e($d); ?>" <?= $filterCity === $d ? 'selected' : ''; ?>><?= e($d); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
                                 <div class="col-6">
-                                    <label class="form-label small fw-semibold text-muted">Nooca (Category)</label>
+                                    <label class="form-label small fw-semibold text-muted">Category</label>
                                     <select name="category" class="form-select">
-                                        <option value="0">Dhammaan Noocyada</option>
+                                        <option value="0">All Categories</option>
                                         <?php foreach ($categories as $cat): ?>
                                             <option value="<?= (int)$cat['id']; ?>" <?= $filterCategory === (int)$cat['id'] ? 'selected' : ''; ?>><?= e($cat['category_name']); ?></option>
                                         <?php endforeach; ?>
@@ -168,7 +168,7 @@ require_once __DIR__ . '/includes/header.php';
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-                                <i class="bi bi-arrow-right-circle me-2 text-gold"></i>Raadi Guryaha
+                                <i class="bi bi-arrow-right-circle me-2 text-gold"></i>Search Properties
                             </button>
                         </form>
                     </div>
@@ -185,25 +185,25 @@ require_once __DIR__ . '/includes/header.php';
             <div class="col-6 col-md-3">
                 <div class="p-2">
                     <div class="fs-2 fw-bolder text-primary"><?= (int)$stats['houses']; ?>+</div>
-                    <div class="text-muted small fw-semibold text-uppercase">Guryaha Muqdisho</div>
+                    <div class="text-muted small fw-semibold text-uppercase">Mogadishu Properties</div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="p-2">
                     <div class="fs-2 fw-bolder text-success"><?= (int)$stats['units']; ?></div>
-                    <div class="text-muted small fw-semibold text-uppercase">Wadarta Qeybaha (Units)</div>
+                    <div class="text-muted small fw-semibold text-uppercase">Total Units</div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="p-2">
                     <div class="fs-2 fw-bolder text-gold"><?= (int)$stats['vacant']; ?></div>
-                    <div class="text-muted small fw-semibold text-uppercase">Kireysi Banaan</div>
+                    <div class="text-muted small fw-semibold text-uppercase">Vacant Units</div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="p-2">
                     <div class="fs-2 fw-bolder text-info">17</div>
-                    <div class="text-muted small fw-semibold text-uppercase">Degmooyinka Muqdisho</div>
+                    <div class="text-muted small fw-semibold text-uppercase">Mogadishu Districts</div>
                 </div>
             </div>
         </div>
@@ -370,7 +370,7 @@ require_once __DIR__ . '/includes/header.php';
             </div>
 
             <div class="col-6 col-md-3 col-lg-2">
-                <h6 class="fw-bold mb-3 text-uppercase small text-muted">Degmooyinka Muqdisho</h6>
+                <h6 class="fw-bold mb-3 text-uppercase small text-muted">Mogadishu Districts</h6>
                 <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
                     <li><a href="<?= BASE_URL; ?>?city=Hodan#browse-section" class="text-muted">Hodan</a></li>
                     <li><a href="<?= BASE_URL; ?>?city=Wadajir#browse-section" class="text-muted">Wadajir</a></li>

@@ -202,11 +202,11 @@ require_once __DIR__ . '/../includes/header.php';
                                 </select>
                             </div>
 
-                            <!-- Degmada (District in Mogadishu) -->
+                            <!-- District in Mogadishu -->
                             <div class="col-md-6">
-                                <label class="form-label fw-semibold">Degmada Muqdisho (District) <span class="text-danger">*</span></label>
+                                <label class="form-label fw-semibold">Mogadishu District <span class="text-danger">*</span></label>
                                 <select name="city" class="form-select" required>
-                                    <option value="">-- Dooro Degmada Muqdisho --</option>
+                                    <option value="">-- Select Mogadishu District --</option>
                                     <?php 
                                         $currentDistrict = $_POST['city'] ?? $house['city'];
                                         foreach (mogadishu_districts() as $dist): 
