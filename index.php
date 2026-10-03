@@ -227,12 +227,14 @@ require_once __DIR__ . '/includes/header.php';
         </div>
 
         <?php if (empty($featuredHouses)): ?>
-            <div class="text-center py-5 card border-dashed">
-                <div class="card-body">
-                    <i class="bi bi-house-slash text-muted" style="font-size: 3.5rem;"></i>
-                    <h5 class="mt-3 fw-bold">No properties match your search criteria</h5>
-                    <p class="text-muted">Try adjusting your filters or search keywords.</p>
-                    <a href="<?= BASE_URL; ?>#browse-section" class="btn btn-outline-primary btn-sm">Reset Search</a>
+            <div class="text-center py-5 card border-dashed shadow-sm">
+                <div class="card-body py-4">
+                    <i class="bi bi-houses text-muted opacity-50" style="font-size: 3.5rem;"></i>
+                    <h5 class="mt-3 fw-bold">No Properties Listed Yet</h5>
+                    <p class="text-muted small mb-3">All dummy records have been cleared. Sign in to your Admin portal to begin adding real properties.</p>
+                    <a href="<?= BASE_URL; ?>login.php" class="btn btn-primary btn-sm px-3">
+                        <i class="bi bi-box-arrow-in-right me-1 text-gold"></i>Staff Sign In
+                    </a>
                 </div>
             </div>
         <?php else: ?>

@@ -398,13 +398,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Occupancy Doughnut Chart
     const occCtx = document.getElementById('occupancyChart');
     if (occCtx) {
+        const hasUnits = <?= ($totalApartments > 0) ? 'true' : 'false'; ?>;
         new Chart(occCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Occupied', 'Vacant'],
+                labels: hasUnits ? ['Occupied', 'Vacant'] : ['No Properties Yet'],
                 datasets: [{
-                    data: [<?= (int)$totalOccupied; ?>, <?= (int)$totalVacant; ?>],
-                    backgroundColor: ['#10b981', '#f59e0b'],
+                    data: hasUnits ? [<?= (int)$totalOccupied; ?>, <?= (int)$totalVacant; ?>] : [1],
+                    backgroundColor: hasUnits ? ['#10b981', '#f59e0b'] : ['#e2e8f0'],
                     borderWidth: 2,
                     borderColor: '#ffffff'
                 }]
@@ -413,7 +414,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: { enabled: hasUnits }
                 },
                 cutout: '70%'
             }
