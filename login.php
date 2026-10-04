@@ -364,29 +364,9 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
             </div>
 
-            <!-- Right Column: Uploaded Luxury Villa Visual with Frosted Glass Card -->
+            <!-- Right Column: Uploaded Luxury Villa Visual -->
             <div class="col-lg-6 p-2 p-md-3 d-none d-lg-block">
                 <div class="auth-hero-container" style="background-image: url('<?= BASE_URL; ?>assets/images/auth-bg.jpg?v=<?= $bgImgVer; ?>');">
-                    <div class="auth-hero-overlay"></div>
-
-                    <!-- Glassmorphism Testimonial Card -->
-                    <div class="auth-quote-card">
-                        <p class="auth-quote-text" id="quoteText">“The automated rent collection, digital agreements, and maintenance workflow saved our agency countless hours every single month.”</p>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                <div class="auth-quote-author" id="quoteAuthor">Farhan Ahmed</div>
-                                <div class="auth-quote-role" id="quoteRole">Property Manager</div>
-                            </div>
-                        </div>
-
-                        <!-- 4 Slider Progress Bars Matching Reference Layout -->
-                        <div class="d-flex gap-2 mt-2 pt-2">
-                            <div class="auth-slider-bar" onclick="showQuote(0)" data-index="0" title="Slide 1"></div>
-                            <div class="auth-slider-bar active" onclick="showQuote(1)" data-index="1" title="Slide 2"></div>
-                            <div class="auth-slider-bar" onclick="showQuote(2)" data-index="2" title="Slide 3"></div>
-                            <div class="auth-slider-bar" onclick="showQuote(3)" data-index="3" title="Slide 4"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -410,76 +390,6 @@ function togglePasswordVisibility(inputId, btn) {
         icon.classList.add('bi-eye-slash');
     }
 }
-
-// Testimonials Slider Matching Reference Design
-const testimonials = [
-    {
-        quote: "HomeHub made finding and managing luxury rental properties completely effortless. The smoothest property management experience we have ever had.",
-        author: "Sofia Martinez",
-        role: "Verified Resident"
-    },
-    {
-        quote: "The automated rent collection, digital agreements, and maintenance workflow saved our agency countless hours every single month.",
-        author: "Farhan Ahmed",
-        role: "Property Manager"
-    },
-    {
-        quote: "Professional tools, instant tenant notifications, and reliable financial reporting all in one intuitive, beautifully designed platform.",
-        author: "Sahra Hassan",
-        role: "Real Estate Investor"
-    },
-    {
-        quote: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore.",
-        author: "Ronald Richards",
-        role: "Office Owner"
-    }
-];
-
-let currentQuoteIndex = 1; // Farhan Ahmed (Slide 2) as seen in user's screenshot
-let quoteTimer = null;
-
-function showQuote(index) {
-    currentQuoteIndex = index;
-    const textEl = document.getElementById('quoteText');
-    const authorEl = document.getElementById('quoteAuthor');
-    const roleEl = document.getElementById('quoteRole');
-    const bars = document.querySelectorAll('.auth-slider-bar');
-
-    if (textEl && authorEl && roleEl) {
-        textEl.style.opacity = '0';
-        setTimeout(() => {
-            textEl.textContent = '“' + testimonials[index].quote.replace(/^“|”$/g, '') + '”';
-            authorEl.textContent = testimonials[index].author;
-            roleEl.textContent = testimonials[index].role;
-            textEl.style.opacity = '1';
-        }, 180);
-    }
-
-    bars.forEach((bar, i) => {
-        if (i === index) {
-            bar.classList.add('active');
-        } else {
-            bar.classList.remove('active');
-        }
-    });
-
-    // Reset auto-rotation timer
-    resetQuoteTimer();
-}
-
-function nextQuote() {
-    const nextIndex = (currentQuoteIndex + 1) % testimonials.length;
-    showQuote(nextIndex);
-}
-
-function resetQuoteTimer() {
-    if (quoteTimer) clearInterval(quoteTimer);
-    quoteTimer = setInterval(nextQuote, 6500);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    resetQuoteTimer();
-});
 </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
