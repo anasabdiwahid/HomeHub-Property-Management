@@ -38,7 +38,7 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - HomeHub' : 'HomeHub - Somalia 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <!-- Custom Styles (Logo Color Harmonized) -->
-    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css">
-    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/dark-mode.css">
+    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css?v=<?= file_exists(__DIR__ . '/../assets/css/style.css') ? filemtime(__DIR__ . '/../assets/css/style.css') : time(); ?>">
+    <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/dark-mode.css?v=<?= file_exists(__DIR__ . '/../assets/css/dark-mode.css') ? filemtime(__DIR__ . '/../assets/css/dark-mode.css') : time(); ?>">
 </head>
 <body>

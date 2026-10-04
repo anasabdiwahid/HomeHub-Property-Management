@@ -1,7 +1,7 @@
 <?php
 /**
  * Single Unified Login Page
- * Split-Layout Modern Aesthetic matching Reference Design
+ * Split-Layout Modern Aesthetic with Uploaded Luxury Villa Visual
  * Roles: Admin, Manager, User
  * HomeHub Property Management System
  */
@@ -48,11 +48,232 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$bgImgPath = __DIR__ . '/assets/images/auth-bg.jpg';
+$bgImgVer = file_exists($bgImgPath) ? filemtime($bgImgPath) : time();
+
 $pageTitle = 'Sign In - HomeHub';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<div class="auth-split-wrapper d-flex align-items-center justify-content-center p-3 p-md-4 p-xl-5 position-relative">
+<style>
+/* Embedded Auth Split Styles to guarantee instant render without browser cache lag */
+.auth-split-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    position: relative;
+    background: radial-gradient(circle at 10% 10%, rgba(229, 169, 59, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 90% 90%, rgba(30, 62, 43, 0.09) 0%, transparent 45%),
+                var(--hh-body-bg, #f8fafc);
+}
+
+.auth-split-card {
+    width: 100%;
+    max-width: 1140px;
+    border-radius: 28px !important;
+    background-color: var(--hh-card-bg, #ffffff) !important;
+    box-shadow: 0 25px 60px -15px rgba(16, 42, 69, 0.14), 0 10px 25px -10px rgba(0, 0, 0, 0.05) !important;
+    overflow: hidden;
+    border: 1px solid var(--hh-border, #e2e8f0) !important;
+}
+
+[data-bs-theme="dark"] .auth-split-card {
+    background-color: #0d1e32 !important;
+    border-color: #1a3658 !important;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6) !important;
+}
+
+.auth-brand-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #1e3e2b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(30, 62, 43, 0.25);
+    flex-shrink: 0;
+}
+
+.auth-brand-badge i {
+    color: #e5a93b;
+    font-size: 1.35rem;
+}
+
+.auth-brand-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--hh-text-main, #0f1f33);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.auth-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--hh-text-main, #0f1f33);
+    letter-spacing: -0.025em;
+    margin-bottom: 0.35rem;
+}
+
+.auth-subtitle {
+    font-size: 0.925rem;
+    color: var(--hh-text-muted, #5f748d);
+}
+
+.auth-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--hh-text-main, #0f1f33);
+    margin-bottom: 0.45rem;
+    display: block;
+}
+
+.auth-input {
+    height: 50px;
+    border-radius: 12px !important;
+    border: 1.5px solid var(--hh-border, #e2e8f0) !important;
+    padding: 0.65rem 1.15rem;
+    font-size: 0.95rem;
+    color: var(--hh-text-main, #0f1f33) !important;
+    background-color: var(--hh-card-bg, #ffffff) !important;
+    transition: all 0.2s ease;
+}
+
+.auth-input:focus {
+    border-color: #1e3e2b !important;
+    box-shadow: 0 0 0 4px rgba(30, 62, 43, 0.12) !important;
+}
+
+[data-bs-theme="dark"] .auth-input {
+    background-color: #071524 !important;
+    border-color: #1a3658 !important;
+    color: #f1f6fc !important;
+}
+
+[data-bs-theme="dark"] .auth-input:focus {
+    border-color: #e5a93b !important;
+    box-shadow: 0 0 0 4px rgba(229, 169, 59, 0.18) !important;
+}
+
+.auth-eye-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 6px 10px;
+    cursor: pointer;
+    z-index: 4;
+    transition: color 0.2s ease;
+}
+
+.auth-eye-btn:hover {
+    color: var(--hh-text-main, #0f1f33);
+}
+
+.auth-submit-btn {
+    height: 52px;
+    border-radius: 9999px !important;
+    background-color: #1e3e2b !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 18px rgba(30, 62, 43, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-submit-btn:hover {
+    background-color: #27523a !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(30, 62, 43, 0.32);
+    color: #ffffff !important;
+}
+
+.auth-hero-container {
+    height: 100%;
+    min-height: 620px;
+    border-radius: 22px;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+}
+
+.auth-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 16, 26, 0.88) 0%, rgba(10, 16, 26, 0.35) 55%, rgba(10, 16, 26, 0.08) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.auth-quote-card {
+    position: relative;
+    z-index: 2;
+    background: rgba(15, 23, 42, 0.68) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border-radius: 20px;
+    padding: 24px;
+    color: #ffffff !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4) !important;
+}
+
+.auth-quote-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #ffffff !important;
+    min-height: 68px;
+    margin-bottom: 1rem;
+    font-style: normal;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    transition: opacity 0.2s ease;
+}
+
+.auth-quote-author {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.auth-quote-role {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.78) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.auth-slider-bar {
+    height: 4px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.35);
+    flex: 1;
+    cursor: pointer;
+    transition: all 0.35s ease;
+}
+
+.auth-slider-bar.active {
+    background: #e5a93b !important;
+    box-shadow: 0 0 10px rgba(229, 169, 59, 0.7);
+}
+</style>
+
+<div class="auth-split-wrapper">
     <!-- Theme Toggle Floating Button -->
     <div class="position-absolute top-0 end-0 m-3 m-md-4 z-3">
         <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: var(--hh-card-bg);" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
@@ -60,10 +281,10 @@ require_once __DIR__ . '/includes/header.php';
         </button>
     </div>
 
-    <!-- Main Auth Card -->
+    <!-- Main Auth Split Card -->
     <div class="card auth-split-card border-0">
         <div class="row g-0 align-items-stretch">
-            <!-- Left Column: Form -->
+            <!-- Left Column: Form Section -->
             <div class="col-lg-6 p-4 p-sm-5 d-flex flex-column justify-content-between">
                 <div>
                     <!-- Brand Lockup -->
@@ -142,9 +363,9 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
             </div>
 
-            <!-- Right Column: Hero Visual with Frosted Glass Testimonial -->
+            <!-- Right Column: Uploaded Luxury Villa Visual with Frosted Glass Card -->
             <div class="col-lg-6 p-3 p-md-4 d-none d-lg-block">
-                <div class="auth-hero-container" style="background-image: url('<?= BASE_URL; ?>assets/images/auth-bg.jpg');">
+                <div class="auth-hero-container" style="background-image: url('<?= BASE_URL; ?>assets/images/auth-bg.jpg?v=<?= $bgImgVer; ?>');">
                     <div class="auth-hero-overlay"></div>
 
                     <!-- Glassmorphism Testimonial Card -->
@@ -213,7 +434,7 @@ const testimonials = [
     }
 ];
 
-let currentQuoteIndex = 3; // Defaults to index 3 to match the user's reference screenshot
+let currentQuoteIndex = 3; // Defaults to Slide 4 (Ronald Richards) matching the reference screenshot
 let quoteTimer = null;
 
 function showQuote(index) {
