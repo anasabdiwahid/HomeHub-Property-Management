@@ -23,11 +23,11 @@ $output = fopen('php://output', 'w');
 fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 
 if ($type === 'houses') {
-    fputcsv($output, ['ID', 'House Name', 'House Code', 'Category', 'City', 'Address', 'Rent Price', 'Total Apts', 'Occupied', 'Vacant', 'Manager', 'Created At']);
+    fputcsv($output, ['ID', 'House Name', 'House Code', 'Category', 'City', 'Address', 'Rent Price', 'Total Apts', 'Occupied', 'Vacant', 'Status', 'Manager', 'Created At']);
     $stmt = $pdo->query("
         SELECT h.id, h.house_name, h.house_code, c.category_name, h.city, h.address, 
                h.rent_price, h.total_apartments, h.occupied_apartments, h.vacant_apartments,
-               mgr.name as manager_name, h.created_at
+               h.status, mgr.name as manager_name, h.created_at
         FROM houses h
         JOIN categories c ON h.category_id = c.id
         LEFT JOIN users mgr ON h.manager_id = mgr.id
