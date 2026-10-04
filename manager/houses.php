@@ -100,13 +100,14 @@ require_once __DIR__ . '/../includes/header.php';
                                     <th>Location</th>
                                     <th>Monthly Rent</th>
                                     <th>Occupancy Status</th>
+                                    <th>Status</th>
                                     <th class="text-end no-export">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if (empty($myHouses)): ?>
                                     <tr>
-                                        <td colspan="7">
+                                        <td colspan="8">
                                             <div class="empty-state">
                                                 <div class="empty-state-icon">
                                                     <i class="bi bi-house-slash"></i>
@@ -146,21 +147,33 @@ require_once __DIR__ . '/../includes/header.php';
                                                 <small class="text-muted d-block">per unit/mo</small>
                                             </td>
                                             <td>
-                                                <div class="d-flex align-items-center gap-1 small mb-1">
-                                                    <span class="badge bg-success-subtle text-success"><?= $occ; ?> Occ</span>
-                                                    <span class="badge bg-warning-subtle text-warning"><?= (int)$h['vacant_apartments']; ?> Vac</span>
-                                                    <span class="badge bg-secondary-subtle"><?= $tot; ?> Tot</span>
-                                                </div>
-                                                <div class="progress" style="height: 5px;">
-                                                    <div class="progress-bar bg-success" style="width: <?= $pct; ?>%"></div>
-                                                </div>
+                                                <a href="<?= BASE_URL; ?>manager/house_apartments.php?id=<?= (int)$h['id']; ?>" class="text-decoration-none" title="Manage individual apartments">
+                                                    <div class="d-flex align-items-center gap-1 small mb-1">
+                                                        <span class="badge bg-success-subtle text-success"><?= $occ; ?> Occ</span>
+                                                        <span class="badge bg-warning-subtle text-warning"><?= (int)$h['vacant_apartments']; ?> Vac</span>
+                                                        <span class="badge bg-secondary-subtle"><?= $tot; ?> Tot</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 5px;">
+                                                        <div class="progress-bar bg-success" style="width: <?= $pct; ?>%"></div>
+                                                    </div>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <?php if (($h['status'] ?? 'active') === 'active'): ?>
+                                                    <span class="badge bg-success-subtle text-success border border-success-subtle"><i class="bi bi-check-circle me-1"></i>Active</span>
+                                                <?php else: ?>
+                                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle"><i class="bi bi-x-circle me-1"></i>Deactive</span>
+                                                <?php endif; ?>
                                             </td>
                                             <td class="text-end no-export">
                                                 <div class="btn-action-group justify-content-end">
+                                                    <a href="<?= BASE_URL; ?>manager/house_apartments.php?id=<?= (int)$h['id']; ?>" class="btn btn-sm btn-outline-primary py-0 px-2 d-inline-flex align-items-center" title="Manage Apartments">
+                                                        <i class="bi bi-door-open me-1"></i>Units
+                                                    </a>
                                                     <a href="<?= BASE_URL; ?>manager/house_edit.php?id=<?= (int)$h['id']; ?>" class="btn-action btn-action-edit" title="Update Units & Status">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </a>
-                                                    <a href="<?= BASE_URL; ?>house_details.php?id=<?= (int)$h['id']; ?>" target="_blank" class="btn-action btn-action-view" title="Preview Public Listing">
+                                                    <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$h['id']; ?>" target="_blank" class="btn-action btn-action-view" title="Preview Public Listing">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
                                                 </div>

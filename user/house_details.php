@@ -40,6 +40,11 @@ if (!$house) {
     exit;
 }
 
+// Ensure all individual apartments exist and are synced
+$apartments = ensure_house_apartments($pdo, $houseId);
+$stmt->execute([$houseId]);
+$house = $stmt->fetch();
+
 // Check if user already submitted a request for this house
 $stmtExisting = $pdo->prepare("SELECT * FROM rental_requests WHERE user_id = ? AND house_id = ? ORDER BY id DESC LIMIT 1");
 $stmtExisting->execute([$userId, $houseId]);
@@ -85,20 +90,52 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
 
                 <div class="card-body p-4">
-                    <div class="row g-3 py-3 border-bottom mb-3 text-center">
-                        <div class="col-4 border-end">
-                            <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.72rem;">Monthly Rent</small>
+                    <div class="row g-2 py-3 border-bottom mb-3 text-center align-items-center">
+                        <div class="col-6 col-md-3 border-end">
+                            <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Monthly Rent</small>
                             <h4 class="fw-bolder text-primary mb-0"><?= format_currency($house['rent_price'], $currency); ?></h4>
                         </div>
-                        <div class="col-4 border-end">
-                            <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.72rem;">Available Vacant</small>
-                            <h4 class="fw-bolder <?= (int)$house['vacant_apartments'] > 0 ? 'text-success' : 'text-danger'; ?> mb-0">
-                                <?= (int)$house['vacant_apartments']; ?> Units
+                        <div class="col-6 col-md-3 border-end">
+                            <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Wadarta Apartments</small>
+                            <h4 class="fw-bolder text-dark mb-0"><?= (int)$house['total_apartments']; ?> Qol</h4>
+                        </div>
+                        <div class="col-6 col-md-3 border-end">
+                            <small class="text-muted text-uppercase fw-semibold text-danger" style="font-size: 0.7rem;">La Deggen Yahay</small>
+                            <h4 class="fw-bolder text-danger mb-0">
+                                <i class="bi bi-people-fill me-1"></i><?= (int)$house['occupied_apartments']; ?> Qol
                             </h4>
                         </div>
-                        <div class="col-4">
-                            <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.72rem;">Total Apartments</small>
-                            <h4 class="fw-bolder text-main mb-0"><?= (int)$house['total_apartments']; ?> Units</h4>
+                        <div class="col-6 col-md-3">
+                            <small class="text-muted text-uppercase fw-semibold <?= (int)$house['vacant_apartments'] > 0 ? 'text-success' : 'text-danger'; ?>" style="font-size: 0.7rem;">Bannaan (Vacant)</small>
+                            <h4 class="fw-bolder <?= (int)$house['vacant_apartments'] > 0 ? 'text-success' : 'text-danger'; ?> mb-0">
+                                <i class="bi bi-door-open-fill me-1"></i><?= (int)$house['vacant_apartments']; ?> Qol
+                            </h4>
+                        </div>
+                    </div>
+
+                    <!-- Occupancy Progress Indicator -->
+                    <?php 
+                        $totalApts = max(1, (int)$house['total_apartments']);
+                        $occupiedPct = min(100, round(((int)$house['occupied_apartments'] / $totalApts) * 100));
+                        $isFull = (int)$house['vacant_apartments'] <= 0;
+                    ?>
+                    <div class="mb-4 p-3 rounded-3 <?= $isFull ? 'bg-danger-subtle border border-danger-subtle' : 'bg-body-tertiary border'; ?>">
+                        <div class="d-flex justify-content-between align-items-center mb-1 small fw-semibold">
+                            <span><i class="bi bi-bar-chart-fill me-1 text-primary"></i>Heerka Deganaanshaha (Occupancy Rate):</span>
+                            <span class="<?= $isFull ? 'text-danger fw-bold' : 'text-primary'; ?>"><?= $occupiedPct; ?>% Buuxa</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar <?= $isFull ? 'bg-danger' : ($occupiedPct > 70 ? 'bg-warning' : 'bg-success'); ?>" role="progressbar" style="width: <?= $occupiedPct; ?>%" aria-valuenow="<?= $occupiedPct; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex justify-content-between text-muted mt-2" style="font-size: 0.8rem;">
+                            <span><i class="bi bi-person-check-fill text-danger me-1"></i><?= (int)$house['occupied_apartments']; ?>/<?= (int)$house['total_apartments']; ?> waa la deggen yahay</span>
+                            <span>
+                                <?php if ($isFull): ?>
+                                    <span class="badge bg-danger text-white"><i class="bi bi-x-circle me-1"></i>Wuu Buuxaa (0 Bannaan)</span>
+                                <?php else: ?>
+                                    <span class="badge bg-success text-white"><i class="bi bi-check-circle me-1"></i><?= (int)$house['vacant_apartments']; ?> Qol ayaa bannaan</span>
+                                <?php endif; ?>
+                            </span>
                         </div>
                     </div>
 
@@ -134,6 +171,26 @@ require_once __DIR__ . '/../includes/header.php';
                             </div>
                         </div>
                     </div>
+
+                    <!-- Individual Apartments Availability Map -->
+                    <h5 class="fw-bold mb-3 mt-4"><i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i>Apartments Availability (Qolalka Guriga)</h5>
+                    <p class="text-muted small mb-2">Guji qolka bannaan ee aad rabto si toos ah loogu doorto foomka kireysiga:</p>
+                    <div class="row g-2 mb-2">
+                        <?php foreach ($apartments as $apt): ?>
+                            <?php $isVacant = ($apt['status'] === 'vacant'); ?>
+                            <div class="col-6 col-sm-4 col-md-3">
+                                <div class="p-2 border rounded-3 text-center <?= $isVacant ? 'border-success bg-success-subtle text-success-emphasis' : 'bg-body-secondary text-muted opacity-75'; ?>" 
+                                     style="<?= $isVacant ? 'cursor: pointer; transition: transform 0.15s ease;' : 'cursor: not-allowed;'; ?>"
+                                     <?= $isVacant ? 'onclick="selectApartment(' . (int)$apt['id'] . ')"' : ''; ?>>
+                                    <div class="fw-bold small"><?= e($apt['apartment_number']); ?></div>
+                                    <div class="text-muted" style="font-size: 0.75rem;"><?= e($apt['floor'] ?? 'Ground'); ?></div>
+                                    <span class="badge <?= $isVacant ? 'bg-success' : 'bg-secondary'; ?> mt-1" style="font-size: 0.7rem;">
+                                        <?= $isVacant ? '<i class="bi bi-check-circle me-1"></i>Bannaan' : '<i class="bi bi-x-circle me-1"></i>La deggen'; ?>
+                                    </span>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -153,6 +210,11 @@ require_once __DIR__ . '/../includes/header.php';
                                 <?= status_badge($existingRequest['status']); ?>
                             </div>
                             <small class="d-block text-muted">Applied on: <?= format_date($existingRequest['created_at']); ?></small>
+                            <?php if (!empty($existingRequest['assigned_apartment'])): ?>
+                                <small class="d-block text-primary fw-bold mt-1">
+                                    <i class="bi bi-door-closed me-1"></i>Assigned: <?= e($existingRequest['assigned_apartment']); ?>
+                                </small>
+                            <?php endif; ?>
                             <?php if (!empty($existingRequest['admin_notes'])): ?>
                                 <div class="mt-2 pt-2 border-top small">
                                     <strong>Supervisor Note:</strong> <?= e($existingRequest['admin_notes']); ?>
@@ -166,15 +228,57 @@ require_once __DIR__ . '/../includes/header.php';
                         </div>
                     <?php endif; ?>
 
-                    <?php if ((int)$house['vacant_apartments'] <= 0): ?>
-                        <div class="alert alert-warning py-3" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            <strong>Fully Occupied:</strong> All units in this building are currently leased.
+                    <?php if (($house['status'] ?? 'active') === 'inactive'): ?>
+                        <div class="alert alert-warning p-3 rounded-3 border-warning shadow-sm mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="bi bi-pause-circle-fill text-warning fs-3 flex-shrink-0"></i>
+                                <h6 class="fw-bold mb-0 text-warning-emphasis">Property Currently Deactive</h6>
+                            </div>
+                            <p class="small mb-0 text-muted">
+                                This property has been set to deactive by management. New rental applications are currently closed.
+                            </p>
                         </div>
+                        <button type="button" class="btn btn-secondary w-100 py-2 fw-bold" disabled>
+                            <i class="bi bi-pause-circle me-1"></i> Applications Closed (Deactive)
+                        </button>
+                    <?php elseif ((int)$house['vacant_apartments'] <= 0): ?>
+                        <div class="alert alert-danger p-3 rounded-3 border-danger shadow-sm mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="bi bi-x-octagon-fill text-danger fs-3 flex-shrink-0"></i>
+                                <h6 class="fw-bold mb-0 text-danger">Property Fully Occupied</h6>
+                            </div>
+                            <p class="small mb-2 text-danger-emphasis">
+                                All <?= (int)$house['total_apartments']; ?> apartment units in this property are currently occupied (<?= (int)$house['occupied_apartments']; ?>/<?= (int)$house['total_apartments']; ?>).
+                            </p>
+                            <div class="p-2 rounded bg-white text-danger fw-semibold small border border-danger-subtle">
+                                <i class="bi bi-info-circle me-1"></i> No vacant units available at this time.
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary w-100 py-2 fw-bold" disabled>
+                            <i class="bi bi-x-circle me-1"></i> Fully Occupied
+                        </button>
                     <?php else: ?>
                         <form method="POST" action="<?= BASE_URL; ?>user/rent_request.php">
                             <?= csrf_field(); ?>
                             <input type="hidden" name="house_id" value="<?= (int)$house['id']; ?>">
+
+                            <!-- Select Desired Apartment Unit -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small">Select Desired Apartment Unit <span class="text-danger">*</span></label>
+                                <select name="apartment_id" id="house_apartment_select" class="form-select" required>
+                                    <option value="">-- Choose an Apartment (e.g. Unit 101) --</option>
+                                    <?php foreach ($apartments as $apt): ?>
+                                        <?php if ($apt['status'] === 'vacant'): ?>
+                                            <option value="<?= (int)$apt['id']; ?>">
+                                                <?= e($apt['apartment_number']); ?> (<?= e($apt['floor'] ?? 'Ground'); ?>) - <?= format_currency($apt['rent_price'], $currency); ?>/mo
+                                            </option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </select>
+                                <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">
+                                    Xulo qolka aad doonayso inaad degto (tusaale <strong>Apartment 13</strong>).
+                                </small>
+                            </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold small">Preferred Move-In Date <span class="text-danger">*</span></label>
@@ -182,12 +286,19 @@ require_once __DIR__ . '/../includes/header.php';
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label fw-semibold small">Your Message / Requirements</label>
-                                <textarea name="request_note" rows="3" class="form-control" placeholder="Specify unit floor preference, family size, duration of stay..."></textarea>
+                                <label class="form-label fw-semibold small">Description / Your Message</label>
+                                <textarea name="request_note" rows="3" class="form-control" placeholder="Specify any preferences, family size, duration of stay..."></textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">
-                                <i class="bi bi-send me-1"></i><?= $existingRequest ? 'Submit Another Request' : 'Submit Rental Request'; ?>
+                            <div class="p-2 rounded-3 bg-success-subtle border border-success-subtle d-flex align-items-center gap-2 small text-success-emphasis mb-3">
+                                <i class="bi bi-whatsapp fs-5 text-success flex-shrink-0"></i>
+                                <div>
+                                    Marka aad codsato, waxaa toos laguu geynayaa <strong>WhatsApp (+252 616256534)</strong> si aad fariinta ugu dirto maamulka.
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm">
+                                <i class="bi bi-whatsapp me-1"></i><?= $existingRequest ? 'Submit Another Request via WhatsApp' : 'Submit Rental Request via WhatsApp'; ?>
                             </button>
                         </form>
                     <?php endif; ?>
@@ -207,8 +318,18 @@ require_once __DIR__ . '/../includes/header.php';
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 </main>
 
+<script>
+function selectApartment(aptId) {
+    const sel = document.getElementById('house_apartment_select');
+    if (sel) {
+        sel.value = aptId;
+        sel.focus();
+        sel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+</script>
+
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
+

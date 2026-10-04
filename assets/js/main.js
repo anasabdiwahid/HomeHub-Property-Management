@@ -64,10 +64,113 @@
         }
     });
 
-    // Generic Confirm Delete Helper
-    window.confirmAction = function (message = 'Are you sure you want to proceed with this action?') {
-        return confirm(message);
+    // Modern SweetAlert2 Confirm Dialog Helper
+    window.confirmDialog = function (options = {}) {
+        const defaultOptions = {
+            title: 'Ma Hubtaa? (Confirmation)',
+            text: 'Fadlan xaqiiji tallaabadan ka hor inta aadan sii wadin.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="bi bi-check-lg me-1"></i> Haa, Fuliy (Confirm)',
+            cancelButtonText: 'Maya (Cancel)',
+            reverseButtons: true,
+            focusCancel: true
+        };
+
+        if (typeof options === 'string') {
+            options = { text: options };
+        }
+
+        const merged = Object.assign({}, defaultOptions, options);
+
+        if (window.Swal) {
+            return Swal.fire(merged);
+        } else {
+            return Promise.resolve({ isConfirmed: confirm(merged.text) });
+        }
     };
+
+    window.confirmAction = function (message = 'Are you sure you want to proceed with this action?') {
+        return window.confirmDialog({ text: message });
+    };
+
+    // Modern Alert Dialog Replacement (replaces window.alert to remove "localhost says")
+    window.alert = function (message) {
+        if (window.Swal) {
+            Swal.fire({
+                title: 'Ogeysiis (Notice)',
+                text: message,
+                icon: 'info',
+                confirmButtonText: 'Waan Fahmay (OK)',
+                confirmButtonColor: '#102a45'
+            });
+        } else {
+            console.log('Notice:', message);
+        }
+    };
+
+    // Modern Password Copied SweetAlert Modal
+    window.showPasswordCopied = function (pwd) {
+        if (window.Swal) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Password La Sameeyay & La Koobiyeeyay!',
+                html: `
+                    <p class="text-muted small mb-2">Password-kan waxaa si toos ah loogu koobiyeeyay clipboard-kaaga:</p>
+                    <div class="p-3 bg-body-tertiary rounded-3 border my-2 text-center">
+                        <span class="font-monospace fs-4 fw-bold text-primary">${pwd}</span>
+                    </div>
+                    <small class="text-success fw-semibold"><i class="bi bi-clipboard-check-fill me-1"></i> Waad paste gareysan kartaa hadda (Ctrl + V).</small>
+                `,
+                confirmButtonText: 'Waan Fahmay (OK)',
+                confirmButtonColor: '#102a45'
+            });
+        } else {
+            window.alert('Generated Password: ' + pwd);
+        }
+    };
+
+    // Global Form Submit Interception for data-confirm & inline confirm()
+    document.addEventListener('submit', function (e) {
+        const form = e.target;
+        if (!form || form.dataset.swalBypass === 'true') {
+            return;
+        }
+
+        let confirmMsg = form.getAttribute('data-confirm') || form.dataset.confirm;
+
+        // If form has inline onsubmit with confirm(...), extract message and intercept
+        if (!confirmMsg && form.getAttribute('onsubmit') && form.getAttribute('onsubmit').includes('confirm(')) {
+            const match = form.getAttribute('onsubmit').match(/confirm\s*\(\s*['"](.*?)['"]\s*\)/);
+            if (match && match[1]) {
+                confirmMsg = match[1].replace(/\\'/g, "'").replace(/\\"/g, '"');
+            } else {
+                confirmMsg = 'Ma hubtaa inaad tirtirto ama falkan fuliso?';
+            }
+            form.removeAttribute('onsubmit');
+        }
+
+        if (confirmMsg) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.confirmDialog({
+                title: 'Ma Hubtaa? (Confirmation)',
+                text: confirmMsg,
+                icon: 'warning',
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: '<i class="bi bi-trash3 me-1"></i> Haa, Tirtir (Confirm)',
+                cancelButtonText: 'Maya (Cancel)'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.dataset.swalBypass = 'true';
+                    form.submit();
+                }
+            });
+        }
+    }, true);
 
     // Export Table to CSV
     window.exportTableToCSV = function (tableId, filename = 'report.csv') {

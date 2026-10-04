@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'currency'        => trim($_POST['currency'] ?? '$'),
         'company_email'   => trim($_POST['company_email'] ?? 'contact@homehub.so'),
         'company_phone'   => trim($_POST['company_phone'] ?? '+252 61 555 4321'),
+        'whatsapp_number' => trim($_POST['whatsapp_number'] ?? '+252 616256534'),
         'company_address' => trim($_POST['company_address'] ?? 'Maka Al Mukarama Road, Hodan, Mogadishu, Somalia'),
     ];
 
@@ -49,6 +50,7 @@ $systemName     = get_setting($pdo, 'system_name', 'HomeHub Property Management'
 $currency       = get_setting($pdo, 'currency', '$');
 $companyEmail   = get_setting($pdo, 'company_email', 'contact@homehub.so');
 $companyPhone   = get_setting($pdo, 'company_phone', '+252 61 555 4321');
+$whatsappNumber = get_setting($pdo, 'whatsapp_number', '+252 616256534');
 $companyAddress = get_setting($pdo, 'company_address', 'Maka Al Mukarama Road, Hodan, Mogadishu, Somalia');
 
 $pageTitle = 'System Settings';
@@ -94,6 +96,15 @@ require_once __DIR__ . '/../includes/header.php';
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold small">Support Phone (Somalia)</label>
                                 <input type="text" name="company_phone" class="form-control" value="<?= e($companyPhone); ?>" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold small">WhatsApp Rental Inquiries Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-success text-white"><i class="bi bi-whatsapp"></i></span>
+                                    <input type="text" name="whatsapp_number" class="form-control font-monospace" value="<?= e($whatsappNumber); ?>" placeholder="+252 616256534" required>
+                                </div>
+                                <div class="form-text small">Number where user rental requests and descriptions are forwarded (+252 616256534).</div>
                             </div>
 
                             <div class="col-12">

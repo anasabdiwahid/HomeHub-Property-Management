@@ -226,7 +226,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                             onclick="openEditUserModal(<?= (int)$u['id']; ?>, '<?= e(addslashes($u['name'])); ?>', '<?= e(addslashes($u['email'])); ?>', '<?= e(addslashes($u['phone'] ?? '')); ?>')">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
-                                                    <form method="POST" action="<?= BASE_URL; ?>admin/users.php" class="d-inline" onsubmit="return confirm('Are you sure you want to remove user \'<?= e($u['name']); ?>\'?');">
+                                                    <form method="POST" action="<?= BASE_URL; ?>admin/users.php" class="d-inline" data-confirm="Ma hubtaa inaad tirtirto user-ka '<?= e(addslashes($u['name'])); ?>'? Tallaabadan dib looma noqon karo.">
                                                         <?= csrf_field(); ?>
                                                         <input type="hidden" name="action" value="delete">
                                                         <input type="hidden" name="user_id" value="<?= (int)$u['id']; ?>">
@@ -417,7 +417,7 @@ function generateRandomPassword(inputId) {
     input.value = pwd;
     if (navigator.clipboard) {
         navigator.clipboard.writeText(pwd);
-        alert('Generated Password: ' + pwd + '\n(Copied to clipboard!)');
+        showPasswordCopied(pwd);
     }
 }
 </script>

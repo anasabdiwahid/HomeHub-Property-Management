@@ -26,7 +26,7 @@ $query = "SELECT h.*, c.category_name, u.name as manager_name
           FROM houses h 
           JOIN categories c ON h.category_id = c.id 
           LEFT JOIN users u ON h.manager_id = u.id 
-          WHERE 1=1";
+          WHERE h.status = 'active'";
 $params = [];
 
 if (!empty($search)) {
@@ -50,10 +50,10 @@ $featuredHouses = $stmt->fetchAll();
 
 // Aggregate stats
 $stats = [
-    'houses'     => $pdo->query("SELECT COUNT(*) FROM houses")->fetchColumn(),
-    'units'      => $pdo->query("SELECT COALESCE(SUM(total_apartments), 0) FROM houses")->fetchColumn(),
-    'vacant'     => $pdo->query("SELECT COALESCE(SUM(vacant_apartments), 0) FROM houses")->fetchColumn(),
-    'districts'  => $pdo->query("SELECT COUNT(DISTINCT city) FROM houses")->fetchColumn(),
+    'houses'     => $pdo->query("SELECT COUNT(*) FROM houses WHERE status = 'active'")->fetchColumn(),
+    'units'      => $pdo->query("SELECT COALESCE(SUM(total_apartments), 0) FROM houses WHERE status = 'active'")->fetchColumn(),
+    'vacant'     => $pdo->query("SELECT COALESCE(SUM(vacant_apartments), 0) FROM houses WHERE status = 'active'")->fetchColumn(),
+    'districts'  => $pdo->query("SELECT COUNT(DISTINCT city) FROM houses WHERE status = 'active'")->fetchColumn(),
 ];
 
 $pageTitle = 'Index';
@@ -241,8 +241,27 @@ require_once __DIR__ . '/includes/header.php';
             <div class="row g-4">
                 <?php foreach ($featuredHouses as $h): ?>
                     <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 card-hover overflow-hidden">
-                            <div class="property-card-img-wrapper">
+                        <?php 
+                            $hDataJson = htmlspecialchars(json_encode([
+                                'id'       => (int)$h['id'],
+                                'name'     => $h['house_name'],
+                                'code'     => $h['house_code'],
+                                'category' => $h['category_name'],
+                                'city'     => $h['city'],
+                                'address'  => $h['address'],
+                                'price'    => format_currency($h['rent_price']),
+                                'total'    => (int)$h['total_apartments'],
+                                'occupied' => (int)$h['occupied_apartments'],
+                                'vacant'   => (int)$h['vacant_apartments'],
+                                'desc'     => $h['description'] ?? '',
+                                'image'    => $imgUrl,
+                                'isUser'   => (is_logged_in() && current_user_role() === 'user'),
+                                'rentUrl'  => BASE_URL . 'user/house_details.php?id=' . (int)$h['id'],
+                                'loginUrl' => BASE_URL . 'login.php'
+                            ]), ENT_QUOTES, 'UTF-8');
+                        ?>
+                        <div class="card h-100 card-hover overflow-hidden" style="cursor: pointer;" onclick="showHomeHouseModal(JSON.parse(this.dataset.hdata))" data-hdata="<?= $hDataJson; ?>">
+                            <div class="property-card-img-wrapper position-relative">
                                 <?php 
                                     $imgUrl = !empty($h['image']) && file_exists(UPLOAD_DIR . 'houses/' . $h['image'])
                                         ? UPLOAD_URL . 'houses/' . e($h['image'])
@@ -255,33 +274,59 @@ require_once __DIR__ . '/includes/header.php';
                             <div class="card-body d-flex flex-column">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <small class="text-muted font-monospace"><?= e($h['house_code']); ?></small>
-                                    <span class="badge <?= (int)$h['vacant_apartments'] > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle'; ?>">
-                                        <?= (int)$h['vacant_apartments'] > 0 ? (int)$h['vacant_apartments'] . ' Units Vacant' : 'Fully Occupied'; ?>
+                                    <span class="badge <?= (int)$h['vacant_apartments'] > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger text-white'; ?>">
+                                        <?= (int)$h['vacant_apartments'] > 0 ? (int)$h['vacant_apartments'] . ' Units Vacant' : 'Wuu Buuxaa'; ?>
                                     </span>
                                 </div>
                                 <h5 class="card-title fw-bold text-truncate mb-2"><?= e($h['house_name']); ?></h5>
+
+                                <!-- Apartments Occupancy Breakdown Box -->
+                                <div class="bg-body-tertiary p-2 rounded-2 border mb-2 small" onclick="event.stopPropagation();">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="text-muted"><i class="bi bi-buildings text-primary me-1"></i>Wadarta: <strong><?= (int)$h['total_apartments']; ?> Qol</strong></span>
+                                        <?php if ((int)$h['vacant_apartments'] > 0): ?>
+                                            <span class="text-success fw-bold"><i class="bi bi-door-open me-1"></i><?= (int)$h['vacant_apartments']; ?> Bannaan</span>
+                                        <?php else: ?>
+                                            <span class="text-danger fw-bold"><i class="bi bi-x-circle me-1"></i>Wuu Buuxaa</span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="d-flex justify-content-between small text-muted">
+                                        <span><i class="bi bi-person-fill text-danger me-1"></i>La deggen: <strong class="text-danger"><?= (int)$h['occupied_apartments']; ?></strong></span>
+                                        <span><i class="bi bi-check2-circle text-success me-1"></i>Bannaan: <strong class="text-success"><?= (int)$h['vacant_apartments']; ?></strong></span>
+                                    </div>
+                                </div>
+
                                 <p class="text-muted small mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                                     <?= e($h['description'] ?? 'No description available.'); ?>
                                 </p>
                                 
-                                <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-auto">
+                                <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-auto" onclick="event.stopPropagation();">
                                     <div>
                                         <div class="property-price"><?= format_currency($h['rent_price']); ?></div>
                                         <small class="text-muted">per month</small>
                                     </div>
-                                    <div>
-                                        <?php if (is_logged_in() && current_user_role() === 'user'): ?>
-                                            <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$h['id']; ?>" class="btn btn-outline-primary btn-sm">
-                                                View & Rent <i class="bi bi-arrow-right ms-1"></i>
-                                            </a>
-                                        <?php elseif (is_logged_in()): ?>
-                                            <a href="<?= BASE_URL . current_user_role(); ?>/index.php" class="btn btn-outline-secondary btn-sm">
-                                                Dashboard <i class="bi bi-speedometer2 ms-1"></i>
-                                            </a>
+                                    <div class="d-flex gap-2">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="showHomeHouseModal(JSON.parse(this.closest('.card').dataset.hdata))">
+                                            <i class="bi bi-eye me-1"></i>Faahfaahin
+                                        </button>
+                                        <?php if ((int)$h['vacant_apartments'] > 0): ?>
+                                            <?php if (is_logged_in() && current_user_role() === 'user'): ?>
+                                                <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$h['id']; ?>" class="btn btn-primary btn-sm">
+                                                    Rent <i class="bi bi-arrow-right ms-1"></i>
+                                                </a>
+                                            <?php elseif (is_logged_in()): ?>
+                                                <a href="<?= BASE_URL . current_user_role(); ?>/index.php" class="btn btn-outline-secondary btn-sm">
+                                                    Dashboard
+                                                </a>
+                                            <?php else: ?>
+                                                <a href="<?= BASE_URL; ?>login.php" class="btn btn-primary btn-sm">
+                                                    Rent Now <i class="bi bi-box-arrow-in-right ms-1 text-gold"></i>
+                                                </a>
+                                            <?php endif; ?>
                                         <?php else: ?>
-                                            <a href="<?= BASE_URL; ?>login.php" class="btn btn-primary btn-sm">
-                                                Rent Now <i class="bi bi-box-arrow-in-right ms-1 text-gold"></i>
-                                            </a>
+                                            <button type="button" class="btn btn-outline-danger btn-sm text-nowrap" onclick="showHomeHouseModal(JSON.parse(this.closest('.card').dataset.hdata))">
+                                                <i class="bi bi-x-circle me-1"></i>Wuu Buuxaa
+                                            </button>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -404,5 +449,156 @@ require_once __DIR__ . '/includes/header.php';
         </div>
     </div>
 </footer>
+
+<!-- Home House Details & Occupancy Modal -->
+<div class="modal fade" id="homeHouseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title fw-bold mb-0" id="hmTitle">House Details</h5>
+                    <small class="text-muted" id="hmSubtitle"></small>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-5">
+                        <img id="hmImage" src="" alt="House" class="img-fluid rounded-3 shadow-sm w-100" style="height: 220px; object-fit: cover;">
+                        <div class="mt-2 text-center">
+                            <span class="fs-4 fw-bolder text-primary" id="hmPrice"></span>
+                            <small class="text-muted d-block">per month</small>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <h6 class="fw-bold text-uppercase small text-muted mb-2">
+                            <i class="bi bi-buildings-fill text-primary me-1"></i> Xaaladda Apartments-ka (Occupancy Status)
+                        </h6>
+
+                        <!-- 3 Stat Blocks -->
+                        <div class="row g-2 text-center mb-3">
+                            <div class="col-4">
+                                <div class="p-2 rounded-3 bg-body-tertiary border">
+                                    <small class="text-muted d-block" style="font-size: 0.72rem;">Wadarta</small>
+                                    <h5 class="fw-bold mb-0 text-dark" id="hmTotalApts">0</h5>
+                                    <small class="text-muted" style="font-size: 0.7rem;">Apartments</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded-3 bg-danger-subtle border border-danger-subtle">
+                                    <small class="text-danger d-block fw-semibold" style="font-size: 0.72rem;">La Deggen</small>
+                                    <h5 class="fw-bold mb-0 text-danger" id="hmOccupiedApts">0</h5>
+                                    <small class="text-danger" style="font-size: 0.7rem;">Qol Buuxa</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded-3 bg-success-subtle border border-success-subtle">
+                                    <small class="text-success d-block fw-semibold" style="font-size: 0.72rem;">Bannaan</small>
+                                    <h5 class="fw-bold mb-0 text-success" id="hmVacantApts">0</h5>
+                                    <small class="text-success" style="font-size: 0.7rem;">Qol Bannaan</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between small text-muted mb-1">
+                                <span>Heerka Buuxsanaanta:</span>
+                                <strong id="hmPercentText" class="text-dark">0%</strong>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar" id="hmProgressBar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Message Notice Alert -->
+                        <div id="hmAlertBox"></div>
+                    </div>
+                </div>
+
+                <div class="border-top mt-3 pt-3">
+                    <h6 class="fw-bold small mb-1">Faahfaahinta Guriga:</h6>
+                    <p class="text-muted small mb-0" id="hmDesc" style="white-space: pre-line;"></p>
+                </div>
+            </div>
+            <div class="modal-footer bg-body-tertiary d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Xir (Close)</button>
+                <div id="hmActionBtnContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showHomeHouseModal(data) {
+    document.getElementById('hmTitle').innerText = data.name;
+    document.getElementById('hmSubtitle').innerText = data.code + ' • ' + data.category + ' • ' + data.city + ' (' + data.address + ')';
+    document.getElementById('hmImage').src = data.image;
+    document.getElementById('hmPrice').innerText = data.price;
+    document.getElementById('hmTotalApts').innerText = data.total;
+    document.getElementById('hmOccupiedApts').innerText = data.occupied;
+    document.getElementById('hmVacantApts').innerText = data.vacant;
+    document.getElementById('hmDesc').innerText = data.desc || 'No additional description provided.';
+
+    const total = Math.max(1, parseInt(data.total) || 1);
+    const occupied = parseInt(data.occupied) || 0;
+    const vacant = parseInt(data.vacant) || 0;
+    const pct = Math.min(100, Math.round((occupied / total) * 100));
+
+    document.getElementById('hmPercentText').innerText = pct + '% Buuxa';
+    const pb = document.getElementById('hmProgressBar');
+    pb.style.width = pct + '%';
+    if (vacant <= 0) {
+        pb.className = 'progress-bar bg-danger';
+    } else if (pct > 70) {
+        pb.className = 'progress-bar bg-warning';
+    } else {
+        pb.className = 'progress-bar bg-success';
+    }
+
+    const alertBox = document.getElementById('hmAlertBox');
+    const btnBox = document.getElementById('hmActionBtnContainer');
+
+    if (vacant <= 0) {
+        alertBox.innerHTML = `
+            <div class="alert alert-danger p-2 rounded-3 small mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-x-octagon-fill fs-4 text-danger flex-shrink-0"></i>
+                <div>
+                    <strong>Gurigan wuu buuxaa:</strong> Dhammaan waa la wada deggen yahay! (Ma jiro qol bannaan hadda).
+                </div>
+            </div>
+        `;
+        btnBox.innerHTML = `
+            <button type="button" class="btn btn-secondary btn-sm fw-bold" disabled>
+                <i class="bi bi-x-circle me-1"></i> Wuu Buuxaa (Dhammaan Waa La Wada Deggen Yahay)
+            </button>
+        `;
+    } else {
+        alertBox.innerHTML = `
+            <div class="alert alert-success p-2 rounded-3 small mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill fs-4 text-success flex-shrink-0"></i>
+                <div>
+                    <strong>Diyaar u ah Kireysi:</strong> Waxaa bannaan <strong>${vacant}</strong> qol/apartments oo diyaar ah!
+                </div>
+            </div>
+        `;
+        if (data.isUser) {
+            btnBox.innerHTML = `
+                <a href="${data.rentUrl}" class="btn btn-success btn-sm fw-bold">
+                    <i class="bi bi-key me-1"></i> Kireyso Hadda (Rent Property)
+                </a>
+            `;
+        } else {
+            btnBox.innerHTML = `
+                <a href="${data.loginUrl}" class="btn btn-primary btn-sm fw-bold">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Gal si aad u Kireysato (Sign In to Rent)
+                </a>
+            `;
+        }
+    }
+
+    new bootstrap.Modal(document.getElementById('homeHouseModal')).show();
+}
+</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

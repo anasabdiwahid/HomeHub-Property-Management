@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS `houses` (
   `vacant_apartments` INT NOT NULL DEFAULT 1,
   `description` TEXT NULL,
   `image` VARCHAR(255) NULL,
+  `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`manager_id`) REFERENCES `users`(`id`) ON DELETE SET NULL

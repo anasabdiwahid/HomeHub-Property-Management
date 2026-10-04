@@ -278,7 +278,7 @@ require_once __DIR__ . '/../includes/header.php';
                                             </td>
                                             <td class="text-end no-export">
                                                 <div class="btn-action-group justify-content-end">
-                                                    <form method="POST" action="<?= BASE_URL; ?>admin/payments.php" class="d-inline" onsubmit="return confirm('Delete this payment record permanently?');">
+                                                    <form method="POST" action="<?= BASE_URL; ?>admin/payments.php" class="d-inline" data-confirm="Ma hubtaa inaad tirtirto diiwaankan lacag-bixinta ah? Tallaabadan dib looma noqon karo.">
                                                         <?= csrf_field(); ?>
                                                         <input type="hidden" name="action" value="delete">
                                                         <input type="hidden" name="payment_id" value="<?= (int)$p['id']; ?>">

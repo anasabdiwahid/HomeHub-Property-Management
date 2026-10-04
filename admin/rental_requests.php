@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $action = $_POST['action'] ?? '';
     $requestId = (int)($_POST['request_id'] ?? 0);
+    $apartmentId = (int)($_POST['apartment_id'] ?? 0);
     $notes = trim($_POST['admin_notes'] ?? '');
 
     if ($requestId > 0) {
@@ -33,21 +34,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $req = $stmt->fetch();
 
         if ($req) {
+            $houseId = (int)$req['house_id'];
+
             if ($action === 'approve') {
+                if ($req['status'] !== 'approved' && (int)$req['vacant_apartments'] <= 0) {
+                    set_flash('danger', 'Lama aqbali karo codsigan: Gurigan wuu buuxaa, dhammaan waa la wada deggenyahay (0 qol oo bannaan ayaa haray)!');
+                    header('Location: ' . BASE_URL . 'admin/rental_requests.php');
+                    exit;
+                }
+
+                // Ensure individual apartment units exist
+                ensure_house_apartments($pdo, $houseId);
+
+                // Fetch chosen apartment or first available vacant unit if none selected
+                $assignedAptName = '';
+                if ($apartmentId > 0) {
+                    $aptStmt = $pdo->prepare("SELECT id, apartment_number FROM apartments WHERE id = ? AND house_id = ? LIMIT 1");
+                    $aptStmt->execute([$apartmentId, $houseId]);
+                    $chosenApt = $aptStmt->fetch();
+                    if ($chosenApt) {
+                        $assignedAptName = $chosenApt['apartment_number'];
+                    }
+                }
+
+                if (empty($assignedAptName)) {
+                    // Pick first vacant apartment
+                    $vacStmt = $pdo->prepare("SELECT id, apartment_number FROM apartments WHERE house_id = ? AND status = 'vacant' ORDER BY id ASC LIMIT 1");
+                    $vacStmt->execute([$houseId]);
+                    $chosenApt = $vacStmt->fetch();
+                    if ($chosenApt) {
+                        $apartmentId = (int)$chosenApt['id'];
+                        $assignedAptName = $chosenApt['apartment_number'];
+                    }
+                }
+
+                if ($apartmentId <= 0) {
+                    set_flash('danger', 'Ma jiro qol bannaan oo loo xilsaari karo codsigan.');
+                    header('Location: ' . BASE_URL . 'admin/rental_requests.php');
+                    exit;
+                }
+
                 $pdo->beginTransaction();
                 try {
-                    // Update request status
-                    $upd = $pdo->prepare("UPDATE rental_requests SET status = 'approved', admin_notes = ? WHERE id = ?");
-                    $upd->execute([$notes, $requestId]);
-
-                    // If vacant apartments exist and old status was pending/rejected, update house counts
-                    if ($req['status'] !== 'approved' && (int)$req['vacant_apartments'] > 0) {
-                        $updHouse = $pdo->prepare("UPDATE houses SET occupied_apartments = occupied_apartments + 1, vacant_apartments = GREATEST(0, vacant_apartments - 1) WHERE id = ?");
-                        $updHouse->execute([$req['house_id']]);
+                    // If request was previously assigned to a different apartment, release it
+                    if (!empty($req['apartment_id']) && (int)$req['apartment_id'] !== $apartmentId) {
+                        $relPrev = $pdo->prepare("UPDATE apartments SET status = 'vacant', current_tenant_id = NULL, rental_request_id = NULL WHERE id = ?");
+                        $relPrev->execute([(int)$req['apartment_id']]);
                     }
 
+                    // Update request
+                    $upd = $pdo->prepare("UPDATE rental_requests SET status = 'approved', apartment_id = ?, assigned_apartment = ?, admin_notes = ? WHERE id = ?");
+                    $upd->execute([$apartmentId, $assignedAptName, $notes, $requestId]);
+
+                    // Update apartment
+                    $updApt = $pdo->prepare("UPDATE apartments SET status = 'occupied', current_tenant_id = ?, rental_request_id = ? WHERE id = ?");
+                    $updApt->execute([$req['user_id'], $requestId, $apartmentId]);
+
+                    // Sync occupancy counters
+                    sync_house_occupancy_counts($pdo, $houseId);
+
                     $pdo->commit();
-                    set_flash('success', 'Rental request approved successfully!');
+                    set_flash('success', "Rental request approved successfully! Assigned unit: {$assignedAptName}");
                 } catch (Exception $e) {
                     $pdo->rollBack();
                     set_flash('danger', 'Error approving request: ' . $e->getMessage());
@@ -58,19 +105,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $upd = $pdo->prepare("UPDATE rental_requests SET status = 'rejected', admin_notes = ? WHERE id = ?");
                     $upd->execute([$notes, $requestId]);
 
-                    // If it was previously approved, restore vacant unit
-                    if ($req['status'] === 'approved' && (int)$req['occupied_apartments'] > 0) {
-                        $updHouse = $pdo->prepare("UPDATE houses SET occupied_apartments = GREATEST(0, occupied_apartments - 1), vacant_apartments = LEAST(total_apartments, vacant_apartments + 1) WHERE id = ?");
-                        $updHouse->execute([$req['house_id']]);
+                    // If previously approved or had apartment assigned, release it
+                    if (!empty($req['apartment_id'])) {
+                        $relApt = $pdo->prepare("UPDATE apartments SET status = 'vacant', current_tenant_id = NULL, rental_request_id = NULL WHERE id = ?");
+                        $relApt->execute([(int)$req['apartment_id']]);
                     }
 
+                    sync_house_occupancy_counts($pdo, $houseId);
                     $pdo->commit();
-                    set_flash('warning', 'Rental request rejected.');
+                    set_flash('warning', 'Rental request rejected and assigned apartment unit released.');
                 } catch (Exception $e) {
                     $pdo->rollBack();
                     set_flash('danger', 'Error rejecting request: ' . $e->getMessage());
                 }
             } elseif ($action === 'delete') {
+                if (!empty($req['apartment_id'])) {
+                    $relApt = $pdo->prepare("UPDATE apartments SET status = 'vacant', current_tenant_id = NULL, rental_request_id = NULL WHERE id = ?");
+                    $relApt->execute([(int)$req['apartment_id']]);
+                    sync_house_occupancy_counts($pdo, $houseId);
+                }
                 $del = $pdo->prepare("DELETE FROM rental_requests WHERE id = ?");
                 $del->execute([$requestId]);
                 set_flash('success', 'Rental request removed.');
@@ -111,6 +164,13 @@ $sql .= " ORDER BY r.id DESC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $requests = $stmt->fetchAll();
+
+// Fetch all apartments grouped by house for assignment modal
+$houseApartmentsData = [];
+$allAptsStmt = $pdo->query("SELECT id, house_id, apartment_number, rent_price, floor, status FROM apartments ORDER BY id ASC");
+while ($aRow = $allAptsStmt->fetch()) {
+    $houseApartmentsData[(int)$aRow['house_id']][] = $aRow;
+}
 
 // Counts for status pills
 $countPending  = (int)$pdo->query("SELECT COUNT(*) FROM rental_requests WHERE status = 'pending'")->fetchColumn();
@@ -187,6 +247,7 @@ require_once __DIR__ . '/../includes/header.php';
                                     <th>#</th>
                                     <th>Tenant Details</th>
                                     <th>Requested Property</th>
+                                    <th>Assigned Unit</th>
                                     <th>Rent Price</th>
                                     <th>Move-In Date</th>
                                     <th>Status</th>
@@ -197,7 +258,7 @@ require_once __DIR__ . '/../includes/header.php';
                             <tbody>
                                 <?php if (empty($requests)): ?>
                                     <tr>
-                                        <td colspan="8">
+                                        <td colspan="9">
                                             <div class="empty-state">
                                                 <div class="empty-state-icon">
                                                     <i class="bi bi-inbox"></i>
@@ -221,6 +282,21 @@ require_once __DIR__ . '/../includes/header.php';
                                                 <span class="badge bg-secondary-subtle text-secondary font-monospace"><?= e($r['house_code']); ?></span>
                                                 <small class="text-muted d-block"><i class="bi bi-geo-alt me-1"></i><?= e($r['city']); ?></small>
                                             </td>
+                                            <td>
+                                                <?php if (!empty($r['assigned_apartment'])): ?>
+                                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle font-monospace px-2 py-1">
+                                                        <i class="bi bi-door-closed me-1"></i><?= e($r['assigned_apartment']); ?>
+                                                    </span>
+                                                <?php elseif (!empty($r['apartment_id'])): ?>
+                                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle font-monospace px-2 py-1">
+                                                        <i class="bi bi-door-closed me-1"></i>Unit #<?= (int)$r['apartment_id']; ?>
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="badge bg-light text-muted border px-2 py-1">
+                                                        <i class="bi bi-clock me-1"></i>Unassigned
+                                                    </span>
+                                                <?php endif; ?>
+                                            </td>
                                             <td class="fw-bold text-primary">
                                                 <?= format_currency($r['rent_price'], $currency); ?>
                                                 <small class="text-muted d-block">per month</small>
@@ -243,16 +319,16 @@ require_once __DIR__ . '/../includes/header.php';
                                             <td class="text-end no-export">
                                                 <div class="btn-action-group justify-content-end">
                                                     <?php if ($r['status'] !== 'approved'): ?>
-                                                        <button type="button" class="btn-action btn-action-approve" onclick="openActionModal('approve', <?= (int)$r['id']; ?>, '<?= e(addslashes($r['user_name'])); ?>', '<?= e(addslashes($r['house_name'])); ?>')" title="Approve Application">
+                                                        <button type="button" class="btn-action btn-action-approve" onclick="openActionModal('approve', <?= (int)$r['id']; ?>, '<?= e(addslashes($r['user_name'])); ?>', '<?= e(addslashes($r['house_name'])); ?>', <?= (int)$r['house_id']; ?>, <?= (int)($r['apartment_id'] ?? 0); ?>, '<?= e(addslashes($r['assigned_apartment'] ?? '')); ?>')" title="Approve Application & Assign Unit">
                                                             <i class="bi bi-check-lg"></i>
                                                         </button>
                                                     <?php endif; ?>
                                                     <?php if ($r['status'] !== 'rejected'): ?>
-                                                        <button type="button" class="btn-action btn-action-reject" onclick="openActionModal('reject', <?= (int)$r['id']; ?>, '<?= e(addslashes($r['user_name'])); ?>', '<?= e(addslashes($r['house_name'])); ?>')" title="Reject Application">
+                                                        <button type="button" class="btn-action btn-action-reject" onclick="openActionModal('reject', <?= (int)$r['id']; ?>, '<?= e(addslashes($r['user_name'])); ?>', '<?= e(addslashes($r['house_name'])); ?>', <?= (int)$r['house_id']; ?>, <?= (int)($r['apartment_id'] ?? 0); ?>, '<?= e(addslashes($r['assigned_apartment'] ?? '')); ?>')" title="Reject Application">
                                                             <i class="bi bi-x-lg"></i>
                                                         </button>
                                                     <?php endif; ?>
-                                                    <form method="POST" action="<?= BASE_URL; ?>admin/rental_requests.php" class="d-inline" onsubmit="return confirm('Delete this request permanently?');">
+                                                    <form method="POST" action="<?= BASE_URL; ?>admin/rental_requests.php" class="d-inline" data-confirm="Ma hubtaa inaad tirtirto codsigan kireysiga ah? Tallaabadan dib looma noqon karo.">
                                                         <?= csrf_field(); ?>
                                                         <input type="hidden" name="action" value="delete">
                                                         <input type="hidden" name="request_id" value="<?= (int)$r['id']; ?>">
@@ -288,6 +364,18 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
             <div class="modal-body">
                 <p id="modal_desc" class="mb-3"></p>
+
+                <!-- Apartment Unit Assignment Selector -->
+                <div id="apartment_assign_group" class="mb-3">
+                    <label class="form-label fw-semibold small">Assign Apartment Unit (Dooro Qolka la siinayo) <span class="text-danger">*</span></label>
+                    <select name="apartment_id" id="modal_apartment_id" class="form-select">
+                        <option value="">-- Dooro Apartment Unit (e.g. Apartment 13) --</option>
+                    </select>
+                    <small class="text-muted d-block mt-1" id="modal_apt_hint">
+                        Dooro qolka loo xilsaarayo qofkan (tusaale <strong>Apartment 13</strong>).
+                    </small>
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label fw-semibold small">Notes / Reason (Sent to Tenant)</label>
                     <textarea name="admin_notes" id="modal_notes" rows="3" class="form-control" placeholder="Optional comments regarding verification, deposit, lease terms, or rejection reason..."></textarea>
@@ -302,23 +390,55 @@ require_once __DIR__ . '/../includes/header.php';
 </div>
 
 <script>
-function openActionModal(action, id, userName, houseName) {
+const houseApartmentsData = <?= json_encode($houseApartmentsData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+
+function openActionModal(action, id, userName, houseName, houseId, currentAptId, assignedAptName) {
     document.getElementById('modal_action').value = action;
     document.getElementById('modal_request_id').value = id;
     const title = document.getElementById('modal_title');
     const desc = document.getElementById('modal_desc');
     const btn = document.getElementById('modal_submit_btn');
+    const aptGroup = document.getElementById('apartment_assign_group');
+    const aptSelect = document.getElementById('modal_apartment_id');
 
     if (action === 'approve') {
-        title.innerText = 'Approve Rental Application';
-        desc.innerHTML = `You are approving tenant <strong>${userName}</strong> for <strong>${houseName}</strong>. This will allocate 1 vacant unit to occupied status.`;
-        btn.innerText = 'Approve Application';
+        title.innerText = 'Approve Application & Assign Apartment';
+        desc.innerHTML = `You are approving tenant <strong>${userName}</strong> for <strong>${houseName}</strong>. Dooro apartment number-ka aad siinayso (tusaale <strong>Apartment 13</strong>):`;
+        btn.innerText = 'Approve & Assign Apartment';
         btn.className = 'btn btn-success btn-sm';
+        aptGroup.style.display = 'block';
+        aptSelect.required = true;
+
+        aptSelect.innerHTML = '<option value="">-- Dooro Apartment Unit (e.g. Apartment 13) --</option>';
+        const apts = houseApartmentsData[houseId] || [];
+        let hasOptions = false;
+        apts.forEach(apt => {
+            if (apt.status === 'vacant' || apt.id == currentAptId) {
+                hasOptions = true;
+                const opt = document.createElement('option');
+                opt.value = apt.id;
+                const isCur = (apt.id == currentAptId);
+                opt.textContent = `${apt.apartment_number} (${apt.floor || 'Ground'} - $${parseFloat(apt.rent_price).toFixed(2)})${isCur ? ' [Current]' : ''}`;
+                if (isCur) {
+                    opt.selected = true;
+                }
+                aptSelect.appendChild(opt);
+            }
+        });
+
+        if (!hasOptions) {
+            const opt = document.createElement('option');
+            opt.value = "";
+            opt.textContent = "Ma jiro qol bannaan gurigan!";
+            aptSelect.appendChild(opt);
+        }
     } else {
         title.innerText = 'Reject Rental Application';
-        desc.innerHTML = `You are rejecting the rental request from <strong>${userName}</strong> for <strong>${houseName}</strong>.`;
+        desc.innerHTML = `You are rejecting the rental request from <strong>${userName}</strong> for <strong>${houseName}</strong>. Haddii qol loo xilsaaray, waa la bannayn doonaa.`;
         btn.innerText = 'Reject Application';
         btn.className = 'btn btn-danger btn-sm';
+        aptGroup.style.display = 'none';
+        aptSelect.required = false;
     }
     new bootstrap.Modal(document.getElementById('actionModal')).show();
 }

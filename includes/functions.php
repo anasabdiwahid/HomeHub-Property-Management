@@ -35,7 +35,7 @@ function mogadishu_districts(): array {
 /**
  * Escapes HTML characters to prevent XSS
  */
-function e(?string $string): string {
+function e(string|int|float|null $string): string {
     return htmlspecialchars((string)($string ?? ''), ENT_QUOTES, 'UTF-8');
 }
 
@@ -221,4 +221,138 @@ function category_icon_meta(?string $categoryName): array {
         return ['icon' => 'bi-lamp', 'class' => 'cat-icon-studio', 'color' => '#ea580c'];
     }
     return ['icon' => 'bi-tag', 'class' => 'cat-icon-default', 'color' => '#102a45'];
+}
+
+/**
+ * Ensures all individual apartments exist for a house based on total_apartments count.
+ * Returns array of apartments with tenant information if occupied.
+ */
+function ensure_house_apartments(PDO $pdo, int $houseId): array {
+    $houseStmt = $pdo->prepare("SELECT id, house_name, total_apartments, rent_price FROM houses WHERE id = ? LIMIT 1");
+    $houseStmt->execute([$houseId]);
+    $house = $houseStmt->fetch();
+
+    if (!$house) {
+        return [];
+    }
+
+    $totalApts = max(1, (int)$house['total_apartments']);
+    $basePrice = (float)$house['rent_price'];
+
+    // Check existing apartments
+    $aptStmt = $pdo->prepare("SELECT * FROM apartments WHERE house_id = ? ORDER BY id ASC");
+    $aptStmt->execute([$houseId]);
+    $existing = $aptStmt->fetchAll();
+    $existingCount = count($existing);
+
+    // Create any missing apartments
+    if ($existingCount < $totalApts) {
+        $insertStmt = $pdo->prepare("
+            INSERT INTO apartments (house_id, apartment_number, rent_price, floor, status)
+            VALUES (?, ?, ?, ?, 'vacant')
+        ");
+        for ($i = $existingCount + 1; $i <= $totalApts; $i++) {
+            $aptNum = 'Apartment ' . $i;
+            $floorNum = 'Floor ' . ceil($i / 4);
+            $insertStmt->execute([$houseId, $aptNum, $basePrice, $floorNum]);
+        }
+    }
+
+    // Synchronize approved rental requests with apartments if any are unassigned
+    $approvedRequestsStmt = $pdo->prepare("
+        SELECT id, user_id FROM rental_requests 
+        WHERE house_id = ? AND status = 'approved' AND (apartment_id IS NULL OR apartment_id = 0)
+        ORDER BY id ASC
+    ");
+    $approvedRequestsStmt->execute([$houseId]);
+    $unassignedApproved = $approvedRequestsStmt->fetchAll();
+
+    if (!empty($unassignedApproved)) {
+        // Find vacant apartments to assign
+        $vacantAptsStmt = $pdo->prepare("
+            SELECT id, apartment_number FROM apartments 
+            WHERE house_id = ? AND status = 'vacant' 
+            ORDER BY id ASC LIMIT ?
+        ");
+        $vacantAptsStmt->bindValue(1, $houseId, PDO::PARAM_INT);
+        $vacantAptsStmt->bindValue(2, count($unassignedApproved), PDO::PARAM_INT);
+        $vacantAptsStmt->execute();
+        $vacants = $vacantAptsStmt->fetchAll();
+
+        foreach ($unassignedApproved as $idx => $req) {
+            if (isset($vacants[$idx])) {
+                $apt = $vacants[$idx];
+                // Update rental_requests
+                $updReq = $pdo->prepare("UPDATE rental_requests SET apartment_id = ?, assigned_apartment = ? WHERE id = ?");
+                $updReq->execute([$apt['id'], $apt['apartment_number'], $req['id']]);
+
+                // Update apartment
+                $updApt = $pdo->prepare("UPDATE apartments SET status = 'occupied', current_tenant_id = ?, rental_request_id = ? WHERE id = ?");
+                $updApt->execute([$req['user_id'], $req['id'], $apt['id']]);
+            }
+        }
+    }
+
+    // Synchronize house occupancy counters
+    sync_house_occupancy_counts($pdo, $houseId);
+
+    // Return all apartments with tenant details
+    $fullStmt = $pdo->prepare("
+        SELECT a.*, u.name as tenant_name, u.email as tenant_email, u.phone as tenant_phone,
+               r.move_in_date, r.status as request_status
+        FROM apartments a
+        LEFT JOIN users u ON a.current_tenant_id = u.id
+        LEFT JOIN rental_requests r ON a.rental_request_id = r.id
+        WHERE a.house_id = ?
+        ORDER BY a.id ASC
+    ");
+    $fullStmt->execute([$houseId]);
+    return $fullStmt->fetchAll();
+}
+
+/**
+ * Synchronizes the house summary counters (total, occupied, vacant)
+ * with the actual rows in the apartments table.
+ */
+function sync_house_occupancy_counts(PDO $pdo, int $houseId): void {
+    if ($houseId <= 0) {
+        return;
+    }
+    $stmt = $pdo->prepare("
+        SELECT 
+            COUNT(*) as total_apts,
+            SUM(CASE WHEN status = 'occupied' THEN 1 ELSE 0 END) as occ_apts,
+            SUM(CASE WHEN status = 'vacant' THEN 1 ELSE 0 END) as vac_apts
+        FROM apartments 
+        WHERE house_id = ?
+    ");
+    $stmt->execute([$houseId]);
+    $counts = $stmt->fetch();
+    
+    if ($counts && (int)$counts['total_apts'] > 0) {
+        $tot = (int)$counts['total_apts'];
+        $occ = (int)$counts['occ_apts'];
+        $vac = (int)$counts['vac_apts'];
+        $upd = $pdo->prepare("UPDATE houses SET total_apartments = ?, occupied_apartments = ?, vacant_apartments = ? WHERE id = ?");
+        $upd->execute([$tot, $occ, $vac, $houseId]);
+    }
+}
+
+/**
+ * Returns all currently vacant apartments for a house.
+ */
+function get_vacant_apartments(PDO $pdo, int $houseId): array {
+    if ($houseId <= 0) {
+        return [];
+    }
+    // Ensure apartments exist
+    ensure_house_apartments($pdo, $houseId);
+    $stmt = $pdo->prepare("
+        SELECT id, apartment_number, rent_price, floor, status, notes
+        FROM apartments 
+        WHERE house_id = ? AND status = 'vacant'
+        ORDER BY id ASC
+    ");
+    $stmt->execute([$houseId]);
+    return $stmt->fetchAll();
 }

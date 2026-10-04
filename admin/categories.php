@@ -197,7 +197,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                                 <i class="bi bi-pencil-square"></i>
                                                             </button>
 
-                                                            <form method="POST" action="<?= BASE_URL; ?>admin/categories.php" class="d-inline" onsubmit="return confirm('Are you sure you want to delete category \'<?= e($cat['category_name']); ?>\'?');">
+                                                            <form method="POST" action="<?= BASE_URL; ?>admin/categories.php" class="d-inline" data-confirm="Ma hubtaa inaad tirtirto category-gan '<?= e(addslashes($cat['category_name'])); ?>'?">
                                                                 <?= csrf_field(); ?>
                                                                 <input type="hidden" name="action" value="delete">
                                                                 <input type="hidden" name="category_id" value="<?= (int)$cat['id']; ?>">

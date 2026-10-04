@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $occupiedApts   = (int)($_POST['occupied_apartments'] ?? 0);
         $vacantApts     = max(0, $totalApts - $occupiedApts);
         $description    = trim($_POST['description'] ?? '');
+        $status         = in_array($_POST['status'] ?? '', ['active', 'inactive']) ? $_POST['status'] : 'active';
 
         // Validation
         if (empty($houseName)) $errors[] = 'House Name is required.';
@@ -67,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $stmt = $pdo->prepare("
                     INSERT INTO houses 
-                    (category_id, manager_id, house_name, house_code, address, city, rent_price, total_apartments, occupied_apartments, vacant_apartments, description, image) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    (category_id, manager_id, house_name, house_code, address, city, rent_price, total_apartments, occupied_apartments, vacant_apartments, description, image, status) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ");
                 $stmt->execute([
                     $categoryId,
@@ -82,7 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $occupiedApts,
                     $vacantApts,
                     $description,
-                    $imageFilename
+                    $imageFilename,
+                    $status
                 ]);
 
                 set_flash('success', 'House "' . $houseName . '" added successfully!');
@@ -183,7 +185,7 @@ require_once __DIR__ . '/../includes/header.php';
                             </div>
 
                             <!-- District in Mogadishu -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label fw-semibold">Mogadishu District <span class="text-danger">*</span></label>
                                 <select name="city" class="form-select" required>
                                     <option value="">-- Select Mogadishu District --</option>
@@ -199,9 +201,18 @@ require_once __DIR__ . '/../includes/header.php';
                             </div>
 
                             <!-- Address -->
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <label class="form-label fw-semibold">Address / Street <span class="text-danger">*</span></label>
                                 <input type="text" name="address" class="form-control" placeholder="e.g. Maka Al Mukarama Road, Hodan" value="<?= e($_POST['address'] ?? ''); ?>" required>
+                            </div>
+
+                            <!-- Property Status -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Property Status <span class="text-danger">*</span></label>
+                                <select name="status" class="form-select">
+                                    <option value="active" <?= (($_POST['status'] ?? 'active') === 'active') ? 'selected' : ''; ?>>Active (Visible)</option>
+                                    <option value="inactive" <?= (($_POST['status'] ?? '') === 'inactive') ? 'selected' : ''; ?>>Deactive (Hidden)</option>
+                                </select>
                             </div>
 
                             <!-- Monthly Rent Price -->

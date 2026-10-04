@@ -20,20 +20,20 @@ $currency = get_setting($pdo, 'currency', '$');
 // User Dashboard Metrics
 $myRequestsCount = (int)$pdo->query("SELECT COUNT(*) FROM rental_requests WHERE user_id = {$userId}")->fetchColumn();
 $myApprovedCount = (int)$pdo->query("SELECT COUNT(*) FROM rental_requests WHERE user_id = {$userId} AND status = 'approved'")->fetchColumn();
-$totalAvailableHouses = (int)$pdo->query("SELECT COUNT(*) FROM houses WHERE vacant_apartments > 0")->fetchColumn();
+$totalAvailableHouses = (int)$pdo->query("SELECT COUNT(*) FROM houses WHERE status = 'active' AND vacant_apartments > 0")->fetchColumn();
 
 // Filter parameters
 $search = trim($_GET['search'] ?? '');
 $filterCity = trim($_GET['city'] ?? '');
 $filterCategory = !empty($_GET['category']) ? (int)$_GET['category'] : 0;
 $filterMaxPrice = !empty($_GET['max_price']) ? (float)$_GET['max_price'] : 0;
-$filterVacantOnly = isset($_GET['vacant_only']) ? (int)$_GET['vacant_only'] : 1;
+$filterVacantOnly = isset($_GET['vacant_only']) ? (int)$_GET['vacant_only'] : 0;
 
 $query = "SELECT h.*, c.category_name, u.name as manager_name, u.phone as manager_phone
           FROM houses h
           JOIN categories c ON h.category_id = c.id
           LEFT JOIN users u ON h.manager_id = u.id
-          WHERE 1=1";
+          WHERE h.status = 'active'";
 $params = [];
 
 if (!empty($search)) {
@@ -61,6 +61,18 @@ $query .= " ORDER BY h.id DESC";
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);
 $houses = $stmt->fetchAll();
+
+// Ensure all houses have their apartments populated & sync occupancy
+foreach ($houses as $h) {
+    ensure_house_apartments($pdo, (int)$h['id']);
+}
+
+// Fetch vacant apartments grouped by house for quick rent modal
+$vacantApartmentsByHouse = [];
+$vacStmt = $pdo->query("SELECT id, house_id, apartment_number, rent_price, floor FROM apartments WHERE status = 'vacant' ORDER BY id ASC");
+while ($vRow = $vacStmt->fetch()) {
+    $vacantApartmentsByHouse[(int)$vRow['house_id']][] = $vRow;
+}
 
 // Categories and Mogadishu Districts
 $categories = $pdo->query("SELECT * FROM categories ORDER BY category_name ASC")->fetchAll();
@@ -197,13 +209,29 @@ require_once __DIR__ . '/../includes/header.php';
                         <div class="card-body d-flex flex-column p-3">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <small class="text-muted font-monospace"><?= e($h['house_code']); ?></small>
-                                <span class="badge <?= (int)$h['vacant_apartments'] > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle'; ?>">
-                                    <?= (int)$h['vacant_apartments'] > 0 ? (int)$h['vacant_apartments'] . ' Units Vacant' : 'Occupied'; ?>
+                                <span class="badge <?= (int)$h['vacant_apartments'] > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger text-white'; ?>">
+                                    <?= (int)$h['vacant_apartments'] > 0 ? (int)$h['vacant_apartments'] . ' Units Vacant' : 'Wuu Buuxaa'; ?>
                                 </span>
                             </div>
 
                             <h5 class="card-title fw-bold text-truncate mb-1"><?= e($h['house_name']); ?></h5>
                             <small class="text-muted mb-2"><i class="bi bi-geo me-1"></i><?= e($h['address']); ?></small>
+
+                            <!-- Apartments Occupancy Breakdown -->
+                            <div class="bg-body-tertiary p-2 rounded-2 border mb-2 small">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="text-muted"><i class="bi bi-buildings text-primary me-1"></i>Wadarta: <strong><?= (int)$h['total_apartments']; ?> Qol</strong></span>
+                                    <?php if ((int)$h['vacant_apartments'] > 0): ?>
+                                        <span class="text-success fw-bold"><i class="bi bi-door-open me-1"></i><?= (int)$h['vacant_apartments']; ?> Bannaan</span>
+                                    <?php else: ?>
+                                        <span class="text-danger fw-bold"><i class="bi bi-x-circle me-1"></i>Wuu Buuxaa</span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="d-flex justify-content-between small text-muted">
+                                    <span><i class="bi bi-person-fill text-danger me-1"></i>La deggen: <strong class="text-danger"><?= (int)$h['occupied_apartments']; ?></strong></span>
+                                    <span><i class="bi bi-check2-circle text-success me-1"></i>Bannaan: <strong class="text-success"><?= (int)$h['vacant_apartments']; ?></strong></span>
+                                </div>
+                            </div>
 
                             <p class="text-muted small mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                                 <?= e($h['description'] ?? 'No description provided.'); ?>
@@ -223,7 +251,9 @@ require_once __DIR__ . '/../includes/header.php';
                                             Rent <i class="bi bi-arrow-right ms-1"></i>
                                         </button>
                                     <?php else: ?>
-                                        <button type="button" class="btn btn-secondary btn-sm" disabled>Full</button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm text-nowrap" onclick="showOccupiedNotice('<?= e(addslashes($h['house_name'])); ?>', <?= (int)$h['total_apartments']; ?>)">
+                                            <i class="bi bi-x-circle me-1"></i>Wuu Buuxaa
+                                        </button>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -253,33 +283,99 @@ require_once __DIR__ . '/../includes/header.php';
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label fw-semibold small">Dooro Apartment-ka aad rabto (Select Unit) <span class="text-danger">*</span></label>
+                    <select name="apartment_id" id="modal_apartment_select" class="form-select" required>
+                        <option value="">-- Dooro Apartment Number (e.g. Apartment 13) --</option>
+                    </select>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">
+                        Qolka aad doorato waxaa lagu dari doonaa codsigaaga iyo farriinta WhatsApp.
+                    </small>
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label fw-semibold small">Preferred Move-In Date <span class="text-danger">*</span></label>
                     <input type="date" name="move_in_date" class="form-control" value="<?= date('Y-m-d', strtotime('+3 days')); ?>" required>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold small">Notes or Unit Preference</label>
-                    <textarea name="request_note" rows="3" class="form-control" placeholder="e.g. 2nd floor preferred, moving with small family, inquiry about parking space..."></textarea>
+                    <label class="form-label fw-semibold small">Description / Faahfaahinta Codsiga</label>
+                    <textarea name="request_note" rows="3" class="form-control" placeholder="Qor faahfaahintaada / e.g. 2nd floor preferred, moving with small family, inquiry about parking space..."></textarea>
                 </div>
 
-                <div class="small text-muted">
-                    <i class="bi bi-shield-check text-success me-1"></i>Your request will be sent to the assigned property supervisor for approval.
+                <div class="p-2 rounded-3 bg-success-subtle border border-success-subtle d-flex align-items-center gap-2 small text-success-emphasis mb-2">
+                    <i class="bi bi-whatsapp fs-5 text-success flex-shrink-0"></i>
+                    <div>
+                        Marka aad riixdo <strong>Confirm</strong>, waxaa toos laguu geynayaa <strong>WhatsApp (+252 616256534)</strong> fariintana waa diyaar si aad u dirto.
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary btn-sm">Confirm & Submit Request</button>
+                <button type="submit" class="btn btn-success btn-sm fw-bold shadow-sm">
+                    <i class="bi bi-whatsapp me-1"></i> Confirm & Send via WhatsApp
+                </button>
             </div>
         </form>
     </div>
 </div>
 
+<!-- Fully Occupied Notice Modal -->
+<div class="modal fade" id="occupiedNoticeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold"><i class="bi bi-x-octagon-fill me-2"></i>Gurigan Wuu Buuxaa!</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3">
+                    <span class="rounded-circle bg-danger-subtle text-danger p-3 d-inline-flex" style="width: 70px; height: 70px; align-items: center; justify-content: center;">
+                        <i class="bi bi-houses-fill fs-2"></i>
+                    </span>
+                </div>
+                <h5 class="fw-bold mb-1" id="occupiedHouseName"></h5>
+                <div class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1 mb-3">
+                    Dhammaan waa la wada deggen yahay
+                </div>
+                <div class="alert alert-danger text-start p-3 rounded-3 small mb-0">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    Gurigan wuxuu ka kooban yahay <strong id="occupiedHouseTotal">15</strong> Apartments, dhammaantoodna waa la wada qabsaday oo la wada deggen yahay. Hadda ma jiro qol bannaan oo la kireysan karo.
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center bg-body-tertiary">
+                <button type="button" class="btn btn-secondary px-4 btn-sm" data-bs-dismiss="modal">Waan Fahmay (Close)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+const vacantApartmentsData = <?= json_encode($vacantApartmentsByHouse, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+
 function openRentModal(houseId, houseTitle, rentPrice) {
     document.getElementById('modal_house_id').value = houseId;
     document.getElementById('modal_house_title').innerText = houseTitle;
     document.getElementById('modal_house_price').innerText = rentPrice + ' / month';
+
+    const aptSelect = document.getElementById('modal_apartment_select');
+    if (aptSelect) {
+        aptSelect.innerHTML = '<option value="">-- Dooro Apartment Number (e.g. Apartment 13) --</option>';
+        const apts = vacantApartmentsData[houseId] || [];
+        apts.forEach(apt => {
+            const opt = document.createElement('option');
+            opt.value = apt.id;
+            opt.textContent = `${apt.apartment_number} (${apt.floor || 'Ground'}) - $${parseFloat(apt.rent_price).toFixed(2)}/mo`;
+            aptSelect.appendChild(opt);
+        });
+    }
+
     new bootstrap.Modal(document.getElementById('rentModal')).show();
+}
+
+function showOccupiedNotice(houseTitle, totalApts) {
+    document.getElementById('occupiedHouseName').innerText = houseTitle;
+    document.getElementById('occupiedHouseTotal').innerText = totalApts;
+    new bootstrap.Modal(document.getElementById('occupiedNoticeModal')).show();
 }
 </script>
 

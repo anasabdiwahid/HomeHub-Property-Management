@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $occupiedApts = (int)($_POST['occupied_apartments'] ?? 0);
         $vacantApts   = max(0, $totalApts - $occupiedApts);
         $description  = trim($_POST['description'] ?? '');
+        $status       = in_array($_POST['status'] ?? '', ['active', 'inactive']) ? $_POST['status'] : ($house['status'] ?? 'active');
 
         if (empty($address)) $errors[] = 'Address cannot be empty.';
         if (empty($city))    $errors[] = 'City cannot be empty.';
@@ -71,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $upd = $pdo->prepare("
                     UPDATE houses SET
                     address = ?, city = ?, rent_price = ?, total_apartments = ?,
-                    occupied_apartments = ?, vacant_apartments = ?, description = ?, image = ?
+                    occupied_apartments = ?, vacant_apartments = ?, description = ?, image = ?, status = ?
                     WHERE id = ? AND manager_id = ?
                 ");
                 $upd->execute([
@@ -83,9 +84,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $vacantApts,
                     $description,
                     $imageFilename,
+                    $status,
                     $houseId,
                     $managerId
                 ]);
+
+                // Synchronize individual apartments with new capacity and rent price
+                ensure_house_apartments($pdo, $houseId);
+                sync_house_occupancy_counts($pdo, $houseId);
 
                 set_flash('success', 'Property status and details updated successfully!');
                 header('Location: ' . BASE_URL . 'manager/houses.php');
@@ -187,7 +193,7 @@ require_once __DIR__ . '/../includes/header.php';
                                 <input type="text" name="address" class="form-control" value="<?= e($_POST['address'] ?? $house['address']); ?>" required>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label fw-semibold small">Monthly Rent Price ($) <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
@@ -195,7 +201,16 @@ require_once __DIR__ . '/../includes/header.php';
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold small">Property Status</label>
+                                <select name="status" class="form-select">
+                                    <?php $currentStatus = $_POST['status'] ?? ($house['status'] ?? 'active'); ?>
+                                    <option value="active" <?= ($currentStatus === 'active') ? 'selected' : ''; ?>>Active (Visible on public portal)</option>
+                                    <option value="inactive" <?= ($currentStatus === 'inactive') ? 'selected' : ''; ?>>Deactive (Hidden from public)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
                                 <label class="form-label fw-semibold small">Update Photo</label>
                                 <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
                             </div>
@@ -212,8 +227,8 @@ require_once __DIR__ . '/../includes/header.php';
                             </div>
 
                             <div class="col-12 mt-4 pt-3 border-top d-flex gap-2">
-                                <button type="submit" class="btn btn-primary px-4">
-                                    <i class="bi bi-check-circle me-1"></i>Save Changes
+                                <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm">
+                                    <i class="bi bi-check-circle-fill me-1"></i>Save & Update Property
                                 </button>
                                 <a href="<?= BASE_URL; ?>manager/houses.php" class="btn btn-outline-secondary">Cancel</a>
                             </div>

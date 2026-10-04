@@ -230,7 +230,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                             onclick="openEditManagerModal(<?= (int)$mgr['id']; ?>, '<?= e(addslashes($mgr['name'])); ?>', '<?= e(addslashes($mgr['email'])); ?>', '<?= e(addslashes($mgr['phone'] ?? '')); ?>')">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
-                                                    <form method="POST" action="<?= BASE_URL; ?>admin/managers.php" class="d-inline" onsubmit="return confirm('Are you sure you want to remove manager \'<?= e($mgr['name']); ?>\'?');">
+                                                    <form method="POST" action="<?= BASE_URL; ?>admin/managers.php" class="d-inline" data-confirm="Ma hubtaa inaad tirtirto manager-ka '<?= e(addslashes($mgr['name'])); ?>'? Tallaabadan dib looma noqon karo.">
                                                         <?= csrf_field(); ?>
                                                         <input type="hidden" name="action" value="delete">
                                                         <input type="hidden" name="manager_id" value="<?= (int)$mgr['id']; ?>">
@@ -421,7 +421,7 @@ function generateRandomPassword(inputId) {
     input.value = pwd;
     if (navigator.clipboard) {
         navigator.clipboard.writeText(pwd);
-        alert('Generated Password: ' + pwd + '\n(Copied to clipboard!)');
+        showPasswordCopied(pwd);
     }
 }
 </script>

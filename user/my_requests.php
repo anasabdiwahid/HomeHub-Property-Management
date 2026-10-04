@@ -16,6 +16,8 @@ require_role('user');
 $currentUser = current_user();
 $userId = (int)$currentUser['id'];
 $currency = get_setting($pdo, 'currency', '$');
+$targetWhatsApp = get_setting($pdo, 'whatsapp_number', '+252 616256534');
+$cleanWhatsApp = preg_replace('/[^0-9]/', '', $targetWhatsApp) ?: '252616256534';
 
 // Handle Cancel Request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -83,6 +85,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <tr>
                             <th>Property</th>
                             <th>Category & District</th>
+                            <th>Apartment Unit</th>
                             <th>Monthly Rent</th>
                             <th>Move-In Date</th>
                             <th>Status</th>
@@ -94,7 +97,7 @@ require_once __DIR__ . '/../includes/header.php';
                     <tbody>
                         <?php if (empty($requests)): ?>
                             <tr>
-                                <td colspan="8">
+                                <td colspan="9">
                                     <div class="empty-state">
                                         <div class="empty-state-icon">
                                             <i class="bi bi-file-earmark-x"></i>
@@ -130,6 +133,21 @@ require_once __DIR__ . '/../includes/header.php';
                                         <div><span class="badge bg-primary-subtle text-primary"><?= e($r['category_name']); ?></span></div>
                                         <small class="text-muted"><i class="bi bi-geo-alt me-1"></i><?= e($r['city']); ?></small>
                                     </td>
+                                    <td>
+                                        <?php if (!empty($r['assigned_apartment'])): ?>
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle font-monospace px-2 py-1">
+                                                <i class="bi bi-door-closed-fill me-1"></i><?= e($r['assigned_apartment']); ?>
+                                            </span>
+                                        <?php elseif (!empty($r['apartment_id'])): ?>
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle font-monospace px-2 py-1">
+                                                <i class="bi bi-door-closed-fill me-1"></i>Unit #<?= (int)$r['apartment_id']; ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="badge bg-light text-muted border px-2 py-1">
+                                                <i class="bi bi-clock me-1"></i>Pending Unit
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td class="fw-bold text-primary">
                                         <?= format_currency($r['rent_price'], $currency); ?>
                                     </td>
@@ -157,9 +175,29 @@ require_once __DIR__ . '/../includes/header.php';
                                         <?= format_date($r['created_at']); ?>
                                     </td>
                                     <td class="text-end">
-                                        <div class="btn-action-group justify-content-end">
+                                        <div class="btn-action-group justify-content-end align-items-center">
+                                            <?php
+                                                $rMsg = "🏠 *CODSIGA KIREYSIGA GURI (HomeHub)*\n\n";
+                                                $rMsg .= "👤 *Full Name:* " . ($currentUser['name'] ?? 'Tenant') . "\n";
+                                                $rMsg .= "📧 *Email:* " . ($currentUser['email'] ?? 'N/A') . "\n";
+                                                if (!empty($currentUser['phone'])) {
+                                                    $rMsg .= "📞 *Phone:* " . $currentUser['phone'] . "\n";
+                                                }
+                                                $rMsg .= "🏡 *Guri Name:* " . $r['house_name'] . "\n";
+                                                $rMsg .= "🏢 *Guriga Oo Doortay:* " . $r['house_name'] . " (" . $r['house_code'] . " - " . ($r['category_name'] ?? '') . ")\n";
+                                                $rMsg .= "📍 *Location:* " . $r['address'] . ", " . $r['city'] . "\n";
+                                                $rMsg .= "💰 *Qiimaha:* " . format_currency($r['rent_price'], $currency) . " / bishii\n";
+                                                $rMsg .= "📅 *Move-In Date:* " . (!empty($r['move_in_date']) ? $r['move_in_date'] : 'Immediate') . "\n\n";
+                                                $rMsg .= "📝 *Description:* \n" . (!empty($r['request_note']) ? $r['request_note'] : 'N/A') . "\n\n";
+                                                $rMsg .= "------------------------------------\n";
+                                                $rMsg .= "Waxaan rabaa inaan kireysto gurigan, fadlan iisoo xaqiiji.";
+                                                $rWaUrl = 'https://api.whatsapp.com/send?phone=' . $cleanWhatsApp . '&text=' . rawurlencode($rMsg);
+                                            ?>
+                                            <a href="<?= e($rWaUrl); ?>" target="_blank" class="btn btn-sm btn-outline-success text-nowrap d-inline-flex align-items-center gap-1" title="Ku dir WhatsApp (+252 616256534)">
+                                                <i class="bi bi-whatsapp"></i> <span>WhatsApp</span>
+                                            </a>
                                             <?php if ($r['status'] === 'pending'): ?>
-                                                <form method="POST" action="<?= BASE_URL; ?>user/my_requests.php" class="d-inline" onsubmit="return confirm('Cancel this rental application?');">
+                                                <form method="POST" action="<?= BASE_URL; ?>user/my_requests.php" class="d-inline" data-confirm="Ma hubtaa inaad joojiso (cancel) codsigan kireysiga ah?">
                                                     <?= csrf_field(); ?>
                                                     <input type="hidden" name="request_id" value="<?= (int)$r['id']; ?>">
                                                     <button type="submit" class="btn-action btn-action-delete" title="Cancel Application">

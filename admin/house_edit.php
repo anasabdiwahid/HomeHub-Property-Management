@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $occupiedApts   = (int)($_POST['occupied_apartments'] ?? 0);
         $vacantApts     = max(0, $totalApts - $occupiedApts);
         $description    = trim($_POST['description'] ?? '');
+        $status         = in_array($_POST['status'] ?? '', ['active', 'inactive']) ? $_POST['status'] : ($house['status'] ?? 'active');
 
         if (empty($houseName)) $errors[] = 'House Name is required.';
         if (empty($houseCode)) $errors[] = 'House Code is required.';
@@ -89,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     UPDATE houses SET
                     category_id = ?, manager_id = ?, house_name = ?, house_code = ?, 
                     address = ?, city = ?, rent_price = ?, total_apartments = ?, 
-                    occupied_apartments = ?, vacant_apartments = ?, description = ?, image = ?
+                    occupied_apartments = ?, vacant_apartments = ?, description = ?, image = ?, status = ?
                     WHERE id = ?
                 ");
                 $stmt->execute([
@@ -105,8 +106,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $vacantApts,
                     $description,
                     $imageFilename,
+                    $status,
                     $houseId
                 ]);
+
+                // Synchronize individual apartments with new capacity and rent price
+                ensure_house_apartments($pdo, $houseId);
+                sync_house_occupancy_counts($pdo, $houseId);
 
                 set_flash('success', 'House "' . $houseName . '" updated successfully!');
                 header('Location: ' . BASE_URL . 'admin/houses.php');
@@ -203,7 +209,7 @@ require_once __DIR__ . '/../includes/header.php';
                             </div>
 
                             <!-- District in Mogadishu -->
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label fw-semibold">Mogadishu District <span class="text-danger">*</span></label>
                                 <select name="city" class="form-select" required>
                                     <option value="">-- Select Mogadishu District --</option>
@@ -218,9 +224,19 @@ require_once __DIR__ . '/../includes/header.php';
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <label class="form-label fw-semibold">Address / Street <span class="text-danger">*</span></label>
                                 <input type="text" name="address" class="form-control" value="<?= e($_POST['address'] ?? $house['address']); ?>" required>
+                            </div>
+
+                            <!-- Property Status -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Property Status <span class="text-danger">*</span></label>
+                                <select name="status" class="form-select">
+                                    <?php $currentStatus = $_POST['status'] ?? ($house['status'] ?? 'active'); ?>
+                                    <option value="active" <?= ($currentStatus === 'active') ? 'selected' : ''; ?>>Active (Visible)</option>
+                                    <option value="inactive" <?= ($currentStatus === 'inactive') ? 'selected' : ''; ?>>Deactive (Hidden)</option>
+                                </select>
                             </div>
 
                             <div class="col-md-3">
@@ -265,8 +281,8 @@ require_once __DIR__ . '/../includes/header.php';
                             </div>
 
                             <div class="col-12 mt-4 pt-3 border-top d-flex gap-2">
-                                <button type="submit" class="btn btn-primary px-4">
-                                    <i class="bi bi-save me-1"></i>Update House
+                                <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm">
+                                    <i class="bi bi-check-circle-fill me-1"></i>Save & Update House (Kaydi / Update)
                                 </button>
                                 <a href="<?= BASE_URL; ?>admin/houses.php" class="btn btn-outline-secondary">Cancel</a>
                             </div>
