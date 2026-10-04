@@ -1,7 +1,7 @@
 <?php
 /**
  * Single Unified Login Page
- * Split-Layout Modern Aesthetic with Uploaded Luxury Villa Visual
+ * Split-Layout Modern Aesthetic (0.75 Scale Compact View)
  * Roles: Admin, Manager, User
  * HomeHub Property Management System
  */
@@ -56,13 +56,13 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <style>
-/* Embedded Auth Split Styles to guarantee instant render without browser cache lag */
+/* Embedded Auth Split Styles - Scaled to 0.75 Compact Ratio */
 .auth-split-wrapper {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
+    padding: 1.25rem;
     position: relative;
     background: radial-gradient(circle at 10% 10%, rgba(229, 169, 59, 0.08) 0%, transparent 45%),
                 radial-gradient(circle at 90% 90%, rgba(30, 62, 43, 0.09) 0%, transparent 45%),
@@ -71,10 +71,10 @@ require_once __DIR__ . '/includes/header.php';
 
 .auth-split-card {
     width: 100%;
-    max-width: 1140px;
-    border-radius: 28px !important;
+    max-width: 890px;
+    border-radius: 22px !important;
     background-color: var(--hh-card-bg, #ffffff) !important;
-    box-shadow: 0 25px 60px -15px rgba(16, 42, 69, 0.14), 0 10px 25px -10px rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 20px 50px -12px rgba(16, 42, 69, 0.12), 0 8px 20px -8px rgba(0, 0, 0, 0.04) !important;
     overflow: hidden;
     border: 1px solid var(--hh-border, #e2e8f0) !important;
 }
@@ -82,28 +82,28 @@ require_once __DIR__ . '/includes/header.php';
 [data-bs-theme="dark"] .auth-split-card {
     background-color: #0d1e32 !important;
     border-color: #1a3658 !important;
-    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6) !important;
+    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.6) !important;
 }
 
 .auth-brand-badge {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
     background: #1e3e2b;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(30, 62, 43, 0.25);
+    box-shadow: 0 3px 8px rgba(30, 62, 43, 0.25);
     flex-shrink: 0;
 }
 
 .auth-brand-badge i {
     color: #e5a93b;
-    font-size: 1.35rem;
+    font-size: 1.15rem;
 }
 
 .auth-brand-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 800;
     color: var(--hh-text-main, #0f1f33);
     letter-spacing: -0.03em;
@@ -111,32 +111,32 @@ require_once __DIR__ . '/includes/header.php';
 }
 
 .auth-title {
-    font-size: 2rem;
+    font-size: 1.55rem;
     font-weight: 700;
     color: var(--hh-text-main, #0f1f33);
     letter-spacing: -0.025em;
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.25rem;
 }
 
 .auth-subtitle {
-    font-size: 0.925rem;
+    font-size: 0.825rem;
     color: var(--hh-text-muted, #5f748d);
 }
 
 .auth-label {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--hh-text-main, #0f1f33);
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.35rem;
     display: block;
 }
 
 .auth-input {
-    height: 50px;
-    border-radius: 12px !important;
+    height: 42px;
+    border-radius: 10px !important;
     border: 1.5px solid var(--hh-border, #e2e8f0) !important;
-    padding: 0.65rem 1.15rem;
-    font-size: 0.95rem;
+    padding: 0.5rem 0.95rem;
+    font-size: 0.875rem;
     color: var(--hh-text-main, #0f1f33) !important;
     background-color: var(--hh-card-bg, #ffffff) !important;
     transition: all 0.2s ease;
@@ -144,7 +144,7 @@ require_once __DIR__ . '/includes/header.php';
 
 .auth-input:focus {
     border-color: #1e3e2b !important;
-    box-shadow: 0 0 0 4px rgba(30, 62, 43, 0.12) !important;
+    box-shadow: 0 0 0 3px rgba(30, 62, 43, 0.12) !important;
 }
 
 [data-bs-theme="dark"] .auth-input {
@@ -155,20 +155,21 @@ require_once __DIR__ . '/includes/header.php';
 
 [data-bs-theme="dark"] .auth-input:focus {
     border-color: #e5a93b !important;
-    box-shadow: 0 0 0 4px rgba(229, 169, 59, 0.18) !important;
+    box-shadow: 0 0 0 3px rgba(229, 169, 59, 0.18) !important;
 }
 
 .auth-eye-btn {
     position: absolute;
-    right: 12px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
     background: transparent;
     border: none;
     color: #94a3b8;
-    padding: 6px 10px;
+    padding: 4px 8px;
     cursor: pointer;
     z-index: 4;
+    font-size: 0.9rem;
     transition: color 0.2s ease;
 }
 
@@ -177,16 +178,16 @@ require_once __DIR__ . '/includes/header.php';
 }
 
 .auth-submit-btn {
-    height: 52px;
+    height: 44px;
     border-radius: 9999px !important;
     background-color: #1e3e2b !important;
     border: none !important;
     color: #ffffff !important;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.925rem;
     letter-spacing: 0.01em;
     transition: all 0.25s ease;
-    box-shadow: 0 6px 18px rgba(30, 62, 43, 0.25);
+    box-shadow: 0 4px 14px rgba(30, 62, 43, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -195,22 +196,22 @@ require_once __DIR__ . '/includes/header.php';
 .auth-submit-btn:hover {
     background-color: #27523a !important;
     transform: translateY(-1px);
-    box-shadow: 0 8px 22px rgba(30, 62, 43, 0.32);
+    box-shadow: 0 6px 18px rgba(30, 62, 43, 0.32);
     color: #ffffff !important;
 }
 
 .auth-hero-container {
     height: 100%;
-    min-height: 620px;
-    border-radius: 22px;
+    min-height: 480px;
+    border-radius: 18px;
     position: relative;
     overflow: hidden;
     background-size: cover;
-    background-position: center center;
+    background-position: center 30%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 24px;
+    padding: 16px;
 }
 
 .auth-hero-overlay {
@@ -225,43 +226,43 @@ require_once __DIR__ . '/includes/header.php';
     position: relative;
     z-index: 2;
     background: rgba(15, 23, 42, 0.68) !important;
-    backdrop-filter: blur(18px) !important;
-    -webkit-backdrop-filter: blur(18px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.22) !important;
-    border-radius: 20px;
-    padding: 24px;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 16px;
+    padding: 16px 18px;
     color: #ffffff !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35) !important;
 }
 
 .auth-quote-text {
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 0.825rem;
+    line-height: 1.5;
     color: #ffffff !important;
-    min-height: 68px;
-    margin-bottom: 1rem;
+    min-height: 48px;
+    margin-bottom: 0.65rem;
     font-style: normal;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     transition: opacity 0.2s ease;
 }
 
 .auth-quote-author {
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     color: #ffffff !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .auth-quote-role {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.78) !important;
+    font-size: 0.725rem;
+    color: rgba(255, 255, 255, 0.75) !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .auth-slider-bar {
-    height: 4px;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.35);
+    height: 3.5px;
+    border-radius: 3.5px;
+    background: rgba(255, 255, 255, 0.3);
     flex: 1;
     cursor: pointer;
     transition: all 0.35s ease;
@@ -269,26 +270,26 @@ require_once __DIR__ . '/includes/header.php';
 
 .auth-slider-bar.active {
     background: #e5a93b !important;
-    box-shadow: 0 0 10px rgba(229, 169, 59, 0.7);
+    box-shadow: 0 0 8px rgba(229, 169, 59, 0.6);
 }
 </style>
 
 <div class="auth-split-wrapper">
     <!-- Theme Toggle Floating Button -->
-    <div class="position-absolute top-0 end-0 m-3 m-md-4 z-3">
-        <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px; background: var(--hh-card-bg);" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
-            <i class="bi bi-moon-stars-fill theme-toggle-icon fs-5"></i>
+    <div class="position-absolute top-0 end-0 m-3 z-3">
+        <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 36px; height: 36px; background: var(--hh-card-bg);" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
+            <i class="bi bi-moon-stars-fill theme-toggle-icon" style="font-size: 0.95rem;"></i>
         </button>
     </div>
 
-    <!-- Main Auth Split Card -->
+    <!-- Main Auth Split Card (0.75 Scale) -->
     <div class="card auth-split-card border-0">
         <div class="row g-0 align-items-stretch">
             <!-- Left Column: Form Section -->
-            <div class="col-lg-6 p-4 p-sm-5 d-flex flex-column justify-content-between">
+            <div class="col-lg-6 p-4 p-md-4 p-xl-4 d-flex flex-column justify-content-between">
                 <div>
                     <!-- Brand Lockup -->
-                    <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
                         <div class="auth-brand-badge">
                             <i class="bi bi-houses-fill"></i>
                         </div>
@@ -299,15 +300,15 @@ require_once __DIR__ . '/includes/header.php';
 
                     <!-- Heading & Subtitle -->
                     <h1 class="auth-title">Welcome Back</h1>
-                    <p class="auth-subtitle mb-4">Please enter your account credentials to access your portal.</p>
+                    <p class="auth-subtitle mb-3">Please enter your account credentials to access your portal.</p>
 
                     <?= display_flash(); ?>
 
                     <?php if (!empty($error)): ?>
-                        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center mb-4 rounded-3" role="alert">
-                            <i class="bi bi-exclamation-octagon-fill me-2 fs-5 flex-shrink-0"></i>
+                        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center mb-3 py-2 px-3 rounded-3" role="alert">
+                            <i class="bi bi-exclamation-octagon-fill me-2 fs-6 flex-shrink-0"></i>
                             <div class="flex-grow-1 small"><?= e($error); ?></div>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <button type="button" class="btn-close py-2" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     <?php endif; ?>
 
@@ -315,13 +316,13 @@ require_once __DIR__ . '/includes/header.php';
                         <?= csrf_field(); ?>
 
                         <!-- Email Input -->
-                        <div class="mb-3">
+                        <div class="mb-2.5 mb-2">
                             <label for="email" class="auth-label">Email Address <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control auth-input" id="email" name="email" value="<?= e($_POST['email'] ?? ''); ?>" placeholder="Enter your email" required autofocus>
+                            <input type="email" class="form-control auth-input" id="email" name="email" value="<?= e($_POST['email'] ?? ''); ?>" placeholder="name@example.com" required autofocus>
                         </div>
 
                         <!-- Password Input with Visibility Toggle -->
-                        <div class="mb-3">
+                        <div class="mb-2.5 mb-2">
                             <label for="password" class="auth-label">Password <span class="text-danger">*</span></label>
                             <div class="position-relative">
                                 <input type="password" class="form-control auth-input pe-5" id="password" name="password" placeholder="Enter your password" required>
@@ -332,58 +333,58 @@ require_once __DIR__ . '/includes/header.php';
                         </div>
 
                         <!-- Options Row: Remember Me & Forgot Password -->
-                        <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3 pt-1">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="rememberMe" style="cursor: pointer;">
-                                <label class="form-check-label small text-muted" for="rememberMe" style="cursor: pointer;">
+                                <label class="form-check-label text-muted" for="rememberMe" style="cursor: pointer; font-size: 0.8rem;">
                                     Remember me
                                 </label>
                             </div>
-                            <a href="javascript:void(0)" onclick="alert('To reset your credentials, please contact the system administrator: ayman@gmail.com');" class="small text-muted text-decoration-none">
+                            <a href="javascript:void(0)" onclick="alert('To reset your credentials, please contact the system administrator: ayman@gmail.com');" class="text-muted text-decoration-none" style="font-size: 0.8rem;">
                                 Forgot password?
                             </a>
                         </div>
 
                         <!-- Submit Button (Pill shaped, reference dark green) -->
-                        <button type="submit" class="btn auth-submit-btn w-100 mb-3">
+                        <button type="submit" class="btn auth-submit-btn w-100 mb-2">
                             Sign In
                         </button>
                     </form>
                 </div>
 
                 <!-- Footer Navigation -->
-                <div class="pt-4 border-top mt-3 text-center">
-                    <p class="small text-muted mb-2">
+                <div class="pt-3 border-top mt-2 text-center">
+                    <p class="text-muted mb-1" style="font-size: 0.8rem;">
                         Looking for a home? 
                         <a href="<?= BASE_URL; ?>register.php" class="fw-semibold text-decoration-none" style="color: #1e3e2b;">Create Tenant Account</a>
                     </p>
-                    <a href="<?= BASE_URL; ?>" class="small text-muted text-decoration-none">
+                    <a href="<?= BASE_URL; ?>" class="text-muted text-decoration-none" style="font-size: 0.8rem;">
                         <i class="bi bi-arrow-left me-1"></i>Back to Homepage
                     </a>
                 </div>
             </div>
 
             <!-- Right Column: Uploaded Luxury Villa Visual with Frosted Glass Card -->
-            <div class="col-lg-6 p-3 p-md-4 d-none d-lg-block">
+            <div class="col-lg-6 p-2 p-md-3 d-none d-lg-block">
                 <div class="auth-hero-container" style="background-image: url('<?= BASE_URL; ?>assets/images/auth-bg.jpg?v=<?= $bgImgVer; ?>');">
                     <div class="auth-hero-overlay"></div>
 
                     <!-- Glassmorphism Testimonial Card -->
                     <div class="auth-quote-card">
-                        <p class="auth-quote-text" id="quoteText">“Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore.”</p>
+                        <p class="auth-quote-text" id="quoteText">“The automated rent collection, digital agreements, and maintenance workflow saved our agency countless hours every single month.”</p>
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="auth-quote-author" id="quoteAuthor">Ronald Richards</div>
-                                <div class="auth-quote-role" id="quoteRole">Office Owner</div>
+                                <div class="auth-quote-author" id="quoteAuthor">Farhan Ahmed</div>
+                                <div class="auth-quote-role" id="quoteRole">Property Manager</div>
                             </div>
                         </div>
 
                         <!-- 4 Slider Progress Bars Matching Reference Layout -->
-                        <div class="d-flex gap-2 mt-3 pt-2">
+                        <div class="d-flex gap-2 mt-2 pt-2">
                             <div class="auth-slider-bar" onclick="showQuote(0)" data-index="0" title="Slide 1"></div>
-                            <div class="auth-slider-bar" onclick="showQuote(1)" data-index="1" title="Slide 2"></div>
+                            <div class="auth-slider-bar active" onclick="showQuote(1)" data-index="1" title="Slide 2"></div>
                             <div class="auth-slider-bar" onclick="showQuote(2)" data-index="2" title="Slide 3"></div>
-                            <div class="auth-slider-bar active" onclick="showQuote(3)" data-index="3" title="Slide 4"></div>
+                            <div class="auth-slider-bar" onclick="showQuote(3)" data-index="3" title="Slide 4"></div>
                         </div>
                     </div>
                 </div>
@@ -434,7 +435,7 @@ const testimonials = [
     }
 ];
 
-let currentQuoteIndex = 3; // Defaults to Slide 4 (Ronald Richards) matching the reference screenshot
+let currentQuoteIndex = 1; // Farhan Ahmed (Slide 2) as seen in user's screenshot
 let quoteTimer = null;
 
 function showQuote(index) {
