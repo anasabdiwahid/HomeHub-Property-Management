@@ -109,25 +109,7 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
             </form>
 
-            <hr class="my-4 text-muted opacity-25">
-
-            <!-- Quick Demo Credentials Box -->
-            <div class="p-3 rounded-3 border bg-body-tertiary">
-                <div class="d-flex align-items-center gap-1 mb-2 text-muted fw-bold" style="font-size: 0.75rem;">
-                    <i class="bi bi-key-fill text-gold"></i> ADMIN CREDENTIALS (CLICK TO AUTO-FILL)
-                </div>
-                <div class="d-grid gap-2">
-                    <button type="button" class="btn btn-sm btn-outline-primary text-start d-flex justify-content-between align-items-center" onclick="fillCreds('ayman@gmail.com', 'ayman0000')">
-                        <span><strong class="badge bg-navy me-1" style="border: 1px solid var(--hh-gold);">Admin</strong> ayman@gmail.com</span>
-                        <span class="small text-muted font-monospace">ayman0000</span>
-                    </button>
-                </div>
-                <div class="small text-muted mt-2 pt-2 border-top" style="font-size: 0.75rem;">
-                    <i class="bi bi-info-circle me-1 text-primary"></i>All dummy data cleared. Managers and tenants can now be registered freshly.
-                </div>
-            </div>
-
-            <div class="text-center mt-3">
+            <div class="text-center mt-4 pt-2 border-top">
                 <a href="<?= BASE_URL; ?>" class="small text-muted text-decoration-none">
                     <i class="bi bi-arrow-left me-1"></i>Back to Homepage
                 </a>
@@ -135,12 +117,5 @@ require_once __DIR__ . '/includes/header.php';
         </div>
     </div>
 </div>
-
-<script>
-function fillCreds(email, password) {
-    document.getElementById('email').value = email;
-    document.getElementById('password').value = password;
-}
-</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
