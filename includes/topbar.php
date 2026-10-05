@@ -26,44 +26,6 @@ $currentUser = current_user();
             <i class="bi bi-moon-stars-fill theme-toggle-icon"></i>
         </button>
 
-        <!-- Dashboard Zoom Scale Dropdown -->
-        <div class="dropdown">
-            <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1 rounded-pill px-2.5 py-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Dashboard Zoom Scale">
-                <i class="bi bi-aspect-ratio"></i>
-                <span id="zoomLevelDisplay" class="fw-bold" style="font-size: 0.78rem;">68%</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm py-1" style="min-width: 170px; font-size: 0.85rem;">
-                <li class="dropdown-header text-uppercase fw-bold" style="font-size: 0.68rem; letter-spacing: 0.04em;">Dashboard Scale</li>
-                <li>
-                    <button type="button" class="dropdown-item py-1.5 zoom-option-item d-flex align-items-center justify-content-between" data-zoom="0.68" onclick="setDashboardZoom('0.68')">
-                        <span>68% (Compact)</span>
-                        <span class="badge bg-success-subtle text-success small">Default</span>
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="dropdown-item py-1.5 zoom-option-item d-flex align-items-center justify-content-between" data-zoom="0.65" onclick="setDashboardZoom('0.65')">
-                        <span>65% (Mini)</span>
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="dropdown-item py-1.5 zoom-option-item" data-zoom="0.75" onclick="setDashboardZoom('0.75')">
-                        75%
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="dropdown-item py-1.5 zoom-option-item" data-zoom="0.85" onclick="setDashboardZoom('0.85')">
-                        85%
-                    </button>
-                </li>
-                <li><hr class="dropdown-divider my-1"></li>
-                <li>
-                    <button type="button" class="dropdown-item py-1.5 zoom-option-item" data-zoom="1.0" onclick="setDashboardZoom('1.0')">
-                        100% (Standard)
-                    </button>
-                </li>
-            </ul>
-        </div>
-
         <!-- User Dropdown -->
         <div class="dropdown">
             <button class="btn btn-light btn-sm d-flex align-items-center gap-2 border px-2 py-1 dropdown-toggle rounded-pill" type="button" data-bs-toggle="dropdown" aria-expanded="false">
