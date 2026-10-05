@@ -52,9 +52,9 @@ $sql = "SELECT h.*, c.category_name, u.name as manager_name
 $params = [];
 
 if (!empty($search)) {
-    $sql .= " AND (h.house_name LIKE ? OR h.house_code LIKE ? OR h.address LIKE ?)";
+    $sql .= " AND (h.house_name LIKE ? OR h.house_code LIKE ? OR h.city LIKE ? OR h.address LIKE ?)";
     $term = "%{$search}%";
-    $params = array_merge($params, [$term, $term, $term]);
+    $params = array_merge($params, [$term, $term, $term, $term]);
 }
 if ($filterCategory > 0) {
     $sql .= " AND h.category_id = ?";
@@ -143,16 +143,19 @@ require_once __DIR__ . '/../includes/header.php';
             <!-- Action Bar -->
             <div class="card mb-4">
                 <div class="card-body">
-                    <form method="GET" action="<?= BASE_URL; ?>admin/houses.php" class="row g-2 align-items-center">
+                    <form method="GET" action="<?= BASE_URL; ?>admin/houses.php" class="row g-2 align-items-center" id="houseFilterForm">
                         <div class="col-md-3">
                             <div class="input-group">
-                                <span class="input-group-text bg-transparent"><i class="bi bi-search"></i></span>
-                                <input type="text" name="search" class="form-control" placeholder="Search name, code, address..." value="<?= e($search); ?>">
+                                <span class="input-group-text bg-transparent text-muted"><i class="bi bi-search"></i></span>
+                                <input type="text" name="search" id="houseLiveSearch" class="form-control" placeholder="Search name, code, address..." value="<?= e($search); ?>" autocomplete="off" autofocus>
+                                <button class="btn btn-outline-secondary d-none" type="button" id="clearHouseSearch" title="Clear search">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
                             </div>
                         </div>
 
                         <div class="col-sm-6 col-md-2">
-                            <select name="category" class="form-select">
+                            <select name="category" id="filterCategory" class="form-select">
                                 <option value="0">All Categories</option>
                                 <?php foreach ($categories as $cat): ?>
                                     <option value="<?= (int)$cat['id']; ?>" <?= $filterCategory === (int)$cat['id'] ? 'selected' : ''; ?>>
@@ -163,7 +166,7 @@ require_once __DIR__ . '/../includes/header.php';
                         </div>
 
                         <div class="col-sm-6 col-md-2">
-                            <select name="city" class="form-select">
+                            <select name="city" id="filterCity" class="form-select">
                                 <option value="">All Districts</option>
                                 <?php foreach ($districts as $d): ?>
                                     <option value="<?= e($d); ?>" <?= $filterCity === $d ? 'selected' : ''; ?>>
@@ -174,7 +177,7 @@ require_once __DIR__ . '/../includes/header.php';
                         </div>
 
                         <div class="col-sm-6 col-md-2">
-                            <select name="manager" class="form-select">
+                            <select name="manager" id="filterManager" class="form-select">
                                 <option value="0">All Managers</option>
                                 <?php foreach ($managers as $mgr): ?>
                                     <option value="<?= (int)$mgr['id']; ?>" <?= $filterManager === (int)$mgr['id'] ? 'selected' : ''; ?>>
@@ -185,7 +188,7 @@ require_once __DIR__ . '/../includes/header.php';
                         </div>
 
                         <div class="col-sm-6 col-md-1">
-                            <select name="status" class="form-select px-2" title="Filter by Status">
+                            <select name="status" id="filterStatus" class="form-select px-2" title="Filter by Status">
                                 <option value="">Status</option>
                                 <option value="active" <?= ($filterStatus === 'active') ? 'selected' : ''; ?>>Active</option>
                                 <option value="inactive" <?= ($filterStatus === 'inactive') ? 'selected' : ''; ?>>Deactive</option>
@@ -216,7 +219,7 @@ require_once __DIR__ . '/../includes/header.php';
                         <span class="card-header-icon bg-primary text-white"><i class="bi bi-houses"></i></span>
                         <div>
                             <h6 class="mb-0 fw-bold">Properties Directory</h6>
-                            <small class="text-muted"><?= count($houses); ?> properties registered</small>
+                            <small class="text-muted" id="propertyCountSummary"><?= count($houses); ?> properties registered</small>
                         </div>
                     </div>
                     <button type="button" class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV('housesTable', 'houses_list.csv')">
@@ -239,9 +242,9 @@ require_once __DIR__ . '/../includes/header.php';
                                     <th class="text-end no-export">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="housesTableBody">
                                 <?php if (empty($houses)): ?>
-                                    <tr>
+                                    <tr id="emptyHousesRow">
                                         <td colspan="9">
                                             <div class="empty-state">
                                                 <div class="empty-state-icon">
@@ -262,7 +265,16 @@ require_once __DIR__ . '/../includes/header.php';
                                                 ? UPLOAD_URL . 'houses/' . e($h['image'])
                                                 : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=120&q=80';
                                         ?>
-                                        <tr>
+                                        <tr class="house-row"
+                                            data-name="<?= e(strtolower($h['house_name'])); ?>"
+                                            data-code="<?= e(strtolower($h['house_code'])); ?>"
+                                            data-city="<?= e(strtolower($h['city'])); ?>"
+                                            data-address="<?= e(strtolower($h['address'])); ?>"
+                                            data-category="<?= (int)$h['category_id']; ?>"
+                                            data-category-name="<?= e(strtolower($h['category_name'])); ?>"
+                                            data-manager="<?= (int)($h['manager_id'] ?? 0); ?>"
+                                            data-manager-name="<?= e(strtolower($h['manager_name'] ?? '')); ?>"
+                                            data-status="<?= e(strtolower($h['status'] ?? 'active')); ?>">
                                             <td style="width: 70px;">
                                                 <img src="<?= $imgUrl; ?>" alt="<?= e($h['house_name']); ?>" class="rounded-3 object-fit-cover shadow-sm" style="width: 60px; height: 45px;">
                                             </td>
@@ -351,6 +363,45 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
         </main>
     </div>
-</div>
-
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const catSelect = document.getElementById('filterCategory');
+    const citySelect = document.getElementById('filterCity');
+    const mgrSelect = document.getElementById('filterManager');
+    const statusSelect = document.getElementById('filterStatus');
+
+    if (window.initTableLiveFilter) {
+        const liveFilter = window.initTableLiveFilter({
+            input: '#houseLiveSearch',
+            clearBtn: '#clearHouseSearch',
+            tableBody: '#housesTableBody',
+            rowSelector: 'tr.house-row',
+            countDisplay: '#propertyCountSummary',
+            itemLabel: 'properties',
+            columnsCount: 9,
+            hasActiveDropdowns: () => {
+                return (catSelect && catSelect.value !== '0') ||
+                       (citySelect && citySelect.value !== '') ||
+                       (mgrSelect && mgrSelect.value !== '0') ||
+                       (statusSelect && statusSelect.value !== '');
+            },
+            customFilter: (row) => {
+                if (catSelect && catSelect.value !== '0' && row.dataset.category !== catSelect.value) return false;
+                if (citySelect && citySelect.value && row.dataset.city.toLowerCase() !== citySelect.value.toLowerCase()) return false;
+                if (mgrSelect && mgrSelect.value !== '0' && row.dataset.manager !== mgrSelect.value) return false;
+                if (statusSelect && statusSelect.value && row.dataset.status.toLowerCase() !== statusSelect.value.toLowerCase()) return false;
+                return true;
+            }
+        });
+
+        if (liveFilter) {
+            [catSelect, citySelect, mgrSelect, statusSelect].forEach(sel => {
+                if (sel) sel.addEventListener('change', liveFilter.runFilter);
+            });
+        }
+    }
+});
+</script>
+

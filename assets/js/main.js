@@ -204,6 +204,139 @@
         document.body.removeChild(downloadLink);
     };
 
+    // Instant Table Live Filter Utility (Real-time as-you-type search)
+    window.initTableLiveFilter = function (config) {
+        if (!config) return null;
+        const input = typeof config.input === 'string' ? document.querySelector(config.input) : config.input;
+        const tableBody = typeof config.tableBody === 'string' ? document.querySelector(config.tableBody) : config.tableBody;
+        if (!input || !tableBody) return null;
+
+        const rowSelector = config.rowSelector || 'tr[data-name]';
+        const clearBtn = typeof config.clearBtn === 'string' ? document.querySelector(config.clearBtn) : config.clearBtn;
+        const countDisplay = typeof config.countDisplay === 'string' ? document.querySelector(config.countDisplay) : config.countDisplay;
+        const itemLabel = config.itemLabel || 'properties';
+        const columnsCount = config.columnsCount || 9;
+
+        const rows = Array.from(tableBody.querySelectorAll(rowSelector));
+        const totalCount = rows.length;
+
+        // Prevent Enter key from triggering page reload during typing
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            } else if (e.key === 'Escape') {
+                input.value = '';
+                runFilter();
+            }
+        });
+
+        function runFilter() {
+            const query = input.value.trim().toLowerCase();
+            const tokens = query ? query.split(/\s+/).filter(Boolean) : [];
+
+            // Toggle clear button visibility
+            if (clearBtn) {
+                clearBtn.classList.toggle('d-none', query.length === 0);
+            }
+
+            const customFilter = typeof config.customFilter === 'function' ? config.customFilter : null;
+
+            // Remove any previous dynamic "no results" row
+            const oldNoRow = tableBody.querySelector('.dynamic-no-results-row');
+            if (oldNoRow) oldNoRow.remove();
+
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                // If a custom filter (e.g. dropdowns) rejects the row, hide it
+                if (customFilter && !customFilter(row)) {
+                    row.style.display = 'none';
+                    return;
+                }
+
+                if (tokens.length > 0) {
+                    const name = (row.dataset.name || '').toLowerCase();
+                    const code = (row.dataset.code || '').toLowerCase();
+                    const city = (row.dataset.city || '').toLowerCase();
+                    const address = (row.dataset.address || '').toLowerCase();
+                    const catName = (row.dataset.categoryName || '').toLowerCase();
+                    const mgrName = (row.dataset.managerName || '').toLowerCase();
+                    const allText = `${name} ${city} ${address} ${code} ${catName} ${mgrName} ${row.innerText.toLowerCase()}`;
+
+                    // Extract word tokens for prefix matching (e.g., 'h' matches 'hodan', 'house', etc.)
+                    const words = `${name} ${city} ${address} ${catName} ${mgrName}`.split(/[\s,.\-\/]+/).filter(Boolean);
+
+                    const matches = tokens.every(token => {
+                        if (token.length === 1) {
+                            // Single character: match words starting with this letter (or code without 'hh-')
+                            const cleanCode = code.replace(/^hh-?/i, '');
+                            return words.some(w => w.startsWith(token)) || (cleanCode && cleanCode.startsWith(token));
+                        } else {
+                            // Multiple characters: match word prefix OR substring anywhere in row
+                            return words.some(w => w.startsWith(token)) || allText.includes(token);
+                        }
+                    });
+
+                    if (!matches) {
+                        row.style.display = 'none';
+                        return;
+                    }
+                }
+
+                row.style.display = '';
+                visibleCount++;
+            });
+
+            // Update live counter badge
+            if (countDisplay) {
+                const hasActiveDropdowns = typeof config.hasActiveDropdowns === 'function' ? config.hasActiveDropdowns() : false;
+                if (query.length > 0 || hasActiveDropdowns) {
+                    countDisplay.innerHTML = `Showing <span class="badge bg-primary px-2">${visibleCount}</span> of ${totalCount} ${itemLabel}`;
+                } else {
+                    countDisplay.textContent = `${totalCount} ${itemLabel} registered`;
+                }
+            }
+
+            // Show empty search state if 0 rows matched
+            if (visibleCount === 0 && totalCount > 0) {
+                const noRow = document.createElement('tr');
+                noRow.className = 'dynamic-no-results-row';
+                noRow.innerHTML = `
+                    <td colspan="${columnsCount}" class="text-center py-4 text-muted">
+                        <i class="bi bi-search me-2 fs-5"></i>
+                        No matching ${itemLabel} found for "<strong>${escapeHtml(query || 'selected filters')}</strong>".
+                    </td>
+                `;
+                tableBody.appendChild(noRow);
+            }
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, function (m) {
+                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m];
+            });
+        }
+
+        // Real-time events
+        input.addEventListener('input', runFilter);
+        input.addEventListener('search', runFilter);
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function () {
+                input.value = '';
+                runFilter();
+                input.focus();
+            });
+        }
+
+        // Run immediately if already pre-filled
+        if (input.value.trim().length > 0) {
+            runFilter();
+        }
+
+        return { runFilter };
+    };
+
     // Initialize on DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
         initTheme();

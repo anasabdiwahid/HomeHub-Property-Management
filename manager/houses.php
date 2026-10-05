@@ -53,11 +53,14 @@ require_once __DIR__ . '/../includes/header.php';
             <!-- Search and Action Bar -->
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
-                    <form method="GET" action="<?= BASE_URL; ?>manager/houses.php" class="row g-2 align-items-center">
+                    <form method="GET" action="<?= BASE_URL; ?>manager/houses.php" class="row g-2 align-items-center" id="managerHouseFilterForm">
                         <div class="col-md-5">
                             <div class="input-group">
-                                <span class="input-group-text bg-transparent"><i class="bi bi-search"></i></span>
-                                <input type="text" name="search" class="form-control" placeholder="Search by name, code or district (Hodan, Waaberi...)" value="<?= e($search); ?>">
+                                <span class="input-group-text bg-transparent text-muted"><i class="bi bi-search"></i></span>
+                                <input type="text" name="search" id="managerHouseSearch" class="form-control" placeholder="Search by name, code or district (Hodan, Waaberi...)" value="<?= e($search); ?>" autocomplete="off" autofocus>
+                                <button class="btn btn-outline-secondary d-none" type="button" id="clearManagerHouseSearch" title="Clear search">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -69,7 +72,7 @@ require_once __DIR__ . '/../includes/header.php';
                             <?php endif; ?>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <span class="text-muted small">Properties Assigned: <strong><?= count($myHouses); ?></strong></span>
+                            <span class="text-muted small" id="managerPropertyCountSummary"><?= count($myHouses); ?> properties assigned</span>
                         </div>
                     </form>
                 </div>
@@ -104,9 +107,9 @@ require_once __DIR__ . '/../includes/header.php';
                                     <th class="text-end no-export">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="managerHousesTableBody">
                                 <?php if (empty($myHouses)): ?>
-                                    <tr>
+                                    <tr id="emptyManagerHousesRow">
                                         <td colspan="8">
                                             <div class="empty-state">
                                                 <div class="empty-state-icon">
@@ -127,7 +130,13 @@ require_once __DIR__ . '/../includes/header.php';
                                             $occ = (int)$h['occupied_apartments'];
                                             $pct = $tot > 0 ? min(100, round(($occ / $tot) * 100)) : 0;
                                         ?>
-                                        <tr>
+                                        <tr class="manager-house-row"
+                                            data-name="<?= e(strtolower($h['house_name'])); ?>"
+                                            data-code="<?= e(strtolower($h['house_code'])); ?>"
+                                            data-city="<?= e(strtolower($h['city'])); ?>"
+                                            data-address="<?= e(strtolower($h['address'])); ?>"
+                                            data-category-name="<?= e(strtolower($h['category_name'])); ?>"
+                                            data-status="<?= e(strtolower($h['status'] ?? 'active')); ?>">
                                             <td style="width: 70px;">
                                                 <img src="<?= $imgUrl; ?>" alt="<?= e($h['house_name']); ?>" class="rounded-3 object-fit-cover shadow-sm" style="width: 60px; height: 45px;">
                                             </td>
@@ -191,3 +200,19 @@ require_once __DIR__ . '/../includes/header.php';
 </div>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.initTableLiveFilter) {
+        window.initTableLiveFilter({
+            input: '#managerHouseSearch',
+            clearBtn: '#clearManagerHouseSearch',
+            tableBody: '#managerHousesTableBody',
+            rowSelector: 'tr.manager-house-row',
+            countDisplay: '#managerPropertyCountSummary',
+            itemLabel: 'properties',
+            columnsCount: 8
+        });
+    }
+});
+</script>
