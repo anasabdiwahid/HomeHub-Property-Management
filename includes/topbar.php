@@ -22,9 +22,15 @@ $currentUser = current_user();
 
     <div class="d-flex align-items-center gap-2 gap-md-3">
         <!-- Dark Mode Toggle Button -->
-        <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
+        <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
             <i class="bi bi-moon-stars-fill theme-toggle-icon"></i>
         </button>
+
+        <!-- Quick Logout Button -->
+        <a href="<?= BASE_URL; ?>logout.php" class="btn btn-outline-danger btn-sm rounded-pill d-flex align-items-center gap-1.5 px-2.5 py-1 text-decoration-none shadow-sm" title="Sign Out / Logout">
+            <i class="bi bi-box-arrow-right"></i>
+            <span class="small fw-semibold">Logout</span>
+        </a>
 
         <!-- User Dropdown -->
         <div class="dropdown">
