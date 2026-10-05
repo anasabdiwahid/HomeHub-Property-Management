@@ -11,9 +11,11 @@ require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/auth.php';
 
 $pageTitle = isset($pageTitle) ? $pageTitle . ' - HomeHub' : 'HomeHub - Somalia Property Management';
+$requestScript = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+$isDashboardPage = (strpos($requestScript, '/admin/') !== false) || (strpos($requestScript, '/manager/') !== false);
 ?>
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
+<html lang="en" data-bs-theme="light" class="<?= $isDashboardPage ? 'app-dashboard' : ''; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,4 +47,4 @@ $pageTitle = isset($pageTitle) ? $pageTitle . ' - HomeHub' : 'HomeHub - Somalia 
     <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/style.css?v=<?= file_exists(__DIR__ . '/../assets/css/style.css') ? filemtime(__DIR__ . '/../assets/css/style.css') : time(); ?>">
     <link rel="stylesheet" href="<?= BASE_URL; ?>assets/css/dark-mode.css?v=<?= file_exists(__DIR__ . '/../assets/css/dark-mode.css') ? filemtime(__DIR__ . '/../assets/css/dark-mode.css') : time(); ?>">
 </head>
-<body>
+<body class="<?= $isDashboardPage ? 'app-dashboard' : ''; ?>">
