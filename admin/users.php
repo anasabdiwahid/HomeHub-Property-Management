@@ -226,7 +226,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                             onclick="openEditUserModal(<?= (int)$u['id']; ?>, '<?= e(addslashes($u['name'])); ?>', '<?= e(addslashes($u['email'])); ?>', '<?= e(addslashes($u['phone'] ?? '')); ?>')">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
-                                                    <form method="POST" action="<?= BASE_URL; ?>admin/users.php" class="d-inline" data-confirm="Ma hubtaa inaad tirtirto user-ka '<?= e(addslashes($u['name'])); ?>'? Tallaabadan dib looma noqon karo.">
+                                                    <form method="POST" action="<?= BASE_URL; ?>admin/users.php" class="d-inline" data-confirm="Are you sure you want to delete user '<?= e(addslashes($u['name'])); ?>'? This action cannot be undone.">
                                                         <?= csrf_field(); ?>
                                                         <input type="hidden" name="action" value="delete">
                                                         <input type="hidden" name="user_id" value="<?= (int)$u['id']; ?>">

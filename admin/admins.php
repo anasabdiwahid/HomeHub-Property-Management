@@ -347,7 +347,7 @@ require_once __DIR__ . '/../includes/header.php';
 
                                                     <!-- Delete Button (Disabled for logged-in admin) -->
                                                     <?php if ((int)$adm['id'] !== $currentAdminId): ?>
-                                                        <form method="POST" action="<?= BASE_URL; ?>admin/admins.php" class="d-inline" data-confirm="Ma hubtaa inaad tirtirto admin-ka '<?= e(addslashes($adm['name'])); ?>'? Tallaabadan dib looma noqon karo.">
+                                                        <form method="POST" action="<?= BASE_URL; ?>admin/admins.php" class="d-inline" data-confirm="Are you sure you want to delete administrator '<?= e(addslashes($adm['name'])); ?>'? This action cannot be undone.">
                                                             <?= csrf_field(); ?>
                                                             <input type="hidden" name="action" value="delete">
                                                             <input type="hidden" name="admin_id" value="<?= (int)$adm['id']; ?>">

@@ -230,7 +230,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                             onclick="openEditManagerModal(<?= (int)$mgr['id']; ?>, '<?= e(addslashes($mgr['name'])); ?>', '<?= e(addslashes($mgr['email'])); ?>', '<?= e(addslashes($mgr['phone'] ?? '')); ?>')">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </button>
-                                                    <form method="POST" action="<?= BASE_URL; ?>admin/managers.php" class="d-inline" data-confirm="Ma hubtaa inaad tirtirto manager-ka '<?= e(addslashes($mgr['name'])); ?>'? Tallaabadan dib looma noqon karo.">
+                                                    <form method="POST" action="<?= BASE_URL; ?>admin/managers.php" class="d-inline" data-confirm="Are you sure you want to delete property manager '<?= e(addslashes($mgr['name'])); ?>'? This action cannot be undone.">
                                                         <?= csrf_field(); ?>
                                                         <input type="hidden" name="action" value="delete">
                                                         <input type="hidden" name="manager_id" value="<?= (int)$mgr['id']; ?>">

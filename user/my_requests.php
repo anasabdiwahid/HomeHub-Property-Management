@@ -197,7 +197,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                 <i class="bi bi-whatsapp"></i> <span>WhatsApp</span>
                                             </a>
                                             <?php if ($r['status'] === 'pending'): ?>
-                                                <form method="POST" action="<?= BASE_URL; ?>user/my_requests.php" class="d-inline" data-confirm="Ma hubtaa inaad joojiso (cancel) codsigan kireysiga ah?">
+                                                <form method="POST" action="<?= BASE_URL; ?>user/my_requests.php" class="d-inline" data-confirm="Are you sure you want to cancel this rental application?">
                                                     <?= csrf_field(); ?>
                                                     <input type="hidden" name="request_id" value="<?= (int)$r['id']; ?>">
                                                     <button type="submit" class="btn-action btn-action-delete" title="Cancel Application">

@@ -328,7 +328,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                             <i class="bi bi-x-lg"></i>
                                                         </button>
                                                     <?php endif; ?>
-                                                    <form method="POST" action="<?= BASE_URL; ?>admin/rental_requests.php" class="d-inline" data-confirm="Ma hubtaa inaad tirtirto codsigan kireysiga ah? Tallaabadan dib looma noqon karo.">
+                                                    <form method="POST" action="<?= BASE_URL; ?>admin/rental_requests.php" class="d-inline" data-confirm="Are you sure you want to delete this rental application? This action cannot be undone.">
                                                         <?= csrf_field(); ?>
                                                         <input type="hidden" name="action" value="delete">
                                                         <input type="hidden" name="request_id" value="<?= (int)$r['id']; ?>">

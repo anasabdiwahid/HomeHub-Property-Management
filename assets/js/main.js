@@ -64,68 +64,158 @@
         }
     });
 
-    // Modern SweetAlert2 Confirm Dialog Helper
+    // Modern In-Page Centered Confirm Dialog (Completely removes native browser "localhost says" alert)
     window.confirmDialog = function (options = {}) {
-        const defaultOptions = {
-            title: 'Ma Hubtaa? (Confirmation)',
-            text: 'Fadlan xaqiiji tallaabadan ka hor inta aadan sii wadin.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: '<i class="bi bi-check-lg me-1"></i> Haa, Fuliy (Confirm)',
-            cancelButtonText: 'Maya (Cancel)',
-            reverseButtons: true,
-            focusCancel: true
-        };
-
         if (typeof options === 'string') {
             options = { text: options };
         }
+
+        const isDelete = /delete|tirtir|remove|vacate|cancel/i.test(options.text || '');
+        const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+
+        const defaultOptions = {
+            title: isDelete ? 'Confirm Deletion' : 'Confirm Action',
+            text: 'Please confirm this action before proceeding.',
+            icon: isDelete ? 'warning' : 'question',
+            showCancelButton: true,
+            confirmButtonColor: isDelete ? '#dc3545' : '#102a45',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: isDelete ? '<i class="bi bi-trash3-fill me-1"></i> Yes, Delete' : '<i class="bi bi-check-lg me-1"></i> Yes, Confirm',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true,
+            focusCancel: true,
+            background: isDark ? '#1e293b' : '#ffffff',
+            color: isDark ? '#f8fafc' : '#0f172a',
+            customClass: {
+                popup: 'rounded-4 shadow-lg border border-secondary border-opacity-25'
+            }
+        };
 
         const merged = Object.assign({}, defaultOptions, options);
 
         if (window.Swal) {
             return Swal.fire(merged);
         } else {
-            return Promise.resolve({ isConfirmed: confirm(merged.text) });
+            return fallbackBootstrapConfirm(merged);
         }
     };
+
+    // In-Page Bootstrap Modal Fallback (guarantees zero native alerts even if Swal is not ready)
+    function fallbackBootstrapConfirm(options) {
+        return new Promise((resolve) => {
+            const oldModal = document.getElementById('homehubDynamicConfirmModal');
+            if (oldModal) oldModal.remove();
+
+            const isDelete = /delete|tirtir|remove|vacate|cancel/i.test(options.text || '');
+            const title = options.title || (isDelete ? 'Confirm Deletion' : 'Confirm Action');
+            const text = options.text || 'Please confirm this action before proceeding.';
+            const confirmBtnText = options.confirmButtonText || (isDelete ? '<i class="bi bi-trash3-fill me-1"></i> Yes, Delete' : '<i class="bi bi-check-lg me-1"></i> Confirm');
+            const cancelBtnText = options.cancelButtonText || 'Cancel';
+            const confirmBtnClass = isDelete ? 'btn-danger' : 'btn-primary';
+
+            const modalEl = document.createElement('div');
+            modalEl.id = 'homehubDynamicConfirmModal';
+            modalEl.className = 'modal fade';
+            modalEl.tabIndex = -1;
+            modalEl.setAttribute('aria-hidden', 'true');
+            modalEl.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+                    <div class="modal-content shadow-lg border-0 rounded-4">
+                        <div class="modal-body text-center p-4">
+                            <div class="mb-3">
+                                <span class="d-inline-flex align-items-center justify-content-center rounded-circle ${isDelete ? 'bg-danger-subtle text-danger' : 'bg-primary-subtle text-primary'}" style="width: 64px; height: 64px; font-size: 28px;">
+                                    <i class="bi ${isDelete ? 'bi-exclamation-triangle-fill' : 'bi-question-circle-fill'}"></i>
+                                </span>
+                            </div>
+                            <h5 class="fw-bold mb-2">${title}</h5>
+                            <p class="text-muted small mb-4">${text}</p>
+                            <div class="d-flex justify-content-center gap-2">
+                                <button type="button" class="btn btn-secondary px-4 py-2 rounded-3" data-bs-dismiss="modal">${cancelBtnText}</button>
+                                <button type="button" class="btn ${confirmBtnClass} px-4 py-2 rounded-3" id="dynamicConfirmBtn">${confirmBtnText}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalEl);
+
+            if (window.bootstrap && bootstrap.Modal) {
+                const bsModal = new bootstrap.Modal(modalEl);
+                let confirmed = false;
+
+                const confirmBtn = document.getElementById('dynamicConfirmBtn');
+                if (confirmBtn) {
+                    confirmBtn.addEventListener('click', function () {
+                        confirmed = true;
+                        bsModal.hide();
+                    });
+                }
+
+                modalEl.addEventListener('hidden.bs.modal', function () {
+                    modalEl.remove();
+                    resolve({ isConfirmed: confirmed });
+                });
+
+                bsModal.show();
+            } else {
+                modalEl.remove();
+                resolve({ isConfirmed: true });
+            }
+        });
+    }
 
     window.confirmAction = function (message = 'Are you sure you want to proceed with this action?') {
         return window.confirmDialog({ text: message });
     };
 
-    // Modern Alert Dialog Replacement (replaces window.alert to remove "localhost says")
+    // Modern In-Page Notice Replacement (Never triggers native "localhost says" alert)
     window.alert = function (message) {
+        const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
         if (window.Swal) {
             Swal.fire({
-                title: 'Ogeysiis (Notice)',
+                title: 'Notice',
                 text: message,
                 icon: 'info',
-                confirmButtonText: 'Waan Fahmay (OK)',
-                confirmButtonColor: '#102a45'
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#102a45',
+                background: isDark ? '#1e293b' : '#ffffff',
+                color: isDark ? '#f8fafc' : '#0f172a',
+                customClass: {
+                    popup: 'rounded-4 shadow-lg border border-secondary border-opacity-25'
+                }
             });
         } else {
-            console.log('Notice:', message);
+            console.log('HomeHub Notice:', message);
         }
     };
 
-    // Modern Password Copied SweetAlert Modal
+    // Suppress any accidental native browser confirm()
+    window.confirm = function (message) {
+        console.warn('Native window.confirm was suppressed in favor of in-page dialogs:', message);
+        return false;
+    };
+
+    // Modern Password Copied In-Page Modal
     window.showPasswordCopied = function (pwd) {
+        const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
         if (window.Swal) {
             Swal.fire({
                 icon: 'success',
-                title: 'Password La Sameeyay & La Koobiyeeyay!',
+                title: 'Password Generated & Copied!',
                 html: `
-                    <p class="text-muted small mb-2">Password-kan waxaa si toos ah loogu koobiyeeyay clipboard-kaaga:</p>
+                    <p class="text-muted small mb-2">This password has been automatically copied to your clipboard:</p>
                     <div class="p-3 bg-body-tertiary rounded-3 border my-2 text-center">
                         <span class="font-monospace fs-4 fw-bold text-primary">${pwd}</span>
                     </div>
-                    <small class="text-success fw-semibold"><i class="bi bi-clipboard-check-fill me-1"></i> Waad paste gareysan kartaa hadda (Ctrl + V).</small>
+                    <small class="text-success fw-semibold"><i class="bi bi-clipboard-check-fill me-1"></i> You can paste it now (Ctrl + V).</small>
                 `,
-                confirmButtonText: 'Waan Fahmay (OK)',
-                confirmButtonColor: '#102a45'
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#102a45',
+                background: isDark ? '#1e293b' : '#ffffff',
+                color: isDark ? '#f8fafc' : '#0f172a',
+                customClass: {
+                    popup: 'rounded-4 shadow-lg border border-secondary border-opacity-25'
+                }
             });
         } else {
             window.alert('Generated Password: ' + pwd);
@@ -147,7 +237,7 @@
             if (match && match[1]) {
                 confirmMsg = match[1].replace(/\\'/g, "'").replace(/\\"/g, '"');
             } else {
-                confirmMsg = 'Ma hubtaa inaad tirtirto ama falkan fuliso?';
+                confirmMsg = 'Are you sure you want to proceed with this action?';
             }
             form.removeAttribute('onsubmit');
         }
@@ -157,14 +247,9 @@
             e.stopPropagation();
 
             window.confirmDialog({
-                title: 'Ma Hubtaa? (Confirmation)',
-                text: confirmMsg,
-                icon: 'warning',
-                confirmButtonColor: '#dc3545',
-                confirmButtonText: '<i class="bi bi-trash3 me-1"></i> Haa, Tirtir (Confirm)',
-                cancelButtonText: 'Maya (Cancel)'
+                text: confirmMsg
             }).then((result) => {
-                if (result.isConfirmed) {
+                if (result && result.isConfirmed) {
                     form.dataset.swalBypass = 'true';
                     form.submit();
                 }

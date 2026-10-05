@@ -445,7 +445,7 @@ require_once __DIR__ . '/../includes/header.php';
                                                         </button>
                                                     <?php elseif ($apt['status'] === 'occupied'): ?>
                                                         <!-- Vacate Unit -->
-                                                        <form method="POST" action="<?= BASE_URL; ?>admin/house_apartments.php?id=<?= $houseId; ?>" class="d-inline" data-confirm="Ma hubtaa inaad faruujiso <?= e(addslashes($apt['apartment_number'])); ?>? Qolka wuxuu noqon doonaa mid bannaan.">
+                                                        <form method="POST" action="<?= BASE_URL; ?>admin/house_apartments.php?id=<?= $houseId; ?>" class="d-inline" data-confirm="Are you sure you want to vacate unit '<?= e(addslashes($apt['apartment_number'])); ?>'? The apartment will become vacant immediately.">
                                                             <?= csrf_field(); ?>
                                                             <input type="hidden" name="action" value="vacate_apartment">
                                                             <input type="hidden" name="apartment_id" value="<?= (int)$apt['id']; ?>">

@@ -12,6 +12,9 @@ declare(strict_types=1);
     <!-- Chart.js for Dashboards & Reports -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
+    <!-- SweetAlert2 (In-Page Modern Dialogs & Alerts) -->
+    <script src="<?= BASE_URL; ?>assets/js/sweetalert2.all.min.js"></script>
+
     <!-- Custom Main JS -->
     <script src="<?= BASE_URL; ?>assets/js/main.js?v=<?= file_exists(__DIR__ . '/../assets/js/main.js') ? filemtime(__DIR__ . '/../assets/js/main.js') : time(); ?>"></script>
 </body>
