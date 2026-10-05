@@ -240,94 +240,103 @@ require_once __DIR__ . '/includes/header.php';
         <?php else: ?>
             <div class="row g-4">
                 <?php foreach ($featuredHouses as $h): ?>
+                    <?php 
+                        $imgUrl = !empty($h['image']) && file_exists(UPLOAD_DIR . 'houses/' . $h['image'])
+                            ? UPLOAD_URL . 'houses/' . e($h['image'])
+                            : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=700&q=80';
+
+                        $hDataJson = htmlspecialchars(json_encode([
+                            'id'       => (int)$h['id'],
+                            'name'     => $h['house_name'],
+                            'code'     => $h['house_code'],
+                            'category' => $h['category_name'],
+                            'city'     => $h['city'],
+                            'address'  => $h['address'],
+                            'price'    => format_currency($h['rent_price']),
+                            'total'    => (int)$h['total_apartments'],
+                            'occupied' => (int)$h['occupied_apartments'],
+                            'vacant'   => (int)$h['vacant_apartments'],
+                            'desc'     => $h['description'] ?? '',
+                            'image'    => $imgUrl,
+                            'isUser'   => (is_logged_in() && current_user_role() === 'user'),
+                            'rentUrl'  => BASE_URL . 'user/house_details.php?id=' . (int)$h['id'],
+                            'loginUrl' => BASE_URL . 'login.php'
+                        ]), ENT_QUOTES, 'UTF-8');
+                    ?>
                     <div class="col-md-6 col-lg-4">
-                        <?php 
-                            $hDataJson = htmlspecialchars(json_encode([
-                                'id'       => (int)$h['id'],
-                                'name'     => $h['house_name'],
-                                'code'     => $h['house_code'],
-                                'category' => $h['category_name'],
-                                'city'     => $h['city'],
-                                'address'  => $h['address'],
-                                'price'    => format_currency($h['rent_price']),
-                                'total'    => (int)$h['total_apartments'],
-                                'occupied' => (int)$h['occupied_apartments'],
-                                'vacant'   => (int)$h['vacant_apartments'],
-                                'desc'     => $h['description'] ?? '',
-                                'image'    => $imgUrl,
-                                'isUser'   => (is_logged_in() && current_user_role() === 'user'),
-                                'rentUrl'  => BASE_URL . 'user/house_details.php?id=' . (int)$h['id'],
-                                'loginUrl' => BASE_URL . 'login.php'
-                            ]), ENT_QUOTES, 'UTF-8');
-                        ?>
-                        <div class="card h-100 card-hover overflow-hidden" style="cursor: pointer;" onclick="showHomeHouseModal(JSON.parse(this.dataset.hdata))" data-hdata="<?= $hDataJson; ?>">
+                        <div class="card h-100 card-hover overflow-hidden shadow-sm border" style="cursor: pointer;" onclick="showHomeHouseModal(JSON.parse(this.dataset.hdata))" data-hdata="<?= $hDataJson; ?>">
                             <div class="property-card-img-wrapper position-relative">
-                                <?php 
-                                    $imgUrl = !empty($h['image']) && file_exists(UPLOAD_DIR . 'houses/' . $h['image'])
-                                        ? UPLOAD_URL . 'houses/' . e($h['image'])
-                                        : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=700&q=80';
-                                ?>
                                 <img src="<?= $imgUrl; ?>" class="property-card-img" alt="<?= e($h['house_name']); ?>">
                                 <span class="property-badge-city"><i class="bi bi-geo-alt me-1"></i><?= e($h['city']); ?></span>
                                 <span class="property-badge-category"><?= e($h['category_name']); ?></span>
                             </div>
-                            <div class="card-body d-flex flex-column">
+                            <div class="card-body d-flex flex-column p-3">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <small class="text-muted font-monospace"><?= e($h['house_code']); ?></small>
-                                    <span class="badge <?= (int)$h['vacant_apartments'] > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger text-white'; ?>">
-                                        <?= (int)$h['vacant_apartments'] > 0 ? (int)$h['vacant_apartments'] . ' Units Vacant' : 'Wuu Buuxaa'; ?>
+                                    <span class="badge <?= (int)$h['vacant_apartments'] > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle'; ?>">
+                                        <?= (int)$h['vacant_apartments'] > 0 ? (int)$h['vacant_apartments'] . ' Units Vacant' : 'Fully Occupied'; ?>
                                     </span>
                                 </div>
-                                <h5 class="card-title fw-bold text-truncate mb-2"><?= e($h['house_name']); ?></h5>
+                                <h5 class="card-title fw-bold text-truncate mb-2" title="<?= e($h['house_name']); ?>"><?= e($h['house_name']); ?></h5>
 
                                 <!-- Apartments Occupancy Breakdown Box -->
-                                <div class="bg-body-tertiary p-2 rounded-2 border mb-2 small" onclick="event.stopPropagation();">
+                                <div class="bg-body-tertiary p-2 rounded-3 border mb-2 small" onclick="event.stopPropagation();">
                                     <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <span class="text-muted"><i class="bi bi-buildings text-primary me-1"></i>Wadarta: <strong><?= (int)$h['total_apartments']; ?> Qol</strong></span>
+                                        <span class="text-muted"><i class="bi bi-buildings text-primary me-1"></i>Total: <strong><?= (int)$h['total_apartments']; ?> Unit(s)</strong></span>
                                         <?php if ((int)$h['vacant_apartments'] > 0): ?>
-                                            <span class="text-success fw-bold"><i class="bi bi-door-open me-1"></i><?= (int)$h['vacant_apartments']; ?> Bannaan</span>
+                                            <span class="text-success fw-semibold"><i class="bi bi-door-open me-1"></i><?= (int)$h['vacant_apartments']; ?> Vacant</span>
                                         <?php else: ?>
-                                            <span class="text-danger fw-bold"><i class="bi bi-x-circle me-1"></i>Wuu Buuxaa</span>
+                                            <span class="text-danger fw-semibold"><i class="bi bi-x-circle me-1"></i>Occupied</span>
                                         <?php endif; ?>
                                     </div>
                                     <div class="d-flex justify-content-between small text-muted">
-                                        <span><i class="bi bi-person-fill text-danger me-1"></i>La deggen: <strong class="text-danger"><?= (int)$h['occupied_apartments']; ?></strong></span>
-                                        <span><i class="bi bi-check2-circle text-success me-1"></i>Bannaan: <strong class="text-success"><?= (int)$h['vacant_apartments']; ?></strong></span>
+                                        <span><i class="bi bi-person-fill text-danger me-1"></i>Occupied: <strong class="text-danger"><?= (int)$h['occupied_apartments']; ?></strong></span>
+                                        <span><i class="bi bi-check2-circle text-success me-1"></i>Available: <strong class="text-success"><?= (int)$h['vacant_apartments']; ?></strong></span>
                                     </div>
                                 </div>
 
                                 <p class="text-muted small mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                                    <?= e($h['description'] ?? 'No description available.'); ?>
+                                    <?= e($h['description'] ?? 'Modern property located in Mogadishu with full residential and commercial amenities.'); ?>
                                 </p>
                                 
-                                <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-auto" onclick="event.stopPropagation();">
-                                    <div>
-                                        <div class="property-price"><?= format_currency($h['rent_price']); ?></div>
-                                        <small class="text-muted">per month</small>
+                                <!-- Clean Price & Actions Section (Zero Overlap Guaranteed) -->
+                                <div class="pt-3 border-top mt-auto" onclick="event.stopPropagation();">
+                                    <div class="d-flex justify-content-between align-items-baseline mb-2">
+                                        <div>
+                                            <span class="property-price"><?= format_currency($h['rent_price']); ?></span>
+                                            <small class="text-muted">/ month</small>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="bi bi-geo-alt-fill text-danger me-1"></i><?= e($h['city']); ?>
+                                        </small>
                                     </div>
-                                    <div class="d-flex gap-2">
-                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="showHomeHouseModal(JSON.parse(this.closest('.card').dataset.hdata))">
-                                            <i class="bi bi-eye me-1"></i>Faahfaahin
-                                        </button>
-                                        <?php if ((int)$h['vacant_apartments'] > 0): ?>
-                                            <?php if (is_logged_in() && current_user_role() === 'user'): ?>
-                                                <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$h['id']; ?>" class="btn btn-primary btn-sm">
-                                                    Rent <i class="bi bi-arrow-right ms-1"></i>
-                                                </a>
-                                            <?php elseif (is_logged_in()): ?>
-                                                <a href="<?= BASE_URL . current_user_role(); ?>/index.php" class="btn btn-outline-secondary btn-sm">
-                                                    Dashboard
-                                                </a>
-                                            <?php else: ?>
-                                                <a href="<?= BASE_URL; ?>login.php" class="btn btn-primary btn-sm">
-                                                    Rent Now <i class="bi bi-box-arrow-in-right ms-1 text-gold"></i>
-                                                </a>
-                                            <?php endif; ?>
-                                        <?php else: ?>
-                                            <button type="button" class="btn btn-outline-danger btn-sm text-nowrap" onclick="showHomeHouseModal(JSON.parse(this.closest('.card').dataset.hdata))">
-                                                <i class="bi bi-x-circle me-1"></i>Wuu Buuxaa
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm w-100 py-1.5 fw-semibold d-flex align-items-center justify-content-center gap-1" onclick="showHomeHouseModal(JSON.parse(this.closest('.card').dataset.hdata))">
+                                                <i class="bi bi-eye"></i> Details
                                             </button>
-                                        <?php endif; ?>
+                                        </div>
+                                        <div class="col-6">
+                                            <?php if ((int)$h['vacant_apartments'] > 0): ?>
+                                                <?php if (is_logged_in() && current_user_role() === 'user'): ?>
+                                                    <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$h['id']; ?>" class="btn btn-primary btn-sm w-100 py-1.5 fw-semibold d-flex align-items-center justify-content-center gap-1">
+                                                        Rent Now <i class="bi bi-arrow-right"></i>
+                                                    </a>
+                                                <?php elseif (is_logged_in()): ?>
+                                                    <a href="<?= BASE_URL . current_user_role(); ?>/index.php" class="btn btn-outline-primary btn-sm w-100 py-1.5 fw-semibold d-flex align-items-center justify-content-center">
+                                                        Dashboard
+                                                    </a>
+                                                <?php else: ?>
+                                                    <a href="<?= BASE_URL; ?>login.php" class="btn btn-primary btn-sm w-100 py-1.5 fw-semibold d-flex align-items-center justify-content-center gap-1">
+                                                        Rent Now <i class="bi bi-arrow-right"></i>
+                                                    </a>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1.5 fw-semibold d-flex align-items-center justify-content-center gap-1 opacity-75" onclick="showHomeHouseModal(JSON.parse(this.closest('.card').dataset.hdata))">
+                                                    <i class="bi bi-x-circle"></i> Full
+                                                </button>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -472,30 +481,30 @@ require_once __DIR__ . '/includes/header.php';
                     </div>
                     <div class="col-md-7">
                         <h6 class="fw-bold text-uppercase small text-muted mb-2">
-                            <i class="bi bi-buildings-fill text-primary me-1"></i> Xaaladda Apartments-ka (Occupancy Status)
+                            <i class="bi bi-buildings-fill text-primary me-1"></i> Apartment Occupancy Status
                         </h6>
 
                         <!-- 3 Stat Blocks -->
                         <div class="row g-2 text-center mb-3">
                             <div class="col-4">
                                 <div class="p-2 rounded-3 bg-body-tertiary border">
-                                    <small class="text-muted d-block" style="font-size: 0.72rem;">Wadarta</small>
+                                    <small class="text-muted d-block" style="font-size: 0.72rem;">Total</small>
                                     <h5 class="fw-bold mb-0 text-dark" id="hmTotalApts">0</h5>
                                     <small class="text-muted" style="font-size: 0.7rem;">Apartments</small>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="p-2 rounded-3 bg-danger-subtle border border-danger-subtle">
-                                    <small class="text-danger d-block fw-semibold" style="font-size: 0.72rem;">La Deggen</small>
+                                    <small class="text-danger d-block fw-semibold" style="font-size: 0.72rem;">Occupied</small>
                                     <h5 class="fw-bold mb-0 text-danger" id="hmOccupiedApts">0</h5>
-                                    <small class="text-danger" style="font-size: 0.7rem;">Qol Buuxa</small>
+                                    <small class="text-danger" style="font-size: 0.7rem;">Units</small>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="p-2 rounded-3 bg-success-subtle border border-success-subtle">
-                                    <small class="text-success d-block fw-semibold" style="font-size: 0.72rem;">Bannaan</small>
+                                    <small class="text-success d-block fw-semibold" style="font-size: 0.72rem;">Vacant</small>
                                     <h5 class="fw-bold mb-0 text-success" id="hmVacantApts">0</h5>
-                                    <small class="text-success" style="font-size: 0.7rem;">Qol Bannaan</small>
+                                    <small class="text-success" style="font-size: 0.7rem;">Available</small>
                                 </div>
                             </div>
                         </div>
@@ -503,7 +512,7 @@ require_once __DIR__ . '/includes/header.php';
                         <!-- Progress Bar -->
                         <div class="mb-3">
                             <div class="d-flex justify-content-between small text-muted mb-1">
-                                <span>Heerka Buuxsanaanta:</span>
+                                <span>Occupancy Rate:</span>
                                 <strong id="hmPercentText" class="text-dark">0%</strong>
                             </div>
                             <div class="progress" style="height: 8px;">
@@ -517,12 +526,12 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
 
                 <div class="border-top mt-3 pt-3">
-                    <h6 class="fw-bold small mb-1">Faahfaahinta Guriga:</h6>
+                    <h6 class="fw-bold small mb-1">Property Overview:</h6>
                     <p class="text-muted small mb-0" id="hmDesc" style="white-space: pre-line;"></p>
                 </div>
             </div>
             <div class="modal-footer bg-body-tertiary d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Xir (Close)</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
                 <div id="hmActionBtnContainer"></div>
             </div>
         </div>
@@ -545,7 +554,7 @@ function showHomeHouseModal(data) {
     const vacant = parseInt(data.vacant) || 0;
     const pct = Math.min(100, Math.round((occupied / total) * 100));
 
-    document.getElementById('hmPercentText').innerText = pct + '% Buuxa';
+    document.getElementById('hmPercentText').innerText = pct + '% Occupied';
     const pb = document.getElementById('hmProgressBar');
     pb.style.width = pct + '%';
     if (vacant <= 0) {
@@ -564,13 +573,13 @@ function showHomeHouseModal(data) {
             <div class="alert alert-danger p-2 rounded-3 small mb-0 d-flex align-items-center gap-2">
                 <i class="bi bi-x-octagon-fill fs-4 text-danger flex-shrink-0"></i>
                 <div>
-                    <strong>Gurigan wuu buuxaa:</strong> Dhammaan waa la wada deggen yahay! (Ma jiro qol bannaan hadda).
+                    <strong>Fully Occupied:</strong> All apartment units in this property are currently occupied.
                 </div>
             </div>
         `;
         btnBox.innerHTML = `
-            <button type="button" class="btn btn-secondary btn-sm fw-bold" disabled>
-                <i class="bi bi-x-circle me-1"></i> Wuu Buuxaa (Dhammaan Waa La Wada Deggen Yahay)
+            <button type="button" class="btn btn-secondary btn-sm fw-semibold" disabled>
+                <i class="bi bi-x-circle me-1"></i> Fully Occupied
             </button>
         `;
     } else {
@@ -578,20 +587,20 @@ function showHomeHouseModal(data) {
             <div class="alert alert-success p-2 rounded-3 small mb-0 d-flex align-items-center gap-2">
                 <i class="bi bi-check-circle-fill fs-4 text-success flex-shrink-0"></i>
                 <div>
-                    <strong>Diyaar u ah Kireysi:</strong> Waxaa bannaan <strong>${vacant}</strong> qol/apartments oo diyaar ah!
+                    <strong>Available for Rent:</strong> There are <strong>${vacant}</strong> vacant unit(s) ready for move-in!
                 </div>
             </div>
         `;
         if (data.isUser) {
             btnBox.innerHTML = `
-                <a href="${data.rentUrl}" class="btn btn-success btn-sm fw-bold">
-                    <i class="bi bi-key me-1"></i> Kireyso Hadda (Rent Property)
+                <a href="${data.rentUrl}" class="btn btn-success btn-sm fw-semibold">
+                    <i class="bi bi-key me-1"></i> Apply to Rent
                 </a>
             `;
         } else {
             btnBox.innerHTML = `
-                <a href="${data.loginUrl}" class="btn btn-primary btn-sm fw-bold">
-                    <i class="bi bi-box-arrow-in-right me-1"></i> Gal si aad u Kireysato (Sign In to Rent)
+                <a href="${data.loginUrl}" class="btn btn-primary btn-sm fw-semibold">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Rent
                 </a>
             `;
         }

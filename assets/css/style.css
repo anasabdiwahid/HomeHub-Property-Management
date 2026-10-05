@@ -82,10 +82,14 @@ a:hover {
 }
 
 /* ==========================================================================
-   Dashboard Proportional 0.75 Compact Scale (Browser stays at 100%)
+   Global & Public Proportional 0.75-0.80 Compact Scale (Browser stays at 100%)
    ========================================================================== */
+html {
+    font-size: 13.5px; /* Scales entire site proportionally by ~16-20% for clean compact luxury feel */
+}
+
 html.app-dashboard {
-    font-size: 13px; /* Scales all rem units proportionally by ~20-25% without layout clipping */
+    font-size: 13px; /* Extra compact for dashboard data tables and metrics */
 }
 
 /* Layout Wrappers */
@@ -533,7 +537,7 @@ html.app-dashboard {
 /* Property Image Cards */
 .property-card-img-wrapper {
     position: relative;
-    height: 210px;
+    height: 190px;
     overflow: hidden;
     border-top-left-radius: var(--hh-radius);
     border-top-right-radius: var(--hh-radius);
@@ -547,39 +551,40 @@ html.app-dashboard {
 }
 
 .card:hover .property-card-img {
-    transform: scale(1.05);
+    transform: scale(1.04);
 }
 
 .property-badge-city {
     position: absolute;
-    top: 12px;
-    left: 12px;
-    background: rgba(16, 42, 69, 0.88);
-    backdrop-filter: blur(4px);
+    top: 10px;
+    left: 10px;
+    background: rgba(16, 42, 69, 0.90);
+    backdrop-filter: blur(6px);
     color: #fff;
-    padding: 0.3rem 0.75rem;
+    padding: 0.25rem 0.65rem;
     border-radius: 50px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
 }
 
 .property-badge-category {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 10px;
+    right: 10px;
     background: rgba(229, 169, 59, 0.95);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
     color: #09192b;
-    padding: 0.3rem 0.75rem;
+    padding: 0.25rem 0.65rem;
     border-radius: 50px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
 }
 
 .property-price {
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     font-weight: 800;
     color: var(--hh-primary);
+    line-height: 1.2;
 }
 
 /* Progress Bars */
