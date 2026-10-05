@@ -81,7 +81,13 @@ a:hover {
     color: #ffffff !important;
 }
 
-/* Layout Wrappers */
+/* Layout Wrappers & Dashboard Scale */
+html.app-dashboard,
+body.app-dashboard,
+body:has(.app-wrapper) {
+    zoom: var(--dashboard-zoom, 0.68);
+}
+
 .app-wrapper {
     display: flex;
     min-height: 100vh;

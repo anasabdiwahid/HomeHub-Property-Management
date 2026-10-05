@@ -204,10 +204,40 @@
         document.body.removeChild(downloadLink);
     };
 
+    // Dashboard Zoom / Scale Controller (Default 0.68 / ~65% compact)
+    window.setDashboardZoom = function (level) {
+        localStorage.setItem('homehub-dashboard-zoom', level);
+        document.documentElement.style.setProperty('--dashboard-zoom', level);
+        updateZoomDisplay(level);
+    };
+
+    const updateZoomDisplay = (level) => {
+        const display = document.getElementById('zoomLevelDisplay');
+        if (display) {
+            display.textContent = Math.round(parseFloat(level) * 100) + '%';
+        }
+        // Update active class in dropdown items if present
+        document.querySelectorAll('.zoom-option-item').forEach(btn => {
+            const btnLevel = btn.getAttribute('data-zoom');
+            if (btnLevel === level) {
+                btn.classList.add('active', 'fw-bold');
+            } else {
+                btn.classList.remove('active', 'fw-bold');
+            }
+        });
+    };
+
+    const initDashboardZoom = () => {
+        const savedZoom = localStorage.getItem('homehub-dashboard-zoom') || '0.68';
+        document.documentElement.style.setProperty('--dashboard-zoom', savedZoom);
+        updateZoomDisplay(savedZoom);
+    };
+
     // Initialize on DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
         initTheme();
         initAlerts();
+        initDashboardZoom();
 
         // Enable tooltips if Bootstrap Tooltips are present
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
