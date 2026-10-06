@@ -551,7 +551,7 @@ require_once __DIR__ . '/includes/header.php';
 <footer id="contact-section" class="footer-showcase py-5">
     <div class="container">
         <div class="row g-4 justify-content-between mb-4">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="mb-3">
                     <img src="<?= BASE_URL; ?>assets/images/logo-dark.png" alt="HomeHub Logo" style="height: 48px; width: auto; object-fit: contain;">
                 </div>
@@ -576,16 +576,38 @@ require_once __DIR__ . '/includes/header.php';
                 </ul>
             </div>
 
-            <div class="col-6 col-md-3 col-lg-2">
+            <div class="col-12 col-md-6 col-lg-4">
                 <h6 class="fw-bold mb-3 text-uppercase small text-muted">Mogadishu Districts</h6>
-                <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
-                    <li><a href="<?= BASE_URL; ?>?city=Hodan#browse-section" class="text-muted">Hodan</a></li>
-                    <li><a href="<?= BASE_URL; ?>?city=Wadajir#browse-section" class="text-muted">Wadajir</a></li>
-                    <li><a href="<?= BASE_URL; ?>?city=Waaberi#browse-section" class="text-muted">Waaberi</a></li>
-                    <li><a href="<?= BASE_URL; ?>?city=Cabdicasiis#browse-section" class="text-muted">Cabdicasiis</a></li>
-                    <li><a href="<?= BASE_URL; ?>?city=Darusalaam#browse-section" class="text-muted">Darusalaam</a></li>
-                    <li><a href="<?= BASE_URL; ?>?city=Xamar+Weyne#browse-section" class="text-muted">Xamar Weyne</a></li>
-                </ul>
+                <?php 
+                $allDst = mogadishu_districts();
+                $halfDst = (int)ceil(count($allDst) / 2);
+                $colDst1 = array_slice($allDst, 0, $halfDst);
+                $colDst2 = array_slice($allDst, $halfDst);
+                ?>
+                <div class="row g-2 small">
+                    <div class="col-6">
+                        <ul class="list-unstyled d-flex flex-column gap-1.5 mb-0">
+                            <?php foreach ($colDst1 as $dst): ?>
+                                <li>
+                                    <a href="<?= BASE_URL; ?>?city=<?= urlencode($dst); ?>#browse-section" class="text-muted d-flex align-items-center gap-1.5 text-truncate">
+                                        <i class="bi bi-geo-alt text-gold" style="font-size: 0.75rem;"></i> <?= e($dst); ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <ul class="list-unstyled d-flex flex-column gap-1.5 mb-0">
+                            <?php foreach ($colDst2 as $dst): ?>
+                                <li>
+                                    <a href="<?= BASE_URL; ?>?city=<?= urlencode($dst); ?>#browse-section" class="text-muted d-flex align-items-center gap-1.5 text-truncate">
+                                        <i class="bi bi-geo-alt text-gold" style="font-size: 0.75rem;"></i> <?= e($dst); ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <div class="col-lg-3">

@@ -28,7 +28,8 @@ function mogadishu_districts(): array {
         'Kaaraan',
         'Warta Nabadda',
         'Kaxda',
-        'Huriwaa'
+        'Huriwaa',
+        'Garasbaaley'
     ];
 }
 
