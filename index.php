@@ -61,13 +61,14 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <!-- Public Top Navigation -->
-<nav class="navbar navbar-expand-lg bg-body border-bottom sticky-top py-2 shadow-sm">
+<nav class="navbar navbar-expand-lg bg-body border-bottom sticky-top py-2 shadow-sm public-navbar">
     <div class="container">
         <!-- Official Logo -->
         <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL; ?>">
-            <img src="<?= BASE_URL; ?>assets/images/logo_clean.png" alt="HomeHub Logo" style="height: 48px; width: auto; object-fit: contain;">
+            <img src="<?= BASE_URL; ?>assets/images/logo_clean.png" alt="HomeHub Logo" style="height: 46px; width: auto; object-fit: contain;">
         </a>
 
+        <!-- Right Controls: Dark Mode, Auth & Mobile Toggler -->
         <div class="d-flex align-items-center gap-2 order-lg-last">
             <!-- Dark mode toggle -->
             <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
@@ -102,6 +103,37 @@ require_once __DIR__ . '/includes/header.php';
                     <i class="bi bi-person-plus me-1"></i>Register
                 </a>
             <?php endif; ?>
+
+            <!-- Mobile Hamburger Toggle Button -->
+            <button class="navbar-toggler border-0 ms-1 p-1" type="button" data-bs-toggle="collapse" data-bs-target="#publicNavbarContent" aria-controls="publicNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        <!-- Center Nav Items -->
+        <div class="collapse navbar-collapse" id="publicNavbarContent">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-2">
+                <li class="nav-item">
+                    <a class="nav-link public-nav-link active" href="<?= BASE_URL; ?>">
+                        <i class="bi bi-house-door me-1 text-gold"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link public-nav-link" href="<?= BASE_URL; ?>#browse-section">
+                        <i class="bi bi-buildings me-1"></i> Available Houses
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link public-nav-link" href="<?= BASE_URL; ?>#features-section">
+                        <i class="bi bi-shield-check me-1"></i> Features
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link public-nav-link" href="<?= BASE_URL; ?>#contact-section">
+                        <i class="bi bi-telephone me-1"></i> Contact Us
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
@@ -349,7 +381,7 @@ require_once __DIR__ . '/includes/header.php';
 </section>
 
 <!-- Features Section -->
-<section class="py-5 bg-body-tertiary">
+<section id="features-section" class="py-5 bg-body-tertiary">
     <div class="container py-4">
         <div class="text-center max-w-700 mx-auto mb-5">
             <span class="badge badge-gold mb-2">System Advantages</span>
@@ -398,7 +430,7 @@ require_once __DIR__ . '/includes/header.php';
 </section>
 
 <!-- Footer -->
-<footer class="bg-body border-top py-5">
+<footer id="contact-section" class="bg-body border-top py-5">
     <div class="container">
         <div class="row g-4 justify-content-between mb-4">
             <div class="col-lg-4">

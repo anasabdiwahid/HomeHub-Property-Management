@@ -368,6 +368,55 @@ html.app-dashboard {
     border-bottom: 2px solid var(--hh-gold);
 }
 
+/* Public Homepage Top Navbar */
+.public-navbar {
+    background-color: var(--hh-card-bg) !important;
+    border-bottom: 1px solid var(--hh-border) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.public-nav-link {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--hh-text-muted) !important;
+    padding: 0.5rem 0.85rem !important;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.public-nav-link:hover {
+    color: var(--hh-primary) !important;
+    background: var(--hh-gold-light);
+}
+
+.public-nav-link.active {
+    color: var(--hh-gold) !important;
+}
+
+[data-bs-theme="dark"] .public-navbar {
+    background-color: rgba(13, 30, 50, 0.95) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #162f4d !important;
+}
+
+[data-bs-theme="dark"] .public-nav-link {
+    color: #cbd8e7 !important;
+}
+
+[data-bs-theme="dark"] .public-nav-link:hover {
+    color: #e5a93b !important;
+    background: rgba(229, 169, 59, 0.12);
+}
+
+[data-bs-theme="dark"] .public-nav-link.active {
+    color: #e5a93b !important;
+}
+
 /* Custom Cards */
 .card {
     background-color: var(--hh-card-bg);
