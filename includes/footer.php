@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 ?>
-    <!-- Floating WhatsApp Action Button -->
+    <!-- Floating WhatsApp Action Button (Icon Only) -->
     <a href="https://wa.me/252615554321?text=Hello%20HomeHub,%20I%20am%20interested%20in%20your%20property%20services" 
        target="_blank" 
        rel="noopener noreferrer" 
@@ -15,7 +15,6 @@ declare(strict_types=1);
        title="Chat with us on WhatsApp"
        aria-label="Chat with us on WhatsApp">
         <i class="bi bi-whatsapp"></i>
-        <span class="whatsapp-badge">Chat with us</span>
     </a>
 
     <!-- Bootstrap 5 Bundle with Popper -->

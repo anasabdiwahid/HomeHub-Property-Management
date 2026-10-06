@@ -1262,49 +1262,43 @@ html.app-dashboard {
 }
 
 /* ==========================================================================
-   Floating WhatsApp Sticky Button
+   Floating WhatsApp Sticky Button (Icon Only & Elevated)
    ========================================================================== */
 .floating-whatsapp-btn {
     position: fixed;
-    bottom: 28px;
+    bottom: 85px;
     right: 28px;
     z-index: 1040;
     display: inline-flex;
     align-items: center;
-    gap: 9px;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    padding: 0;
     background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
     color: #ffffff !important;
     text-decoration: none !important;
-    padding: 11px 18px 11px 15px;
-    border-radius: 50px;
     box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
     transition: all 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    font-weight: 600;
-    font-size: 0.92rem;
-    line-height: 1;
 }
 
 .floating-whatsapp-btn i {
-    font-size: 1.6rem;
+    font-size: 1.85rem;
     line-height: 1;
     display: inline-block;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
-.floating-whatsapp-btn .whatsapp-badge {
-    letter-spacing: 0.02em;
-    white-space: nowrap;
-}
-
 .floating-whatsapp-btn:hover {
     background: linear-gradient(135deg, #2ae771 0%, #16a08f 100%);
-    transform: translateY(-4px) scale(1.05);
+    transform: translateY(-4px) scale(1.08);
     box-shadow: 0 12px 28px rgba(37, 211, 102, 0.6), 0 4px 10px rgba(0, 0, 0, 0.25);
     color: #ffffff !important;
 }
 
 .floating-whatsapp-btn:active {
-    transform: translateY(-1px) scale(0.98);
+    transform: translateY(-1px) scale(0.96);
 }
 
 /* Pulsing radar ring */
@@ -1312,7 +1306,7 @@ html.app-dashboard {
     content: '';
     position: absolute;
     inset: -3px;
-    border-radius: 50px;
+    border-radius: 50%;
     background: #25D366;
     opacity: 0.5;
     z-index: -1;
@@ -1321,37 +1315,28 @@ html.app-dashboard {
 
 @keyframes wa-pulse {
     0% {
-        transform: scale(0.98);
+        transform: scale(0.95);
         opacity: 0.7;
     }
     70% {
-        transform: scale(1.15, 1.28);
+        transform: scale(1.25);
         opacity: 0;
     }
     100% {
-        transform: scale(1.22, 1.35);
+        transform: scale(1.35);
         opacity: 0;
     }
 }
 
 @media (max-width: 576px) {
     .floating-whatsapp-btn {
-        bottom: 20px;
+        bottom: 80px;
         right: 20px;
-        padding: 0;
-        border-radius: 50%;
-        width: 52px;
-        height: 52px;
-        justify-content: center;
-    }
-    .floating-whatsapp-btn .whatsapp-badge {
-        display: none;
+        width: 54px;
+        height: 54px;
     }
     .floating-whatsapp-btn i {
-        font-size: 1.55rem;
-    }
-    .floating-whatsapp-btn::before {
-        border-radius: 50%;
+        font-size: 1.7rem;
     }
 }
 
