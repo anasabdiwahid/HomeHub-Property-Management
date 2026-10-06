@@ -1193,31 +1193,43 @@ html.app-dashboard {
 }
 
 /* ==========================================================================
-   Properties Section - Luxury Real Estate & Houses Background Showcase
+   Properties Section - 3D Architectural Clay Model Background Showcase
    ========================================================================== */
 .properties-section {
     position: relative;
     background-color: var(--hh-body-bg);
     background-image: 
-        radial-gradient(circle at 15% 15%, rgba(229, 169, 59, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(2, 132, 199, 0.08) 0%, transparent 45%),
-        linear-gradient(180deg, rgba(7, 18, 30, 0.92) 0%, rgba(13, 30, 50, 0.86) 50%, rgba(7, 18, 30, 0.94) 100%),
-        url('../images/houses-pattern.svg'),
+        radial-gradient(circle at 15% 15%, rgba(229, 169, 59, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(2, 132, 199, 0.12) 0%, transparent 45%),
+        linear-gradient(180deg, rgba(7, 18, 30, 0.82) 0%, rgba(13, 30, 50, 0.72) 50%, rgba(7, 18, 30, 0.86) 100%),
         url('../images/properties-bg.jpg');
-    background-size: auto, auto, auto, 240px 180px, cover;
-    background-position: center, center, center, 0 0, center center;
-    background-repeat: no-repeat, no-repeat, no-repeat, repeat, no-repeat;
+    background-size: auto, auto, auto, cover;
+    background-position: center, center, center, center center;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
     border-top: 1px solid rgba(229, 169, 59, 0.2);
     border-bottom: 1px solid rgba(229, 169, 59, 0.2);
 }
 
+.properties-section .card {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
 [data-bs-theme="light"] .properties-section {
     background-image: 
-        radial-gradient(circle at 15% 15%, rgba(229, 169, 59, 0.08) 0%, transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(16, 42, 69, 0.06) 0%, transparent 45%),
-        linear-gradient(180deg, rgba(8, 20, 34, 0.90) 0%, rgba(16, 42, 69, 0.84) 50%, rgba(8, 20, 34, 0.92) 100%),
-        url('../images/houses-pattern.svg'),
+        radial-gradient(circle at 15% 15%, rgba(229, 169, 59, 0.10) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(16, 42, 69, 0.08) 0%, transparent 45%),
+        linear-gradient(180deg, rgba(248, 250, 252, 0.86) 0%, rgba(241, 245, 249, 0.78) 50%, rgba(248, 250, 252, 0.88) 100%),
         url('../images/properties-bg.jpg');
+}
+
+[data-bs-theme="light"] .properties-section h2 {
+    color: var(--hh-text-main) !important;
+    text-shadow: none;
+}
+
+[data-bs-theme="light"] .properties-section .text-muted {
+    color: var(--hh-text-muted) !important;
 }
 
 .properties-section .badge-gold {
