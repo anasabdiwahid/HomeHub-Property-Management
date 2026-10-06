@@ -8,7 +8,7 @@
 
     // Theme Switcher Initialization
     const initTheme = () => {
-        const storedTheme = localStorage.getItem('homehub-theme') || 'light';
+        const storedTheme = localStorage.getItem('homehub-theme') || 'dark';
         setTheme(storedTheme);
     };
 
@@ -29,7 +29,7 @@
     };
 
     window.toggleTheme = function () {
-        const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+        const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'dark';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         setTheme(newTheme);
     };

@@ -15,7 +15,7 @@ $requestScript = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
 $isDashboardPage = (strpos($requestScript, '/admin/') !== false) || (strpos($requestScript, '/manager/') !== false);
 ?>
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light" class="<?= $isDashboardPage ? 'app-dashboard' : ''; ?>">
+<html lang="en" data-bs-theme="dark" class="<?= $isDashboardPage ? 'app-dashboard' : ''; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,10 +26,16 @@ $isDashboardPage = (strpos($requestScript, '/admin/') !== false) || (strpos($req
     <link rel="shortcut icon" href="<?= BASE_URL; ?>favicon.ico">
     <link rel="apple-touch-icon" href="<?= BASE_URL; ?>assets/images/favicon.png">
 
-    <!-- Prevent dark mode flash -->
+    <!-- Prevent dark mode flash & Set Dark Mode by Default -->
     <script>
         (function() {
-            const savedTheme = localStorage.getItem('homehub-theme') || 'light';
+            let savedTheme = localStorage.getItem('homehub-theme');
+            // Ensure open browser defaults to dark mode
+            if (!savedTheme || localStorage.getItem('homehub-force-dark') !== '1') {
+                savedTheme = 'dark';
+                localStorage.setItem('homehub-theme', 'dark');
+                localStorage.setItem('homehub-force-dark', '1');
+            }
             document.documentElement.setAttribute('data-bs-theme', savedTheme);
 
             // Clean up any previous zoom override to restore 100% normal crisp layout

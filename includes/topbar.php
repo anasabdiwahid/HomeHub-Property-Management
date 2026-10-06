@@ -23,7 +23,7 @@ $currentUser = current_user();
     <div class="d-flex align-items-center gap-2 gap-md-3">
         <!-- Dark Mode Toggle Button -->
         <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
-            <i class="bi bi-moon-stars-fill theme-toggle-icon"></i>
+            <i class="bi bi-sun-fill theme-toggle-icon"></i>
         </button>
 
         <!-- Quick Logout Button -->

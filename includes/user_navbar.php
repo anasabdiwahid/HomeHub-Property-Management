@@ -52,7 +52,7 @@ $currentUser = current_user();
             <!-- Right Controls: Dark Mode & User Dropdown -->
             <div class="d-flex align-items-center gap-3">
                 <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
-                    <i class="bi bi-moon-stars-fill theme-toggle-icon"></i>
+                    <i class="bi bi-sun-fill theme-toggle-icon"></i>
                 </button>
 
                 <div class="dropdown">

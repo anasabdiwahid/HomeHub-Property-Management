@@ -71,7 +71,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="d-flex align-items-center gap-2 order-lg-last">
             <!-- Dark mode toggle -->
             <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
-                <i class="bi bi-moon-stars-fill theme-toggle-icon"></i>
+                <i class="bi bi-sun-fill theme-toggle-icon"></i>
             </button>
 
             <?php if (is_logged_in()): ?>

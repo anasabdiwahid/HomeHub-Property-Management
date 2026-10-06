@@ -70,7 +70,7 @@ require_once __DIR__ . '/includes/header.php';
 <div class="min-vh-100 d-flex flex-column justify-content-center align-items-center py-5 px-3" style="background: radial-gradient(circle at 50% 20%, rgba(229, 169, 59, 0.12) 0%, rgba(16, 42, 69, 0.05) 50%, transparent 80%);">
     <div style="position: absolute; top: 20px; right: 20px;">
         <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
-            <i class="bi bi-moon-stars-fill theme-toggle-icon fs-5"></i>
+            <i class="bi bi-sun-fill theme-toggle-icon fs-5"></i>
         </button>
     </div>
 

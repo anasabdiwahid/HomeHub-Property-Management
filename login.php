@@ -278,7 +278,7 @@ require_once __DIR__ . '/includes/header.php';
     <!-- Theme Toggle Floating Button -->
     <div class="position-absolute top-0 end-0 m-3 z-3">
         <button type="button" class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 36px; height: 36px; background: var(--hh-card-bg);" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle Theme">
-            <i class="bi bi-moon-stars-fill theme-toggle-icon" style="font-size: 0.95rem;"></i>
+            <i class="bi bi-sun-fill theme-toggle-icon" style="font-size: 0.95rem;"></i>
         </button>
     </div>
 
