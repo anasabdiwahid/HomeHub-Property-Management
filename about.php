@@ -308,15 +308,12 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
             </div>
 
-            <div class="col-lg-3">
-                <h6 class="fw-bold mb-3 text-uppercase small text-muted">System Portals</h6>
-                <div class="d-flex flex-column gap-2">
-                    <a href="<?= BASE_URL; ?>login.php" class="btn btn-outline-primary btn-sm text-start">
-                        <i class="bi bi-shield-lock me-1"></i> Admin & Manager Sign In
-                    </a>
-                    <a href="<?= BASE_URL; ?>register.php" class="btn btn-gold btn-sm text-start">
-                        <i class="bi bi-person-plus me-1"></i> Tenant Sign Up
-                    </a>
+            <div class="col-lg-3 d-flex flex-column align-items-center align-items-lg-end justify-content-center">
+                <div class="text-center text-lg-end p-2">
+                    <img src="<?= BASE_URL; ?>assets/images/logo-icon-white.png" alt="HomeHub Logo Icon" class="footer-brand-icon" style="height: 105px; width: auto; object-fit: contain; filter: drop-shadow(0 8px 24px rgba(1, 167, 153, 0.35)); transition: transform 0.3s ease;">
+                    <div class="mt-2 text-muted small fw-semibold" style="letter-spacing: 0.05em; font-size: 0.75rem;">
+                        <span class="text-gold">HomeHub</span> Property Management
+                    </div>
                 </div>
             </div>
         </div>
