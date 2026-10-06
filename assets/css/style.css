@@ -105,6 +105,7 @@ html.app-dashboard {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    margin-left: 235px;
     background-color: var(--hh-body-bg);
 }
 
@@ -134,7 +135,7 @@ html.app-dashboard {
     z-index: 990;
 }
 
-/* Sidebar - Stationary, Fixed & Solid (No twitching / No unwanted scrolling) */
+/* Sidebar - Stationary, Fixed & Solid (Stuck to top and bottom) */
 .sidebar {
     width: 235px;
     background-color: var(--hh-sidebar-bg);
@@ -143,10 +144,12 @@ html.app-dashboard {
     flex-direction: column;
     flex-shrink: 0;
     z-index: 1000;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    bottom: 0;
     height: 100vh;
-    max-height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
@@ -258,19 +261,26 @@ html.app-dashboard {
     padding: 0.45rem 0.85rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     flex-shrink: 0;
+    margin-top: auto;
+    background: var(--hh-sidebar-bg);
 }
 
 /* Mobile Responsive Sidebar Off-canvas */
 @media (max-width: 991.98px) {
+    .app-main {
+        margin-left: 0;
+    }
+
     .sidebar {
         position: fixed;
         top: 0;
         left: -260px;
         bottom: 0;
         height: 100vh;
-        max-height: 100vh;
+        height: 100dvh;
         z-index: 1050;
         box-shadow: none;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .sidebar.show {
         left: 0;
