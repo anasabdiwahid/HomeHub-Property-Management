@@ -1050,3 +1050,49 @@ html.app-dashboard {
     background: #e5a93b !important;
     box-shadow: 0 0 8px rgba(229, 169, 59, 0.6);
 }
+
+/* ==========================================================================
+   Hero Section - Luxury Living Room Background Showcase
+   ========================================================================== */
+.hero-section {
+    position: relative;
+    background-image: 
+        linear-gradient(135deg, rgba(7, 18, 30, 0.88) 0%, rgba(13, 30, 50, 0.76) 50%, rgba(7, 18, 30, 0.90) 100%),
+        url('../images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border-bottom: 1px solid rgba(229, 169, 59, 0.2);
+}
+
+[data-bs-theme="light"] .hero-section {
+    background-image: 
+        linear-gradient(135deg, rgba(8, 20, 34, 0.86) 0%, rgba(16, 42, 69, 0.74) 50%, rgba(8, 20, 34, 0.88) 100%),
+        url('../images/hero-bg.jpg');
+}
+
+.hero-section .text-main {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.hero-section .lead {
+    color: #cbd8e7 !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.hero-search-card {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(13, 30, 50, 0.88) !important;
+    border: 1px solid rgba(229, 169, 59, 0.3) !important;
+    border-top: 4px solid var(--hh-gold) !important;
+    box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.65) !important;
+}
+
+[data-bs-theme="light"] .hero-search-card {
+    background: rgba(255, 255, 255, 0.94) !important;
+    border: 1px solid rgba(229, 169, 59, 0.35) !important;
+    border-top: 4px solid var(--hh-gold) !important;
+    box-shadow: 0 20px 45px -12px rgba(16, 42, 69, 0.25) !important;
+}

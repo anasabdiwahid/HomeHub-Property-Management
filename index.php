@@ -107,7 +107,7 @@ require_once __DIR__ . '/includes/header.php';
 </nav>
 
 <!-- Hero Section -->
-<section class="py-5" style="background: radial-gradient(circle at 50% 10%, rgba(229, 169, 59, 0.14) 0%, rgba(16, 42, 69, 0.04) 50%, transparent 80%);">
+<section class="hero-section py-5 position-relative">
     <div class="container py-4">
         <div class="row align-items-center justify-content-between g-5">
             <div class="col-lg-6">
@@ -132,7 +132,7 @@ require_once __DIR__ . '/includes/header.php';
 
             <div class="col-lg-5">
                 <!-- Search Card -->
-                <div class="card shadow-lg border-0 p-3 p-md-4" style="border-top: 4px solid var(--hh-gold) !important;">
+                <div class="card hero-search-card shadow-lg p-3 p-md-4">
                     <div class="card-body">
                         <h4 class="card-title fw-bold mb-3 d-flex align-items-center gap-2">
                             <i class="bi bi-funnel-fill text-gold"></i> Find Properties in Mogadishu
