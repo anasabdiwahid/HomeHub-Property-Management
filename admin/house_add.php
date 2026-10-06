@@ -239,7 +239,7 @@ require_once __DIR__ . '/../includes/header.php';
                             <!-- Vacant Apartments -->
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Vacant Apartments</label>
-                                <input type="number" id="vacant_apartments" class="form-control bg-light" value="1" readonly>
+                                <input type="number" id="vacant_apartments" class="form-control bg-body fw-bold text-success" value="1" readonly>
                             </div>
 
                             <!-- Image Upload -->

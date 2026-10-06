@@ -259,7 +259,7 @@ require_once __DIR__ . '/../includes/header.php';
 
                             <div class="col-md-3">
                                 <label class="form-label fw-semibold">Vacant Apartments</label>
-                                <input type="number" id="vacant_apartments" class="form-control bg-light" value="<?= (int)$house['vacant_apartments']; ?>" readonly>
+                                <input type="number" id="vacant_apartments" class="form-control bg-body fw-bold text-success" value="<?= (int)$house['vacant_apartments']; ?>" readonly>
                             </div>
 
                             <!-- Image Preview & File Input -->
