@@ -191,70 +191,79 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
         </div>
     <?php else: ?>
-        <div class="row g-4">
+        <div class="row g-2 g-md-3 g-lg-4">
             <?php foreach ($houses as $h): ?>
-                <div class="col-md-6 col-lg-4">
+                <div class="col-6 col-md-6 col-lg-4">
                     <div class="card h-100 card-hover overflow-hidden border">
-                        <div class="property-card-img-wrapper">
+                        <div class="property-card-img-wrapper position-relative">
                             <?php 
                                 $imgUrl = !empty($h['image']) && file_exists(UPLOAD_DIR . 'houses/' . $h['image'])
                                     ? UPLOAD_URL . 'houses/' . e($h['image'])
                                     : 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=80';
                             ?>
                             <img src="<?= $imgUrl; ?>" class="property-card-img" alt="<?= e($h['house_name']); ?>">
-                            <span class="property-badge-city"><i class="bi bi-geo-alt me-1"></i><?= e($h['city']); ?></span>
+                            <span class="property-badge-city"><i class="bi bi-geo-alt me-0.5"></i><?= e($h['city']); ?></span>
                             <span class="property-badge-category"><?= e($h['category_name']); ?></span>
                         </div>
 
-                        <div class="card-body d-flex flex-column p-3">
+                        <div class="card-body d-flex flex-column p-2 p-sm-3">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <small class="text-muted font-monospace"><?= e($h['house_code']); ?></small>
-                                <span class="badge <?= (int)$h['vacant_apartments'] > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger text-white'; ?>">
-                                    <?= (int)$h['vacant_apartments'] > 0 ? (int)$h['vacant_apartments'] . ' Units Vacant' : 'Wuu Buuxaa'; ?>
+                                <small class="text-muted font-monospace" style="font-size: 0.7rem;"><?= e($h['house_code']); ?></small>
+                                <span class="badge <?= (int)$h['vacant_apartments'] > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger text-white'; ?>" style="font-size: 0.68rem; padding: 0.2rem 0.4rem;">
+                                    <?= (int)$h['vacant_apartments'] > 0 ? (int)$h['vacant_apartments'] . ' Vac' : 'Full'; ?>
                                 </span>
                             </div>
 
-                            <h5 class="card-title fw-bold text-truncate mb-1"><?= e($h['house_name']); ?></h5>
-                            <small class="text-muted mb-2"><i class="bi bi-geo me-1"></i><?= e($h['address']); ?></small>
+                            <h6 class="card-title fw-bold text-truncate mb-1 fs-sm-5"><?= e($h['house_name']); ?></h6>
+                            <small class="text-muted mb-2 text-truncate" style="font-size: 0.72rem;"><i class="bi bi-geo me-0.5"></i><?= e($h['address']); ?></small>
 
                             <!-- Apartments Occupancy Breakdown -->
-                            <div class="bg-body-tertiary p-2 rounded-2 border mb-2 small">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span class="text-muted"><i class="bi bi-buildings text-primary me-1"></i>Wadarta: <strong><?= (int)$h['total_apartments']; ?> Qol</strong></span>
+                            <div class="bg-body-tertiary p-1.5 p-sm-2 rounded-2 border mb-2" style="font-size: 0.72rem;">
+                                <div class="d-flex justify-content-between align-items-center mb-0.5">
+                                    <span class="text-muted"><i class="bi bi-buildings text-primary me-0.5"></i>Tot: <strong><?= (int)$h['total_apartments']; ?></strong></span>
                                     <?php if ((int)$h['vacant_apartments'] > 0): ?>
-                                        <span class="text-success fw-bold"><i class="bi bi-door-open me-1"></i><?= (int)$h['vacant_apartments']; ?> Bannaan</span>
+                                        <span class="text-success fw-bold"><i class="bi bi-door-open me-0.5"></i><?= (int)$h['vacant_apartments']; ?> Vac</span>
                                     <?php else: ?>
-                                        <span class="text-danger fw-bold"><i class="bi bi-x-circle me-1"></i>Wuu Buuxaa</span>
+                                        <span class="text-danger fw-bold"><i class="bi bi-x-circle me-0.5"></i>Full</span>
                                     <?php endif; ?>
                                 </div>
-                                <div class="d-flex justify-content-between small text-muted">
-                                    <span><i class="bi bi-person-fill text-danger me-1"></i>La deggen: <strong class="text-danger"><?= (int)$h['occupied_apartments']; ?></strong></span>
-                                    <span><i class="bi bi-check2-circle text-success me-1"></i>Bannaan: <strong class="text-success"><?= (int)$h['vacant_apartments']; ?></strong></span>
+                                <div class="d-flex justify-content-between text-muted" style="font-size: 0.68rem;">
+                                    <span><i class="bi bi-person-fill text-danger me-0.5"></i>Occ: <strong class="text-danger"><?= (int)$h['occupied_apartments']; ?></strong></span>
+                                    <span><i class="bi bi-check2-circle text-success me-0.5"></i>Avail: <strong class="text-success"><?= (int)$h['vacant_apartments']; ?></strong></span>
                                 </div>
                             </div>
 
-                            <p class="text-muted small mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            <p class="text-muted small mb-2 flex-grow-1 d-none d-sm--webkit-box" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.74rem;">
                                 <?= e($h['description'] ?? 'No description provided.'); ?>
                             </p>
 
-                            <div class="border-top pt-3 d-flex justify-content-between align-items-center mt-auto">
-                                <div>
-                                    <div class="property-price"><?= format_currency($h['rent_price'], $currency); ?></div>
-                                    <small class="text-muted">per month</small>
+                            <div class="border-top pt-2 pt-sm-3 d-flex flex-column gap-1.5 mt-auto">
+                                <div class="d-flex justify-content-between align-items-baseline">
+                                    <div>
+                                        <span class="property-price fs-6 fs-sm-5"><?= format_currency($h['rent_price'], $currency); ?></span>
+                                        <small class="text-muted d-none d-sm-inline">/ mo</small>
+                                    </div>
+                                    <small class="text-muted text-truncate" style="font-size: 0.7rem; max-width: 60px;">
+                                        <i class="bi bi-geo-alt-fill text-danger me-0.5"></i><?= e($h['city']); ?>
+                                    </small>
                                 </div>
-                                <div class="d-flex gap-2">
-                                    <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$h['id']; ?>" class="btn btn-outline-primary btn-sm">
-                                        Details
-                                    </a>
-                                    <?php if ((int)$h['vacant_apartments'] > 0): ?>
-                                        <button type="button" class="btn btn-primary btn-sm" onclick="openRentModal(<?= (int)$h['id']; ?>, '<?= e(addslashes($h['house_name'])); ?>', '<?= format_currency($h['rent_price'], $currency); ?>')">
-                                            Rent <i class="bi bi-arrow-right ms-1"></i>
-                                        </button>
-                                    <?php else: ?>
-                                        <button type="button" class="btn btn-outline-danger btn-sm text-nowrap" onclick="showOccupiedNotice('<?= e(addslashes($h['house_name'])); ?>', <?= (int)$h['total_apartments']; ?>)">
-                                            <i class="bi bi-x-circle me-1"></i>Wuu Buuxaa
-                                        </button>
-                                    <?php endif; ?>
+                                <div class="row g-1 g-sm-2">
+                                    <div class="col-6">
+                                        <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$h['id']; ?>" class="btn btn-outline-primary btn-sm w-100 py-1 px-1 fw-semibold text-center" style="font-size: 0.74rem;">
+                                            Details
+                                        </a>
+                                    </div>
+                                    <div class="col-6">
+                                        <?php if ((int)$h['vacant_apartments'] > 0): ?>
+                                            <button type="button" class="btn btn-primary btn-sm w-100 py-1 px-1 fw-semibold text-center" style="font-size: 0.74rem;" onclick="openRentModal(<?= (int)$h['id']; ?>, '<?= e(addslashes($h['house_name'])); ?>', '<?= format_currency($h['rent_price'], $currency); ?>')">
+                                                <span>Rent</span> <i class="bi bi-arrow-right"></i>
+                                            </button>
+                                        <?php else: ?>
+                                            <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1 px-1 fw-semibold text-center opacity-75" style="font-size: 0.74rem;" onclick="showOccupiedNotice('<?= e(addslashes($h['house_name'])); ?>', <?= (int)$h['total_apartments']; ?>)">
+                                                Full
+                                            </button>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>

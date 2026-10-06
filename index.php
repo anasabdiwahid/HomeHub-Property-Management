@@ -276,7 +276,7 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
             </div>
         <?php else: ?>
-            <div class="row g-4">
+            <div class="row g-2 g-md-3 g-lg-4">
                 <?php foreach ($featuredHouses as $h): ?>
                     <?php 
                         $imgUrl = !empty($h['image']) && file_exists(UPLOAD_DIR . 'houses/' . $h['image'])
@@ -301,77 +301,77 @@ require_once __DIR__ . '/includes/header.php';
                             'loginUrl' => BASE_URL . 'login.php'
                         ]), ENT_QUOTES, 'UTF-8');
                     ?>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-6 col-md-6 col-lg-4">
                         <div class="card h-100 card-hover overflow-hidden shadow-sm border" style="cursor: pointer;" onclick="showHomeHouseModal(JSON.parse(this.dataset.hdata))" data-hdata="<?= $hDataJson; ?>">
                             <div class="property-card-img-wrapper position-relative">
                                 <img src="<?= $imgUrl; ?>" class="property-card-img" alt="<?= e($h['house_name']); ?>">
-                                <span class="property-badge-city"><i class="bi bi-geo-alt me-1"></i><?= e($h['city']); ?></span>
+                                <span class="property-badge-city"><i class="bi bi-geo-alt me-0.5"></i><?= e($h['city']); ?></span>
                                 <span class="property-badge-category"><?= e($h['category_name']); ?></span>
                             </div>
-                            <div class="card-body d-flex flex-column p-3">
+                            <div class="card-body d-flex flex-column p-2 p-sm-3">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <small class="text-muted font-monospace"><?= e($h['house_code']); ?></small>
-                                    <span class="badge <?= (int)$h['vacant_apartments'] > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle'; ?>">
-                                        <?= (int)$h['vacant_apartments'] > 0 ? (int)$h['vacant_apartments'] . ' Units Vacant' : 'Fully Occupied'; ?>
+                                    <small class="text-muted font-monospace" style="font-size: 0.7rem;"><?= e($h['house_code']); ?></small>
+                                    <span class="badge <?= (int)$h['vacant_apartments'] > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle'; ?>" style="font-size: 0.68rem; padding: 0.2rem 0.4rem;">
+                                        <?= (int)$h['vacant_apartments'] > 0 ? (int)$h['vacant_apartments'] . ' Vac' : 'Full'; ?>
                                     </span>
                                 </div>
-                                <h5 class="card-title fw-bold text-truncate mb-2" title="<?= e($h['house_name']); ?>"><?= e($h['house_name']); ?></h5>
+                                <h6 class="card-title fw-bold text-truncate mb-1 fs-sm-5" title="<?= e($h['house_name']); ?>"><?= e($h['house_name']); ?></h6>
 
                                 <!-- Apartments Occupancy Breakdown Box -->
-                                <div class="bg-body-tertiary p-2 rounded-3 border mb-2 small" onclick="event.stopPropagation();">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <span class="text-muted"><i class="bi bi-buildings text-primary me-1"></i>Total: <strong><?= (int)$h['total_apartments']; ?> Unit(s)</strong></span>
+                                <div class="bg-body-tertiary p-1.5 p-sm-2 rounded-3 border mb-2" onclick="event.stopPropagation();" style="font-size: 0.72rem;">
+                                    <div class="d-flex justify-content-between align-items-center mb-0.5">
+                                        <span class="text-muted"><i class="bi bi-buildings text-primary me-0.5"></i>Tot: <strong><?= (int)$h['total_apartments']; ?></strong></span>
                                         <?php if ((int)$h['vacant_apartments'] > 0): ?>
-                                            <span class="text-success fw-semibold"><i class="bi bi-door-open me-1"></i><?= (int)$h['vacant_apartments']; ?> Vacant</span>
+                                            <span class="text-success fw-semibold"><i class="bi bi-door-open me-0.5"></i><?= (int)$h['vacant_apartments']; ?> Vac</span>
                                         <?php else: ?>
-                                            <span class="text-danger fw-semibold"><i class="bi bi-x-circle me-1"></i>Occupied</span>
+                                            <span class="text-danger fw-semibold"><i class="bi bi-x-circle me-0.5"></i>Full</span>
                                         <?php endif; ?>
                                     </div>
-                                    <div class="d-flex justify-content-between small text-muted">
-                                        <span><i class="bi bi-person-fill text-danger me-1"></i>Occupied: <strong class="text-danger"><?= (int)$h['occupied_apartments']; ?></strong></span>
-                                        <span><i class="bi bi-check2-circle text-success me-1"></i>Available: <strong class="text-success"><?= (int)$h['vacant_apartments']; ?></strong></span>
+                                    <div class="d-flex justify-content-between text-muted" style="font-size: 0.68rem;">
+                                        <span><i class="bi bi-person-fill text-danger me-0.5"></i>Occ: <strong class="text-danger"><?= (int)$h['occupied_apartments']; ?></strong></span>
+                                        <span><i class="bi bi-check2-circle text-success me-0.5"></i>Avail: <strong class="text-success"><?= (int)$h['vacant_apartments']; ?></strong></span>
                                     </div>
                                 </div>
 
-                                <p class="text-muted small mb-3 flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                <p class="text-muted small mb-2 flex-grow-1 d-none d-sm--webkit-box" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.74rem;">
                                     <?= e($h['description'] ?? 'Modern property located in Mogadishu with full residential and commercial amenities.'); ?>
                                 </p>
                                 
                                 <!-- Clean Price & Actions Section (Zero Overlap Guaranteed) -->
-                                <div class="pt-3 border-top mt-auto" onclick="event.stopPropagation();">
-                                    <div class="d-flex justify-content-between align-items-baseline mb-2">
+                                <div class="pt-2 pt-sm-3 border-top mt-auto" onclick="event.stopPropagation();">
+                                    <div class="d-flex justify-content-between align-items-baseline mb-1.5 mb-sm-2">
                                         <div>
                                             <span class="property-price"><?= format_currency($h['rent_price']); ?></span>
-                                            <small class="text-muted">/ month</small>
+                                            <small class="text-muted d-none d-sm-inline">/ mo</small>
                                         </div>
-                                        <small class="text-muted">
-                                            <i class="bi bi-geo-alt-fill text-danger me-1"></i><?= e($h['city']); ?>
+                                        <small class="text-muted text-truncate" style="font-size: 0.7rem; max-width: 60px;">
+                                            <i class="bi bi-geo-alt-fill text-danger me-0.5"></i><?= e($h['city']); ?>
                                         </small>
                                     </div>
-                                    <div class="row g-2">
+                                    <div class="row g-1 g-sm-2">
                                         <div class="col-6">
-                                            <button type="button" class="btn btn-outline-secondary btn-sm w-100 py-1.5 fw-semibold d-flex align-items-center justify-content-center gap-1" onclick="showHomeHouseModal(JSON.parse(this.closest('.card').dataset.hdata))">
-                                                <i class="bi bi-eye"></i> Details
+                                            <button type="button" class="btn btn-outline-secondary btn-sm w-100 py-1 px-1 fw-semibold d-flex align-items-center justify-content-center gap-1" style="font-size: 0.74rem;" onclick="showHomeHouseModal(JSON.parse(this.closest('.card').dataset.hdata))">
+                                                <i class="bi bi-eye"></i> <span>Details</span>
                                             </button>
                                         </div>
                                         <div class="col-6">
                                             <?php if ((int)$h['vacant_apartments'] > 0): ?>
                                                 <?php if (is_logged_in() && current_user_role() === 'user'): ?>
-                                                    <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$h['id']; ?>" class="btn btn-primary btn-sm w-100 py-1.5 fw-semibold d-flex align-items-center justify-content-center gap-1">
-                                                        Rent Now <i class="bi bi-arrow-right"></i>
+                                                    <a href="<?= BASE_URL; ?>user/house_details.php?id=<?= (int)$h['id']; ?>" class="btn btn-primary btn-sm w-100 py-1 px-1 fw-semibold d-flex align-items-center justify-content-center gap-1" style="font-size: 0.74rem;">
+                                                        <span>Rent</span> <i class="bi bi-arrow-right"></i>
                                                     </a>
                                                 <?php elseif (is_logged_in()): ?>
-                                                    <a href="<?= BASE_URL . current_user_role(); ?>/index.php" class="btn btn-outline-primary btn-sm w-100 py-1.5 fw-semibold d-flex align-items-center justify-content-center">
-                                                        Dashboard
+                                                    <a href="<?= BASE_URL . current_user_role(); ?>/index.php" class="btn btn-outline-primary btn-sm w-100 py-1 px-1 fw-semibold d-flex align-items-center justify-content-center" style="font-size: 0.74rem;">
+                                                        Dash
                                                     </a>
                                                 <?php else: ?>
-                                                    <a href="<?= BASE_URL; ?>login.php" class="btn btn-primary btn-sm w-100 py-1.5 fw-semibold d-flex align-items-center justify-content-center gap-1">
-                                                        Rent Now <i class="bi bi-arrow-right"></i>
+                                                    <a href="<?= BASE_URL; ?>login.php" class="btn btn-primary btn-sm w-100 py-1 px-1 fw-semibold d-flex align-items-center justify-content-center gap-1" style="font-size: 0.74rem;">
+                                                        <span>Rent</span> <i class="bi bi-arrow-right"></i>
                                                     </a>
                                                 <?php endif; ?>
                                             <?php else: ?>
-                                                <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1.5 fw-semibold d-flex align-items-center justify-content-center gap-1 opacity-75" onclick="showHomeHouseModal(JSON.parse(this.closest('.card').dataset.hdata))">
-                                                    <i class="bi bi-x-circle"></i> Full
+                                                <button type="button" class="btn btn-outline-danger btn-sm w-100 py-1 px-1 fw-semibold d-flex align-items-center justify-content-center gap-1 opacity-75" style="font-size: 0.74rem;" onclick="showHomeHouseModal(JSON.parse(this.closest('.card').dataset.hdata))">
+                                                    <i class="bi bi-x-circle"></i> <span>Full</span>
                                                 </button>
                                             <?php endif; ?>
                                         </div>

@@ -692,6 +692,31 @@ html.app-dashboard {
     line-height: 1.2;
 }
 
+@media (max-width: 576px) {
+    .property-card-img-wrapper {
+        height: 125px;
+    }
+    .property-badge-city,
+    .property-badge-category {
+        font-size: 0.62rem;
+        padding: 0.15rem 0.4rem;
+        top: 6px;
+    }
+    .property-badge-city {
+        left: 6px;
+    }
+    .property-badge-category {
+        right: 6px;
+        max-width: 85px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .property-price {
+        font-size: 1rem;
+    }
+}
+
 /* Progress Bars */
 .progress {
     height: 8px;
