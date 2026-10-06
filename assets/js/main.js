@@ -422,10 +422,59 @@
         return { runFilter };
     };
 
+    // Live Real-Time Dynamic Clock (Date, Time, Minutes, Seconds, Day, Week, Month, Year)
+    const initLiveSystemClock = () => {
+        const clockEls = document.querySelectorAll('.live-system-clock');
+        if (!clockEls.length) return;
+
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        const updateClock = () => {
+            const now = new Date();
+
+            const dayName = days[now.getDay()];
+            const monthName = months[now.getMonth()];
+            const dateNum = String(now.getDate()).padStart(2, '0');
+            const year = now.getFullYear();
+
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const strHours = String(hours).padStart(2, '0');
+
+            // Calculate ISO week number
+            const dUTC = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+            dUTC.setUTCDate(dUTC.getUTCDate() + 4 - (dUTC.getUTCDay() || 7));
+            const yearStart = new Date(Date.UTC(dUTC.getUTCFullYear(), 0, 1));
+            const weekNum = Math.ceil((((dUTC - yearStart) / 86400000) + 1) / 7);
+
+            clockEls.forEach(el => {
+                el.innerHTML = `
+                    <span class="text-gold fw-semibold">${dayName}</span>, 
+                    <span class="ms-1">${dateNum} ${monthName} ${year}</span> 
+                    <span class="opacity-50 mx-1.5">•</span> 
+                    <span class="font-monospace text-gold fw-semibold">${strHours}:${minutes}:${seconds} ${ampm}</span> 
+                    <span class="badge badge-gold ms-1.5" style="font-size: 0.68rem; padding: 0.2rem 0.45rem;">Week ${weekNum}</span>
+                `;
+            });
+        };
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    };
+
     // Initialize on DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
         initTheme();
         initAlerts();
+        initLiveSystemClock();
 
         // Clear any previous dashboard zoom override
         localStorage.removeItem('homehub-dashboard-zoom');

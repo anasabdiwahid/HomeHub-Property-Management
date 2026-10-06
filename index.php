@@ -641,9 +641,19 @@ require_once __DIR__ . '/includes/header.php';
             </div>
         </div>
 
-        <div class="border-top pt-3 d-flex flex-column flex-sm-row justify-content-between align-items-center text-muted small">
-            <div>&copy; <?= date('Y'); ?> HomeHub Somalia Property Management. All rights reserved.</div>
-            <div class="mt-2 mt-sm-0">
+        <div class="border-top pt-3 d-flex flex-column flex-lg-row justify-content-between align-items-center gap-2 text-muted small text-center text-lg-start">
+            <div class="d-flex flex-column flex-sm-row align-items-center gap-2">
+                <div>&copy; <?= date('Y'); ?> HomeHub Somalia Property Management. All rights reserved.</div>
+                <span class="d-none d-sm-inline opacity-50">&bull;</span>
+                <div class="live-system-clock d-inline-flex flex-wrap align-items-center justify-content-center bg-body-tertiary px-2.5 py-1 rounded-pill border" title="Current Real-Time Live Clock">
+                    <span class="text-gold fw-semibold"><?= date('l'); ?></span>, 
+                    <span class="ms-1"><?= date('d F Y'); ?></span> 
+                    <span class="opacity-50 mx-1.5">•</span> 
+                    <span class="font-monospace text-gold fw-semibold"><?= date('h:i:s A'); ?></span> 
+                    <span class="badge badge-gold ms-1.5" style="font-size: 0.68rem; padding: 0.2rem 0.45rem;">Week <?= date('W'); ?></span>
+                </div>
+            </div>
+            <div class="mt-1 mt-lg-0">
                 <span>Developed by <a href="https://anazabdiwahid.netlify.app/" target="_blank" rel="noopener noreferrer" class="text-gold fw-semibold text-decoration-none">Anas Abdiwahid</a></span>
             </div>
         </div>
