@@ -57,6 +57,15 @@ $currentScript = basename($_SERVER['SCRIPT_NAME'] ?? '');
             <i class="bi bi-box-arrow-right"></i>
             <span>Logout</span>
         </a>
+
+        <!-- View Public Website Button -->
+        <div class="pt-2 px-1">
+            <a href="<?= BASE_URL; ?>index.php" target="_blank" class="btn-view-website" title="Open Public Website">
+                <i class="bi bi-globe2"></i>
+                <span>View Website</span>
+                <i class="bi bi-arrow-up-right small ms-auto opacity-75"></i>
+            </a>
+        </div>
     </div>
 
     <div class="sidebar-footer">

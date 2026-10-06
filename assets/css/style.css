@@ -257,6 +257,33 @@ html.app-dashboard {
     color: var(--hh-gold) !important;
 }
 
+/* Sidebar 'View Website' Action Button */
+.btn-view-website {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.42rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--hh-gold) !important;
+    border: 1px solid rgba(229, 169, 59, 0.4);
+    background: rgba(229, 169, 59, 0.1);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-view-website:hover {
+    background: var(--hh-gold) !important;
+    color: #07121e !important;
+    border-color: var(--hh-gold) !important;
+    box-shadow: 0 4px 14px rgba(229, 169, 59, 0.28);
+}
+
+.btn-view-website i {
+    font-size: 1rem;
+}
+
 .sidebar-footer {
     padding: 0.45rem 0.85rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
