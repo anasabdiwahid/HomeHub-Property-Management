@@ -242,8 +242,8 @@ require_once __DIR__ . '/includes/header.php';
     </div>
 </section>
 
-<!-- Featured / Available Properties Section -->
-<section id="browse-section" class="py-5">
+<!-- Featured / Available Properties Section (Real Estate / Houses Background) -->
+<section id="browse-section" class="properties-section py-5 position-relative">
     <div class="container py-3">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-2">
             <div>
