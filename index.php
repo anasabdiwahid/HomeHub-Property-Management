@@ -129,6 +129,11 @@ require_once __DIR__ . '/includes/header.php';
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link public-nav-link" href="<?= BASE_URL; ?>#about-section">
+                        <i class="bi bi-info-circle me-1"></i> About Us
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link public-nav-link" href="<?= BASE_URL; ?>#contact-section">
                         <i class="bi bi-telephone me-1"></i> Contact Us
                     </a>
@@ -380,6 +385,118 @@ require_once __DIR__ . '/includes/header.php';
     </div>
 </section>
 
+<!-- About Us Section -->
+<section id="about-section" class="py-5 position-relative bg-body">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="badge badge-gold px-3 py-2 rounded-pill mb-3">
+                    <i class="bi bi-info-circle-fill me-1 text-gold"></i> About HomeHub
+                </span>
+                <h2 class="display-6 fw-bold mb-3 text-main">
+                    Mogadishu’s Most Trusted Digital Property Platform
+                </h2>
+                <p class="lead text-muted mb-4">
+                    HomeHub was engineered to modernize, simplify, and secure property leasing and estate management across all 17 districts of Mogadishu (Banaadir).
+                </p>
+                <p class="text-muted mb-4">
+                    Whether you are an ambitious property owner seeking transparent occupancy tracking, an assigned manager supervising rental units, or a tenant searching for a modern verified home, HomeHub bridges every step with automated rent invoicing, seamless Somali mobile money records (EVC Plus, Zaad, Sahal), and instant digital agreements.
+                </p>
+
+                <!-- Value Highlights Grid -->
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start gap-3 p-3 rounded-3 bg-body-tertiary border h-100">
+                            <div class="rounded-3 icon-gold d-inline-flex p-2 fs-4 flex-shrink-0">
+                                <i class="bi bi-patch-check-fill text-gold"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">100% Verified</h6>
+                                <p class="text-muted small mb-0">Every house, unit, and lease agreement is legally documented.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start gap-3 p-3 rounded-3 bg-body-tertiary border h-100">
+                            <div class="rounded-3 icon-primary d-inline-flex p-2 fs-4 flex-shrink-0">
+                                <i class="bi bi-wallet2 text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Local Payments</h6>
+                                <p class="text-muted small mb-0">Direct support for Somali mobile money & bank transfer references.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start gap-3 p-3 rounded-3 bg-body-tertiary border h-100">
+                            <div class="rounded-3 icon-success d-inline-flex p-2 fs-4 flex-shrink-0">
+                                <i class="bi bi-speedometer2 text-success"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Real-Time Data</h6>
+                                <p class="text-muted small mb-0">Live occupancy tracking, automated invoices, and receipt verification.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start gap-3 p-3 rounded-3 bg-body-tertiary border h-100">
+                            <div class="rounded-3 icon-purple d-inline-flex p-2 fs-4 flex-shrink-0">
+                                <i class="bi bi-shield-lock-fill text-purple"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Secure Portals</h6>
+                                <p class="text-muted small mb-0">Distinct portals for Administrators, Assigned Managers, and Tenants.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#contact-section" class="btn btn-primary px-4 py-2">
+                        <i class="bi bi-envelope-paper me-2 text-gold"></i>Get In Touch
+                    </a>
+                    <a href="https://wa.me/252615554321?text=Hello%20HomeHub,%20I%20would%20like%20to%20learn%20more%20about%20your%20services" target="_blank" rel="noopener noreferrer" class="btn btn-success px-4 py-2" style="background-color: #25D366; border-color: #25D366;">
+                        <i class="bi bi-whatsapp me-2"></i>Chat on WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <!-- Visual Showcase Card -->
+                <div class="card border-0 shadow-lg overflow-hidden position-relative rounded-4">
+                    <img src="<?= BASE_URL; ?>assets/images/architectural-clay-model.jpg" alt="HomeHub Architectural Model" class="card-img-top" style="height: 280px; object-fit: cover;">
+                    <div class="card-body p-4 bg-body-tertiary">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="badge badge-gold px-3 py-1.5 rounded-pill">
+                                <i class="bi bi-geo-alt-fill me-1"></i> Head Office: Maka Al Mukarama, Hodan
+                            </span>
+                            <span class="text-muted small fw-semibold">Est. 2024</span>
+                        </div>
+                        <h4 class="fw-bold mb-2">Our Vision for Somali Urban Living</h4>
+                        <p class="text-muted small mb-4">
+                            We envision Mogadishu as a modern smart city where discovering a home and leasing an apartment takes minutes, with complete digital clarity and zero disputes between landlords and tenants.
+                        </p>
+                        <div class="row g-3 text-center border-top pt-3">
+                            <div class="col-4">
+                                <div class="fs-4 fw-bolder text-primary">17</div>
+                                <div class="text-muted small text-uppercase" style="font-size: 0.72rem;">Districts</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="fs-4 fw-bolder text-gold">100%</div>
+                                <div class="text-muted small text-uppercase" style="font-size: 0.72rem;">Transparent</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="fs-4 fw-bolder text-success">24/7</div>
+                                <div class="text-muted small text-uppercase" style="font-size: 0.72rem;">Support</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Features Section -->
 <section id="features-section" class="py-5 bg-body-tertiary">
     <div class="container py-4">
@@ -452,6 +569,7 @@ require_once __DIR__ . '/includes/header.php';
                 <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
                     <li><a href="<?= BASE_URL; ?>" class="text-muted">Home</a></li>
                     <li><a href="<?= BASE_URL; ?>#browse-section" class="text-muted">Available Houses</a></li>
+                    <li><a href="<?= BASE_URL; ?>#about-section" class="text-muted">About Us</a></li>
                     <li><a href="<?= BASE_URL; ?>login.php" class="text-muted">Portal Login</a></li>
                     <li><a href="<?= BASE_URL; ?>register.php" class="text-muted">Register Tenant</a></li>
                 </ul>

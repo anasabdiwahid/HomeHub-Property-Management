@@ -6,6 +6,18 @@
 
 declare(strict_types=1);
 ?>
+    <!-- Floating WhatsApp Action Button -->
+    <a href="https://wa.me/252615554321?text=Hello%20HomeHub,%20I%20am%20interested%20in%20your%20property%20services" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="floating-whatsapp-btn" 
+       id="floatingWhatsappBtn"
+       title="Chat with us on WhatsApp"
+       aria-label="Chat with us on WhatsApp">
+        <i class="bi bi-whatsapp"></i>
+        <span class="whatsapp-badge">Chat with us</span>
+    </a>
+
     <!-- Bootstrap 5 Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
