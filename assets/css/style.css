@@ -1145,3 +1145,49 @@ html.app-dashboard {
     border-top: 4px solid var(--hh-gold) !important;
     box-shadow: 0 20px 45px -12px rgba(16, 42, 69, 0.25) !important;
 }
+
+/* ==========================================================================
+   Public Footer - Luxury Architectural Background Showcase
+   ========================================================================== */
+.footer-showcase {
+    position: relative;
+    background-image: 
+        linear-gradient(180deg, rgba(7, 18, 30, 0.94) 0%, rgba(9, 25, 43, 0.90) 50%, rgba(5, 14, 23, 0.96) 100%),
+        url('../images/footer-bg.jpg');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    border-top: 1px solid rgba(229, 169, 59, 0.25) !important;
+    color: #e2e8f0;
+}
+
+[data-bs-theme="light"] .footer-showcase {
+    background-image: 
+        linear-gradient(180deg, rgba(8, 20, 34, 0.93) 0%, rgba(16, 42, 69, 0.88) 50%, rgba(8, 20, 34, 0.95) 100%),
+        url('../images/footer-bg.jpg');
+    color: #e2e8f0;
+}
+
+.footer-showcase h6 {
+    color: var(--hh-gold) !important;
+    letter-spacing: 0.05em;
+}
+
+.footer-showcase .text-muted {
+    color: #a0aec0 !important;
+}
+
+.footer-showcase a.text-muted {
+    color: #cbd5e1 !important;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.footer-showcase a.text-muted:hover {
+    color: var(--hh-gold) !important;
+    padding-left: 4px;
+}
+
+.footer-showcase .border-top {
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
