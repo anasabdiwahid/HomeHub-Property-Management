@@ -324,7 +324,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="border-top pt-3 d-flex flex-column flex-sm-row justify-content-between align-items-center text-muted small">
             <div>&copy; <?= date('Y'); ?> HomeHub Somalia Property Management. All rights reserved.</div>
             <div class="mt-2 mt-sm-0">
-                <span>Designed with HTML5, CSS3, Bootstrap 5, PHP 8 & MySQL</span>
+                <span>Developed by <span class="text-gold fw-semibold">Anas Abdiwahid</span></span>
             </div>
         </div>
     </div>
