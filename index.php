@@ -512,39 +512,52 @@ require_once __DIR__ . '/includes/header.php';
             <p class="text-muted">Built specifically for the real estate landscape across the districts of Mogadishu (Banaadir).</p>
         </div>
 
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm p-3 border-top border-4" style="border-top-color: var(--hh-gold) !important;">
-                    <div class="card-body">
-                        <div class="rounded-3 icon-gold d-inline-flex p-3 fs-3 mb-3">
+        <!-- Features Cards Grid (2 Columns Side-by-Side on Mobile, 4 Columns on Desktop) -->
+        <div class="row g-2 g-sm-3 g-lg-4">
+            <div class="col-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm p-2.5 p-sm-3 border-top border-4" style="border-top-color: var(--hh-gold) !important;">
+                    <div class="card-body p-1 p-sm-2">
+                        <div class="rounded-3 icon-gold d-inline-flex p-2 p-sm-2.5 fs-4 fs-sm-3 mb-2 mb-sm-3">
                             <i class="bi bi-phone"></i>
                         </div>
-                        <h5 class="fw-bold mb-2">Somali Mobile Payments</h5>
-                        <p class="text-muted small">Seamless rent tracking supporting EVC Plus, Zaad Service, Sahal, and local bank transfers with reference validation.</p>
+                        <h6 class="fw-bold mb-1 mb-sm-2 fs-sm-5">Somali Mobile Payments</h6>
+                        <p class="text-muted mb-0" style="font-size: 0.74rem; line-height: 1.4;">Seamless rent tracking supporting EVC Plus, Zaad Service, Sahal, and local bank transfers with reference validation.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm p-3 border-top border-4" style="border-top-color: var(--hh-primary) !important;">
-                    <div class="card-body">
-                        <div class="rounded-3 icon-primary d-inline-flex p-3 fs-3 mb-3">
+            <div class="col-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm p-2.5 p-sm-3 border-top border-4" style="border-top-color: var(--hh-primary) !important;">
+                    <div class="card-body p-1 p-sm-2">
+                        <div class="rounded-3 icon-primary d-inline-flex p-2 p-sm-2.5 fs-4 fs-sm-3 mb-2 mb-sm-3">
                             <i class="bi bi-pie-chart"></i>
                         </div>
-                        <h5 class="fw-bold mb-2">Automated Occupancy Tracking</h5>
-                        <p class="text-muted small">Real-time statistics on occupied vs. vacant apartments, tenant turnover, and monthly collection ratios for property managers.</p>
+                        <h6 class="fw-bold mb-1 mb-sm-2 fs-sm-5">Automated Occupancy Tracking</h6>
+                        <p class="text-muted mb-0" style="font-size: 0.74rem; line-height: 1.4;">Real-time statistics on occupied vs. vacant apartments, tenant turnover, and monthly collection ratios for property managers.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-sm p-3 border-top border-4" style="border-top-color: var(--hh-gold) !important;">
-                    <div class="card-body">
-                        <div class="rounded-3 icon-gold d-inline-flex p-3 fs-3 mb-3">
+            <div class="col-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm p-2.5 p-sm-3 border-top border-4" style="border-top-color: var(--hh-gold) !important;">
+                    <div class="card-body p-1 p-sm-2">
+                        <div class="rounded-3 icon-gold d-inline-flex p-2 p-sm-2.5 fs-4 fs-sm-3 mb-2 mb-sm-3">
                             <i class="bi bi-shield-check"></i>
                         </div>
-                        <h5 class="fw-bold mb-2">Role-Based Security</h5>
-                        <p class="text-muted small">Independent portals for Administrators, Assigned Property Managers, and Tenants with complete RBAC and data privacy.</p>
+                        <h6 class="fw-bold mb-1 mb-sm-2 fs-sm-5">Role-Based Security</h6>
+                        <p class="text-muted mb-0" style="font-size: 0.74rem; line-height: 1.4;">Independent portals for Administrators, Assigned Property Managers, and Tenants with complete RBAC and data privacy.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm p-2.5 p-sm-3 border-top border-4" style="border-top-color: var(--hh-primary) !important;">
+                    <div class="card-body p-1 p-sm-2">
+                        <div class="rounded-3 icon-primary d-inline-flex p-2 p-sm-2.5 fs-4 fs-sm-3 mb-2 mb-sm-3">
+                            <i class="bi bi-receipt-cutoff"></i>
+                        </div>
+                        <h6 class="fw-bold mb-1 mb-sm-2 fs-sm-5">Instant Digital Invoicing</h6>
+                        <p class="text-muted mb-0" style="font-size: 0.74rem; line-height: 1.4;">Automated monthly rent invoices, verifiable digital payment receipts, and real-time ledger records for all leases.</p>
                     </div>
                 </div>
             </div>
