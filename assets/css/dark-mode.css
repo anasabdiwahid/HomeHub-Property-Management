@@ -1,22 +1,24 @@
 /* ==========================================================================
    HomeHub - Dark Mode Stylesheet (Logo Harmonized)
-   Deep Midnight Navy (#081422) + Logo Amber Gold (#e5a93b)
+   Deep Slate Charcoal (#071219) + Logo Emerald Teal (#01a799)
    ========================================================================== */
 
 [data-bs-theme="dark"] {
-    --hh-primary: #e5a93b;          /* Accent gold in dark mode */
-    --hh-primary-hover: #f5bc4b;
-    --hh-primary-light: rgba(229, 169, 59, 0.15);
-    --hh-gold: #e5a93b;
-    --hh-body-bg: #07121e;          /* Rich Deep Navy Background */
-    --hh-card-bg: #0d1e32;          /* Midnight Navy Cards */
-    --hh-text-main: #f1f6fc;
-    --hh-text-muted: #8ea5be;
-    --hh-border: #162f4d;
-    --hh-sidebar-bg: #050e17;       /* Darkest Navy Sidebar */
-    --hh-sidebar-color: #8ea5be;
-    --hh-sidebar-active: #e5a93b;
-    --hh-sidebar-active-bg: rgba(229, 169, 59, 0.15);
+    --hh-primary: #01a799;          /* Logo Emerald Teal */
+    --hh-primary-hover: #00c7b6;
+    --hh-primary-light: rgba(1, 167, 153, 0.18);
+    --hh-gold: #01a799;
+    --hh-gold-hover: #00c7b6;
+    --hh-gold-light: rgba(1, 167, 153, 0.18);
+    --hh-body-bg: #071219;          /* Deep Slate Background */
+    --hh-card-bg: #0c1c26;          /* Deep Slate Cards */
+    --hh-text-main: #f0f6fa;
+    --hh-text-muted: #8ca2b0;
+    --hh-border: #152d3d;
+    --hh-sidebar-bg: #050d12;       /* Darkest Slate Sidebar */
+    --hh-sidebar-color: #8ca2b0;
+    --hh-sidebar-active: #01a799;
+    --hh-sidebar-active-bg: rgba(1, 167, 153, 0.18);
 }
 
 [data-bs-theme="dark"] body {
@@ -30,127 +32,129 @@
 
 [data-bs-theme="dark"] .topbar,
 [data-bs-theme="dark"] .user-navbar {
-    background: #0d1e32;
-    border-bottom: 1px solid #162f4d;
+    background: #0c1c26;
+    border-bottom: 1px solid #152d3d;
 }
 
 [data-bs-theme="dark"] .card {
-    background-color: #0d1e32;
-    border-color: #162f4d;
+    background-color: #0c1c26;
+    border-color: #152d3d;
 }
 
 [data-bs-theme="dark"] .stat-card {
-    background-color: #0d1e32;
-    border-color: #162f4d;
+    background-color: #0c1c26;
+    border-color: #152d3d;
 }
 
 [data-bs-theme="dark"] .form-control,
 [data-bs-theme="dark"] .form-select {
-    background-color: #071524;
-    border-color: #1a3658;
-    color: #f1f6fc;
+    background-color: #081620;
+    border-color: #183547;
+    color: #f0f6fa;
 }
 
 [data-bs-theme="dark"] .form-control:focus,
 [data-bs-theme="dark"] .form-select:focus {
-    background-color: #091a2c;
-    border-color: #e5a93b;
+    background-color: #0a1b26;
+    border-color: #01a799;
     color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(1, 167, 153, 0.25);
 }
 
 [data-bs-theme="dark"] .table {
-    color: #f1f6fc;
+    color: #f0f6fa;
 }
 
 [data-bs-theme="dark"] .table th {
-    background-color: #091a2c;
-    border-bottom: 1px solid #1a3658;
-    color: #8ea5be;
+    background-color: #091a26;
+    border-bottom: 1px solid #183547;
+    color: #8ca2b0;
 }
 
 [data-bs-theme="dark"] .table td {
-    border-bottom: 1px solid #162f4d;
-    color: #cbd8e7;
+    border-bottom: 1px solid #152d3d;
+    color: #c9d8e2;
 }
 
 [data-bs-theme="dark"] .table-hover tbody tr:hover {
-    background-color: rgba(229, 169, 59, 0.06);
+    background-color: rgba(1, 167, 153, 0.08);
 }
 
 [data-bs-theme="dark"] .modal-content {
-    background-color: #0d1e32;
-    border: 1px solid #162f4d;
-    color: #f1f6fc;
+    background-color: #0c1c26;
+    border: 1px solid #152d3d;
+    color: #f0f6fa;
 }
 
 [data-bs-theme="dark"] .modal-header,
 [data-bs-theme="dark"] .modal-footer {
-    border-color: #162f4d;
+    border-color: #152d3d;
 }
 
 [data-bs-theme="dark"] .dropdown-menu {
-    background-color: #0d1e32;
-    border-color: #162f4d;
+    background-color: #0c1c26;
+    border-color: #152d3d;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
 }
 
 [data-bs-theme="dark"] .dropdown-item {
-    color: #cbd8e7;
+    color: #c9d8e2;
 }
 
 [data-bs-theme="dark"] .dropdown-item:hover {
-    background-color: #162f4d;
+    background-color: #152d3d;
     color: #ffffff;
 }
 
 [data-bs-theme="dark"] .dropdown-divider {
-    border-top-color: #162f4d;
+    border-top-color: #152d3d;
 }
 
 [data-bs-theme="dark"] .property-price {
-    color: #e5a93b;
+    color: #01a799;
 }
 
 [data-bs-theme="dark"] .btn-primary {
-    background-color: #e5a93b;
-    border-color: #e5a93b;
-    color: #07121e;
+    background-color: #01a799;
+    border-color: #01a799;
+    color: #ffffff;
     font-weight: 700;
 }
 
 [data-bs-theme="dark"] .btn-primary:hover,
 [data-bs-theme="dark"] .btn-primary:focus {
-    background-color: #f5bc4b;
-    border-color: #f5bc4b;
-    color: #07121e;
+    background-color: #00c7b6;
+    border-color: #00c7b6;
+    color: #ffffff;
 }
 
-[data-bs-theme="dark"] .icon-primary { background: rgba(16, 42, 69, 0.6); color: #e5a93b; }
-[data-bs-theme="dark"] .icon-gold    { background: rgba(229, 169, 59, 0.18); color: #e5a93b; }
+[data-bs-theme="dark"] .icon-primary { background: rgba(1, 167, 153, 0.2); color: #00c7b6; }
+[data-bs-theme="dark"] .icon-gold    { background: rgba(1, 167, 153, 0.2); color: #00c7b6; }
 [data-bs-theme="dark"] .icon-success { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-[data-bs-theme="dark"] .icon-warning { background: rgba(229, 169, 59, 0.2); color: #fbbf24; }
+[data-bs-theme="dark"] .icon-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
 [data-bs-theme="dark"] .icon-danger  { background: rgba(239, 68, 68, 0.2);  color: #f87171; }
 [data-bs-theme="dark"] .icon-purple  { background: rgba(124, 58, 237, 0.2); color: #a78bfa; }
 [data-bs-theme="dark"] .icon-indigo  { background: rgba(79, 70, 229, 0.2);  color: #818cf8; }
 
 [data-bs-theme="dark"] .badge-gold {
-    background-color: rgba(229, 169, 59, 0.2) !important;
-    color: #f5bc4b !important;
-    border-color: rgba(229, 169, 59, 0.35) !important;
+    background-color: rgba(1, 167, 153, 0.2) !important;
+    color: #00c7b6 !important;
+    border-color: rgba(1, 167, 153, 0.35) !important;
 }
 
 [data-bs-theme="dark"] .sidebar .brand .brand-logo-img {
-    background: #ffffff;
+    background: transparent !important;
+    padding: 0 !important;
 }
 
 /* Dark Mode Overrides for Action Buttons & Category Avatars */
 [data-bs-theme="dark"] .btn-action-edit {
-    background: rgba(229, 169, 59, 0.15);
-    color: #e5a93b;
+    background: rgba(1, 167, 153, 0.15);
+    color: #00c7b6;
 }
 [data-bs-theme="dark"] .btn-action-edit:hover {
-    background: #e5a93b;
-    color: #07121e;
+    background: #01a799;
+    color: #ffffff;
 }
 
 [data-bs-theme="dark"] .btn-action-delete {
@@ -190,28 +194,27 @@
 }
 
 [data-bs-theme="dark"] .empty-state-icon {
-    background: rgba(229, 169, 59, 0.1);
-    color: #e5a93b;
-    box-shadow: inset 0 0 0 1px rgba(229, 169, 59, 0.2);
+    background: rgba(1, 167, 153, 0.12);
+    color: #01a799;
+    box-shadow: inset 0 0 0 1px rgba(1, 167, 153, 0.25);
 }
 
 [data-bs-theme="dark"] .cat-icon-apartment { background: rgba(2, 132, 199, 0.2); color: #38bdf8; }
-[data-bs-theme="dark"] .cat-icon-villa     { background: rgba(229, 169, 59, 0.2); color: #fbbf24; }
+[data-bs-theme="dark"] .cat-icon-villa     { background: rgba(1, 167, 153, 0.2); color: #00c7b6; }
 [data-bs-theme="dark"] .cat-icon-office    { background: rgba(124, 58, 237, 0.2); color: #c084fc; }
 [data-bs-theme="dark"] .cat-icon-townhouse { background: rgba(16, 185, 129, 0.2); color: #34d399; }
 [data-bs-theme="dark"] .cat-icon-studio    { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
 [data-bs-theme="dark"] .cat-icon-default   { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
 
 [data-bs-theme="dark"] .badge-count-pill {
-    background: #071524;
-    color: #cbd8e7;
-    border-color: #1a3658;
+    background: #081620;
+    color: #c9d8e2;
+    border-color: #183547;
 }
 
 [data-bs-theme="dark"] .sidebar-nav::-webkit-scrollbar-thumb {
-    background: rgba(229, 169, 59, 0.2);
+    background: rgba(1, 167, 153, 0.25);
 }
 [data-bs-theme="dark"] .sidebar-nav::-webkit-scrollbar-thumb:hover {
     background: var(--hh-gold);
 }
-

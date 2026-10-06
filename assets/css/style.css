@@ -1,41 +1,41 @@
 /* ==========================================================================
    HomeHub Property Management System - Main Stylesheet
    Color Palette strictly based on the Official Logo:
-   - Deep Navy Blue: #102a45 (rgb 16, 42, 69)
-   - Warm Amber Gold: #e5a93b (rgb 229, 169, 59)
+   - Logo Emerald Teal: #01a799 (rgb 1, 167, 153)
+   - Logo Dark Slate Navy: #0e1e26 (rgb 14, 30, 38)
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    /* Brand Colors from Logo */
-    --hh-primary: #102a45;          /* Deep Navy Blue */
-    --hh-primary-hover: #091a2c;
-    --hh-primary-light: #e8eef5;
-    --hh-gold: #e5a93b;             /* Logo Warm Golden Yellow */
-    --hh-gold-hover: #cf9227;
-    --hh-gold-light: #fef8ee;
-    --hh-secondary: #1e3a5f;
-    --hh-accent: #e5a93b;
+    /* Brand Colors from Official Logo */
+    --hh-primary: #01a799;          /* Logo Emerald Teal */
+    --hh-primary-hover: #008f83;
+    --hh-primary-light: #e6f7f5;
+    --hh-gold: #01a799;             /* Harmonized Accent matching Logo Teal */
+    --hh-gold-hover: #008f83;
+    --hh-gold-light: #e6f7f5;
+    --hh-secondary: #0e1e26;        /* Deep Logo Slate */
+    --hh-accent: #01a799;
     --hh-success: #10b981;
-    --hh-warning: #e5a93b;
+    --hh-warning: #f59e0b;
     --hh-danger: #ef4444;
     --hh-info: #0284c7;
 
     --hh-body-bg: #f8fafc;
     --hh-card-bg: #ffffff;
-    --hh-text-main: #0f1f33;
-    --hh-text-muted: #5f748d;
+    --hh-text-main: #0e1e26;
+    --hh-text-muted: #597184;
     --hh-border: #e2e8f0;
 
-    --hh-sidebar-bg: #09192b;       /* Dark Logo Navy */
-    --hh-sidebar-color: #9ab0c7;
-    --hh-sidebar-active: #e5a93b;   /* Gold Active */
-    --hh-sidebar-active-bg: rgba(229, 169, 59, 0.14);
+    --hh-sidebar-bg: #0c1920;       /* Dark Logo Slate */
+    --hh-sidebar-color: #94abb9;
+    --hh-sidebar-active: #01a799;   /* Emerald Teal Active */
+    --hh-sidebar-active-bg: rgba(1, 167, 153, 0.16);
 
-    --hh-shadow-sm: 0 1px 3px 0 rgba(16, 42, 69, 0.06), 0 1px 2px -1px rgba(16, 42, 69, 0.04);
-    --hh-shadow: 0 4px 6px -1px rgba(16, 42, 69, 0.08), 0 2px 4px -2px rgba(16, 42, 69, 0.06);
-    --hh-shadow-lg: 0 10px 15px -3px rgba(16, 42, 69, 0.10), 0 4px 6px -4px rgba(16, 42, 69, 0.06);
+    --hh-shadow-sm: 0 1px 3px 0 rgba(14, 30, 38, 0.06), 0 1px 2px -1px rgba(14, 30, 38, 0.04);
+    --hh-shadow: 0 4px 6px -1px rgba(14, 30, 38, 0.08), 0 2px 4px -2px rgba(14, 30, 38, 0.06);
+    --hh-shadow-lg: 0 10px 15px -3px rgba(14, 30, 38, 0.10), 0 4px 6px -4px rgba(14, 30, 38, 0.06);
     --hh-radius: 12px;
 }
 
@@ -158,19 +158,19 @@ html.app-dashboard {
     display: flex;
     align-items: center;
     gap: 0.65rem;
-    border-bottom: 1px solid rgba(229, 169, 59, 0.15);
+    border-bottom: 1px solid rgba(1, 167, 153, 0.2);
     background: rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
 }
 
 .sidebar .brand .brand-logo-img {
-    height: 32px;
+    height: 34px;
     width: auto;
     object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-    background: #ffffff;
-    padding: 2px 5px;
-    border-radius: 6px;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4));
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
 }
 
 .sidebar .brand .brand-title {
@@ -501,8 +501,8 @@ html.app-dashboard {
 }
 
 /* Icon Color Variants */
-.icon-primary { background: #e8eef5; color: #102a45; }
-.icon-gold    { background: #fef8ee; color: #e5a93b; }
+.icon-primary { background: #e6f7f5; color: #01a799; }
+.icon-gold    { background: #e6f7f5; color: #01a799; }
 .icon-success { background: #d1fae5; color: #059669; }
 .icon-warning { background: #fef3c7; color: #d97706; }
 .icon-danger  { background: #fee2e2; color: #dc2626; }
@@ -526,21 +526,22 @@ html.app-dashboard {
 .btn-primary:hover, .btn-primary:focus {
     background-color: var(--hh-primary-hover);
     border-color: var(--hh-primary-hover);
-    box-shadow: 0 4px 12px rgba(16, 42, 69, 0.35);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(1, 167, 153, 0.35);
 }
 
 .btn-gold {
     background-color: var(--hh-gold);
     border-color: var(--hh-gold);
-    color: #0a1c30;
+    color: #ffffff;
     font-weight: 700;
 }
 
 .btn-gold:hover, .btn-gold:focus {
     background-color: var(--hh-gold-hover);
     border-color: var(--hh-gold-hover);
-    color: #0a1c30;
-    box-shadow: 0 4px 12px rgba(229, 169, 59, 0.35);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(1, 167, 153, 0.4);
 }
 
 .btn-outline-gold {
@@ -550,7 +551,7 @@ html.app-dashboard {
 
 .btn-outline-gold:hover {
     background-color: var(--hh-gold);
-    color: #0a1c30;
+    color: #ffffff;
 }
 
 .btn-rounded {
@@ -613,9 +614,9 @@ html.app-dashboard {
 }
 
 .badge-gold {
-    background-color: rgba(229, 169, 59, 0.16);
-    color: #a87212;
-    border: 1px solid rgba(229, 169, 59, 0.3);
+    background-color: rgba(1, 167, 153, 0.14);
+    color: #018a7e;
+    border: 1px solid rgba(1, 167, 153, 0.32);
 }
 
 /* Property Image Cards */
@@ -1337,5 +1338,31 @@ html.app-dashboard {
     .floating-whatsapp-btn::before {
         border-radius: 50%;
     }
+}
+
+/* ==========================================================================
+   Theme-Adaptive Brand Logos
+   Dark Mode -> White Text Logo (logo-dark.png)
+   Light Mode -> Dark Slate Logo (logo-light.png)
+   ========================================================================== */
+.logo-theme-dark {
+    display: inline-block;
+}
+.logo-theme-light {
+    display: none;
+}
+
+[data-bs-theme="dark"] .logo-theme-dark {
+    display: inline-block !important;
+}
+[data-bs-theme="dark"] .logo-theme-light {
+    display: none !important;
+}
+
+[data-bs-theme="light"] .logo-theme-dark {
+    display: none !important;
+}
+[data-bs-theme="light"] .logo-theme-light {
+    display: inline-block !important;
 }
 

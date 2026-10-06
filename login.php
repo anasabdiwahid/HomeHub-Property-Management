@@ -180,23 +180,23 @@ require_once __DIR__ . '/includes/header.php';
 .auth-submit-btn {
     height: 44px;
     border-radius: 9999px !important;
-    background-color: #1e3e2b !important;
+    background-color: var(--hh-primary, #01a799) !important;
     border: none !important;
     color: #ffffff !important;
     font-weight: 600;
     font-size: 0.925rem;
     letter-spacing: 0.01em;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 14px rgba(30, 62, 43, 0.25);
+    box-shadow: 0 4px 14px rgba(1, 167, 153, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .auth-submit-btn:hover {
-    background-color: #27523a !important;
+    background-color: var(--hh-primary-hover, #008f83) !important;
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(30, 62, 43, 0.32);
+    box-shadow: 0 6px 18px rgba(1, 167, 153, 0.4);
     color: #ffffff !important;
 }
 
@@ -269,8 +269,8 @@ require_once __DIR__ . '/includes/header.php';
 }
 
 .auth-slider-bar.active {
-    background: #e5a93b !important;
-    box-shadow: 0 0 8px rgba(229, 169, 59, 0.6);
+    background: #01a799 !important;
+    box-shadow: 0 0 8px rgba(1, 167, 153, 0.6);
 }
 </style>
 
@@ -290,12 +290,8 @@ require_once __DIR__ . '/includes/header.php';
                 <div>
                     <!-- Brand Lockup -->
                     <div class="d-flex align-items-center gap-2 mb-3">
-                        <div class="auth-brand-badge">
-                            <i class="bi bi-houses-fill"></i>
-                        </div>
-                        <div class="auth-brand-title">
-                            HomeHub<span style="color: #e5a93b;">.</span>
-                        </div>
+                        <img src="<?= BASE_URL; ?>assets/images/logo-dark.png" alt="HomeHub" class="logo-theme-dark" style="height: 42px; width: auto; object-fit: contain;">
+                        <img src="<?= BASE_URL; ?>assets/images/logo-light.png" alt="HomeHub" class="logo-theme-light" style="height: 42px; width: auto; object-fit: contain;">
                     </div>
 
                     <!-- Heading & Subtitle -->

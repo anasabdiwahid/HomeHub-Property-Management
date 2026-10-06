@@ -12,7 +12,8 @@ $currentUser = current_user();
     <div class="container">
         <!-- Brand Logo -->
         <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL; ?>user/index.php">
-            <img src="<?= BASE_URL; ?>assets/images/logo_clean.png" alt="HomeHub Logo" style="height: 42px; width: auto; object-fit: contain;">
+            <img src="<?= BASE_URL; ?>assets/images/logo-dark.png" alt="HomeHub Logo" class="logo-theme-dark" style="height: 42px; width: auto; object-fit: contain;">
+            <img src="<?= BASE_URL; ?>assets/images/logo-light.png" alt="HomeHub Logo" class="logo-theme-light" style="height: 42px; width: auto; object-fit: contain;">
         </a>
 
         <!-- Mobile Toggle Button -->

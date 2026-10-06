@@ -78,7 +78,8 @@ require_once __DIR__ . '/includes/header.php';
         <div class="card-body p-4 p-md-5">
             <div class="text-center mb-4">
                 <a href="<?= BASE_URL; ?>" class="d-inline-block mb-2 text-decoration-none">
-                    <img src="<?= BASE_URL; ?>assets/images/logo_clean.png" alt="HomeHub Logo" style="height: 70px; width: auto; object-fit: contain;">
+                    <img src="<?= BASE_URL; ?>assets/images/logo-dark.png" alt="HomeHub Logo" class="logo-theme-dark" style="height: 55px; width: auto; object-fit: contain;">
+                    <img src="<?= BASE_URL; ?>assets/images/logo-light.png" alt="HomeHub Logo" class="logo-theme-light" style="height: 55px; width: auto; object-fit: contain;">
                 </a>
                 <h5 class="fw-bold mb-1">Create Tenant Account</h5>
                 <p class="text-muted small">Find and lease verified houses and apartments in Somalia</p>

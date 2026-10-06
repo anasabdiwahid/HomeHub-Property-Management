@@ -10,7 +10,7 @@ $currentScript = basename($_SERVER['SCRIPT_NAME'] ?? '');
 <aside class="sidebar">
     <div class="brand d-flex align-items-center justify-content-between">
         <a href="<?= BASE_URL; ?>manager/index.php" class="d-flex align-items-center gap-2 text-decoration-none">
-            <img src="<?= BASE_URL; ?>assets/images/logo_clean.png" alt="HomeHub" class="brand-logo-img">
+            <img src="<?= BASE_URL; ?>assets/images/logo-icon-dark.png" alt="HomeHub" class="brand-logo-img">
             <div>
                 <h6 class="brand-title">HomeHub</h6>
                 <p class="brand-tagline">Manager Panel</p>

@@ -65,7 +65,8 @@ require_once __DIR__ . '/includes/header.php';
     <div class="container">
         <!-- Official Logo -->
         <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL; ?>">
-            <img src="<?= BASE_URL; ?>assets/images/logo_clean.png" alt="HomeHub Logo" style="height: 46px; width: auto; object-fit: contain;">
+            <img src="<?= BASE_URL; ?>assets/images/logo-dark.png" alt="HomeHub Logo" class="logo-theme-dark" style="height: 44px; width: auto; object-fit: contain;">
+            <img src="<?= BASE_URL; ?>assets/images/logo-light.png" alt="HomeHub Logo" class="logo-theme-light" style="height: 44px; width: auto; object-fit: contain;">
         </a>
 
         <!-- Right Controls: Dark Mode, Auth & Mobile Toggler -->
@@ -552,7 +553,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="row g-4 justify-content-between mb-4">
             <div class="col-lg-4">
                 <div class="mb-3">
-                    <img src="<?= BASE_URL; ?>assets/images/logo_clean.png" alt="HomeHub Logo" style="height: 50px; width: auto; object-fit: contain;">
+                    <img src="<?= BASE_URL; ?>assets/images/logo-dark.png" alt="HomeHub Logo" style="height: 48px; width: auto; object-fit: contain;">
                 </div>
                 <p class="text-muted small mb-3">
                     The complete, modern property management solution in Somalia. Empowering owners, managers, and tenants with transparent rental workflows.

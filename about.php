@@ -19,11 +19,8 @@ require_once __DIR__ . '/includes/header.php';
     <div class="container">
         <!-- Logo & Brand -->
         <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL; ?>">
-            <img src="<?= BASE_URL; ?>assets/images/logo_clean.png" alt="HomeHub Logo" class="brand-logo-img">
-            <div class="brand-text d-flex flex-column">
-                <span class="brand-title">HomeHub</span>
-                <span class="brand-subtitle">Property Management</span>
-            </div>
+            <img src="<?= BASE_URL; ?>assets/images/logo-dark.png" alt="HomeHub Logo" class="brand-logo-img logo-theme-dark" style="height: 44px; width: auto; object-fit: contain;">
+            <img src="<?= BASE_URL; ?>assets/images/logo-light.png" alt="HomeHub Logo" class="brand-logo-img logo-theme-light" style="height: 44px; width: auto; object-fit: contain;">
         </a>
 
         <!-- Mobile Toggles Container -->
@@ -254,7 +251,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="row g-4 justify-content-between mb-4">
             <div class="col-lg-4">
                 <div class="mb-3">
-                    <img src="<?= BASE_URL; ?>assets/images/logo_clean.png" alt="HomeHub Logo" style="height: 50px; width: auto; object-fit: contain;">
+                    <img src="<?= BASE_URL; ?>assets/images/logo-dark.png" alt="HomeHub Logo" style="height: 48px; width: auto; object-fit: contain;">
                 </div>
                 <p class="text-muted small mb-3">
                     The complete, modern property management solution in Somalia. Empowering owners, managers, and tenants with transparent rental workflows.
