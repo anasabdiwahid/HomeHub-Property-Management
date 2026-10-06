@@ -404,61 +404,66 @@ require_once __DIR__ . '/includes/header.php';
                     Whether you are an ambitious property owner seeking transparent occupancy tracking, an assigned manager supervising rental units, or a tenant searching for a modern verified home, HomeHub bridges every step with automated rent invoicing, seamless Somali mobile money records (EVC Plus, Zaad, Sahal), and instant digital agreements.
                 </p>
 
-                <!-- Value Highlights Grid -->
-                <div class="row g-3 mb-4">
-                    <div class="col-sm-6">
-                        <div class="d-flex align-items-start gap-3 p-3 rounded-3 bg-body-tertiary border h-100">
-                            <div class="rounded-3 icon-gold d-inline-flex p-2 fs-4 flex-shrink-0">
+                <!-- Value Highlights Grid (2 Columns Side-by-Side on Mobile & Desktop) -->
+                <div class="row g-2 g-sm-3 mb-4">
+                    <div class="col-6">
+                        <div class="d-flex flex-column flex-sm-row align-items-start gap-2 gap-sm-3 p-2.5 p-sm-3 rounded-3 bg-body-tertiary border h-100">
+                            <div class="rounded-3 icon-gold d-inline-flex p-2 fs-5 fs-sm-4 flex-shrink-0">
                                 <i class="bi bi-patch-check-fill text-gold"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-1">100% Verified</h6>
-                                <p class="text-muted small mb-0">Every house, unit, and lease agreement is legally documented.</p>
+                                <h6 class="fw-bold mb-1 small fs-sm-6">100% Verified</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.74rem; line-height: 1.35;">Every house, unit, and lease agreement is legally documented.</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="d-flex align-items-start gap-3 p-3 rounded-3 bg-body-tertiary border h-100">
-                            <div class="rounded-3 icon-primary d-inline-flex p-2 fs-4 flex-shrink-0">
+                    <div class="col-6">
+                        <div class="d-flex flex-column flex-sm-row align-items-start gap-2 gap-sm-3 p-2.5 p-sm-3 rounded-3 bg-body-tertiary border h-100">
+                            <div class="rounded-3 icon-primary d-inline-flex p-2 fs-5 fs-sm-4 flex-shrink-0">
                                 <i class="bi bi-wallet2 text-primary"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-1">Local Payments</h6>
-                                <p class="text-muted small mb-0">Direct support for Somali mobile money & bank transfer references.</p>
+                                <h6 class="fw-bold mb-1 small fs-sm-6">Local Payments</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.74rem; line-height: 1.35;">Direct support for Somali mobile money & bank transfer references.</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="d-flex align-items-start gap-3 p-3 rounded-3 bg-body-tertiary border h-100">
-                            <div class="rounded-3 icon-success d-inline-flex p-2 fs-4 flex-shrink-0">
+                    <div class="col-6">
+                        <div class="d-flex flex-column flex-sm-row align-items-start gap-2 gap-sm-3 p-2.5 p-sm-3 rounded-3 bg-body-tertiary border h-100">
+                            <div class="rounded-3 icon-success d-inline-flex p-2 fs-5 fs-sm-4 flex-shrink-0">
                                 <i class="bi bi-speedometer2 text-success"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-1">Real-Time Data</h6>
-                                <p class="text-muted small mb-0">Live occupancy tracking, automated invoices, and receipt verification.</p>
+                                <h6 class="fw-bold mb-1 small fs-sm-6">Real-Time Data</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.74rem; line-height: 1.35;">Live occupancy tracking, automated invoices, and receipt verification.</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="d-flex align-items-start gap-3 p-3 rounded-3 bg-body-tertiary border h-100">
-                            <div class="rounded-3 icon-purple d-inline-flex p-2 fs-4 flex-shrink-0">
+                    <div class="col-6">
+                        <div class="d-flex flex-column flex-sm-row align-items-start gap-2 gap-sm-3 p-2.5 p-sm-3 rounded-3 bg-body-tertiary border h-100">
+                            <div class="rounded-3 icon-purple d-inline-flex p-2 fs-5 fs-sm-4 flex-shrink-0">
                                 <i class="bi bi-shield-lock-fill text-purple"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-1">Secure Portals</h6>
-                                <p class="text-muted small mb-0">Distinct portals for Administrators, Assigned Managers, and Tenants.</p>
+                                <h6 class="fw-bold mb-1 small fs-sm-6">Secure Portals</h6>
+                                <p class="text-muted mb-0" style="font-size: 0.74rem; line-height: 1.35;">Distinct portals for Administrators, Assigned Managers, and Tenants.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="d-flex flex-wrap gap-3">
-                    <a href="#contact-section" class="btn btn-primary px-4 py-2">
-                        <i class="bi bi-envelope-paper me-2 text-gold"></i>Get In Touch
-                    </a>
-                    <a href="https://wa.me/252615554321?text=Hello%20HomeHub,%20I%20would%20like%20to%20learn%20more%20about%20your%20services" target="_blank" rel="noopener noreferrer" class="btn btn-success px-4 py-2" style="background-color: #25D366; border-color: #25D366;">
-                        <i class="bi bi-whatsapp me-2"></i>Chat on WhatsApp
-                    </a>
+                <!-- Side-by-Side Action Buttons on Mobile & Desktop -->
+                <div class="row g-2">
+                    <div class="col-6">
+                        <a href="#contact-section" class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center text-center">
+                            <i class="bi bi-envelope-paper me-1.5 text-gold"></i><span>Get In Touch</span>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="https://wa.me/252615554321?text=Hello%20HomeHub,%20I%20would%20like%20to%20learn%20more%20about%20your%20services" target="_blank" rel="noopener noreferrer" class="btn btn-success w-100 py-2 d-flex align-items-center justify-content-center text-center" style="background-color: #25D366; border-color: #25D366;">
+                            <i class="bi bi-whatsapp me-1.5"></i><span>WhatsApp</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
