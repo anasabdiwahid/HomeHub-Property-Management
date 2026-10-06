@@ -21,10 +21,16 @@ $isDashboardPage = (strpos($requestScript, '/admin/') !== false) || (strpos($req
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($pageTitle); ?></title>
     
-    <!-- Favicons generated from Official Logo -->
-    <link rel="icon" type="image/png" sizes="64x64" href="<?= BASE_URL; ?>assets/images/favicon.png">
-    <link rel="shortcut icon" href="<?= BASE_URL; ?>favicon.ico">
-    <link rel="apple-touch-icon" href="<?= BASE_URL; ?>assets/images/favicon.png">
+    <!-- Favicons generated from Official Logo with cache-busting -->
+    <?php 
+    $favVer = file_exists(__DIR__ . '/../assets/images/favicon.png') ? filemtime(__DIR__ . '/../assets/images/favicon.png') : time();
+    ?>
+    <link rel="icon" type="image/png" sizes="128x128" href="<?= BASE_URL; ?>assets/images/favicon-128.png?v=<?= $favVer; ?>">
+    <link rel="icon" type="image/png" sizes="64x64" href="<?= BASE_URL; ?>assets/images/favicon-64.png?v=<?= $favVer; ?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= BASE_URL; ?>assets/images/favicon-32.png?v=<?= $favVer; ?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= BASE_URL; ?>assets/images/favicon-16.png?v=<?= $favVer; ?>">
+    <link rel="shortcut icon" type="image/x-icon" href="<?= BASE_URL; ?>favicon.ico?v=<?= $favVer; ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= BASE_URL; ?>assets/images/apple-touch-icon.png?v=<?= $favVer; ?>">
 
     <!-- Prevent dark mode flash & Set Dark Mode by Default -->
     <script>
