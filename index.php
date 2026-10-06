@@ -645,12 +645,11 @@ require_once __DIR__ . '/includes/header.php';
             <div class="d-flex flex-column flex-sm-row align-items-center gap-2">
                 <div>&copy; <?= date('Y'); ?> HomeHub Somalia Property Management. All rights reserved.</div>
                 <span class="d-none d-sm-inline opacity-50">&bull;</span>
-                <div class="live-system-clock d-inline-flex flex-wrap align-items-center justify-content-center bg-body-tertiary px-2.5 py-1 rounded-pill border" title="Current Real-Time Live Clock">
+                <div class="live-system-clock d-inline-flex flex-wrap align-items-center justify-content-center" title="Current Real-Time Live Clock">
                     <span class="text-gold fw-semibold"><?= date('l'); ?></span>, 
                     <span class="ms-1"><?= date('d F Y'); ?></span> 
                     <span class="opacity-50 mx-1.5">•</span> 
-                    <span class="font-monospace text-gold fw-semibold"><?= date('h:i:s A'); ?></span> 
-                    <span class="badge badge-gold ms-1.5" style="font-size: 0.68rem; padding: 0.2rem 0.45rem;">Week <?= date('W'); ?></span>
+                    <span class="font-monospace text-gold fw-semibold"><?= date('h:i:s A'); ?></span>
                 </div>
             </div>
             <div class="mt-1 mt-lg-0">

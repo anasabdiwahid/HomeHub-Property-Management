@@ -422,7 +422,7 @@
         return { runFilter };
     };
 
-    // Live Real-Time Dynamic Clock (Date, Time, Minutes, Seconds, Day, Week, Month, Year)
+    // Live Real-Time Dynamic Clock (Date, Time, Minutes, Seconds, Day, Month, Year)
     const initLiveSystemClock = () => {
         const clockEls = document.querySelectorAll('.live-system-clock');
         if (!clockEls.length) return;
@@ -449,19 +449,12 @@
             hours = hours ? hours : 12;
             const strHours = String(hours).padStart(2, '0');
 
-            // Calculate ISO week number
-            const dUTC = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
-            dUTC.setUTCDate(dUTC.getUTCDate() + 4 - (dUTC.getUTCDay() || 7));
-            const yearStart = new Date(Date.UTC(dUTC.getUTCFullYear(), 0, 1));
-            const weekNum = Math.ceil((((dUTC - yearStart) / 86400000) + 1) / 7);
-
             clockEls.forEach(el => {
                 el.innerHTML = `
                     <span class="text-gold fw-semibold">${dayName}</span>, 
                     <span class="ms-1">${dateNum} ${monthName} ${year}</span> 
                     <span class="opacity-50 mx-1.5">•</span> 
-                    <span class="font-monospace text-gold fw-semibold">${strHours}:${minutes}:${seconds} ${ampm}</span> 
-                    <span class="badge badge-gold ms-1.5" style="font-size: 0.68rem; padding: 0.2rem 0.45rem;">Week ${weekNum}</span>
+                    <span class="font-monospace text-gold fw-semibold">${strHours}:${minutes}:${seconds} ${ampm}</span>
                 `;
             });
         };
