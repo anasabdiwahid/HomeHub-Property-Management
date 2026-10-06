@@ -84,6 +84,11 @@ a:hover {
     color: var(--hh-gold) !important;
 }
 
+a.text-gold:hover {
+    color: var(--hh-gold-hover) !important;
+    text-decoration: underline !important;
+}
+
 .bg-gold {
     background-color: var(--hh-gold) !important;
     color: #09192b !important;
