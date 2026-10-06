@@ -80,7 +80,7 @@ $currentScript = basename($_SERVER['SCRIPT_NAME'] ?? '');
             <span>Settings</span>
         </a>
 
-        <a href="<?= BASE_URL; ?>logout.php" class="nav-link text-danger mt-2">
+        <a href="<?= BASE_URL; ?>logout.php" class="nav-link text-danger mt-1">
             <i class="bi bi-box-arrow-right"></i>
             <span>Logout</span>
         </a>

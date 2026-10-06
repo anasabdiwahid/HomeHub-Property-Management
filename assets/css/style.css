@@ -134,7 +134,7 @@ html.app-dashboard {
     z-index: 990;
 }
 
-/* Sidebar - Compact Full Height without Scrollbars */
+/* Sidebar - Stationary, Fixed & Solid (No twitching / No unwanted scrolling) */
 .sidebar {
     width: 235px;
     background-color: var(--hh-sidebar-bg);
@@ -142,7 +142,6 @@ html.app-dashboard {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1000;
     position: sticky;
     top: 0;
@@ -152,7 +151,7 @@ html.app-dashboard {
 }
 
 .sidebar .brand {
-    padding: 0.95rem 1.15rem;
+    padding: 0.75rem 1rem;
     display: flex;
     align-items: center;
     gap: 0.65rem;
@@ -162,81 +161,76 @@ html.app-dashboard {
 }
 
 .sidebar .brand .brand-logo-img {
-    height: 38px;
+    height: 32px;
     width: auto;
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
     background: #ffffff;
-    padding: 3px 6px;
-    border-radius: 8px;
+    padding: 2px 5px;
+    border-radius: 6px;
 }
 
 .sidebar .brand .brand-title {
     color: #ffffff;
-    font-size: 1.05rem;
+    font-size: 0.98rem;
     font-weight: 800;
     margin: 0;
+    line-height: 1.2;
 }
 
 .sidebar .brand .brand-tagline {
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     color: var(--hh-gold);
     margin: 0;
     font-weight: 600;
+    line-height: 1.2;
 }
 
 .sidebar-nav {
-    padding: 0.65rem 0.5rem;
+    padding: 0.35rem 0.45rem;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 0.08rem;
     overflow-y: auto;
     overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(229, 169, 59, 0.25) transparent;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
 }
 
 .sidebar-nav::-webkit-scrollbar {
-    width: 4px;
-}
-.sidebar-nav::-webkit-scrollbar-track {
-    background: transparent;
-}
-.sidebar-nav::-webkit-scrollbar-thumb {
-    background: rgba(229, 169, 59, 0.25);
-    border-radius: 4px;
-}
-.sidebar-nav::-webkit-scrollbar-thumb:hover {
-    background: var(--hh-gold);
+    display: none;
+    width: 0;
+    height: 0;
 }
 
 .nav-section-title {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 0.08em;
     color: #627d98;
-    padding: 0.5rem 0.65rem 0.2rem;
+    padding: 0.35rem 0.55rem 0.1rem;
+    margin-top: 0.1rem;
 }
 
 .sidebar .nav-link {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.55rem 0.85rem;
+    gap: 0.65rem;
+    padding: 0.38rem 0.65rem;
     color: var(--hh-sidebar-color);
     border-radius: 8px;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     font-weight: 500;
-    transition: all 0.2s ease;
+    margin: 0.04rem 0;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .sidebar .nav-link i {
-    font-size: 1.15rem;
-    width: 22px;
+    font-size: 1.05rem;
+    width: 20px;
     text-align: center;
-    transition: transform 0.2s ease;
 }
 
 .sidebar .nav-link:hover {
@@ -245,19 +239,23 @@ html.app-dashboard {
 }
 
 .sidebar .nav-link:hover i {
-    transform: translateX(2px);
     color: var(--hh-gold);
 }
 
 .sidebar .nav-link.active {
-    color: var(--hh-gold);
-    background: var(--hh-sidebar-active-bg);
+    color: #ffffff !important;
+    background: linear-gradient(90deg, rgba(229, 169, 59, 0.22) 0%, rgba(229, 169, 59, 0.08) 100%) !important;
     font-weight: 600;
-    border-left: 3px solid var(--hh-gold);
+    border-left: 3px solid var(--hh-gold) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.sidebar .nav-link.active i {
+    color: var(--hh-gold) !important;
 }
 
 .sidebar-footer {
-    padding: 0.65rem 1rem;
+    padding: 0.45rem 0.85rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     flex-shrink: 0;
 }
@@ -796,17 +794,7 @@ html.app-dashboard {
 /* Polish Sidebar Active Indicator */
 .sidebar .nav-link {
     position: relative;
-    border-radius: 10px;
-    margin: 0.15rem 0;
-}
-.sidebar .nav-link.active {
-    background: linear-gradient(90deg, rgba(229, 169, 59, 0.22) 0%, rgba(229, 169, 59, 0.08) 100%) !important;
-    color: #ffffff !important;
-    border-left: 4px solid var(--hh-gold) !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-}
-.sidebar .nav-link.active i {
-    color: var(--hh-gold) !important;
+    border-radius: 8px;
 }
 
 /* ==========================================================================
